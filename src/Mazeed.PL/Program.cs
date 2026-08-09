@@ -1,3 +1,5 @@
+using Mazeed.PL.Extensions;
+
 namespace Mazeed.PL;
 
 public class Program
@@ -8,6 +10,9 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
+
+        builder.Services.AddApplicationServices();
+        builder.Services.AddInfrastructureServices(builder.Configuration);
 
         var app = builder.Build();
 
