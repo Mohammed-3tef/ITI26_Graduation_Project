@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mazeed.BLL.ViewModels.User;
+using Mazeed.DAL.Entities;
 
 namespace Mazeed.BLL.Mappers
 {
@@ -13,7 +10,10 @@ namespace Mazeed.BLL.Mappers
         {
             // Add your mapping configurations here
             // Example:
-            // CreateMap<SourceModel, DestinationModel>();
+            CreateMap<RegisterVM, User>().ReverseMap();
+            CreateMap<LoginVM, User>().ReverseMap();
+            CreateMap<UserVM, User>().ReverseMap()
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender == 'M' ? "Male" : "Female"));
         }
     }
 }

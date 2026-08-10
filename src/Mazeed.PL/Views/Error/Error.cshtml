@@ -1,0 +1,20 @@
+﻿```cshtml
+@{
+    ViewData["Title"] = "An Error Occurred";
+}
+
+<div class="text-center">
+    <h1>Oops!</h1>
+    <h2>Something Went Wrong</h2>
+    <p>
+        An unexpected error occurred while processing your request.
+        Please try again later.
+    </p>
+
+    <a asp-controller="Home"
+       asp-action="Index"
+       class="btn btn-primary">
+        Back to Home
+    </a>
+</div>
+```

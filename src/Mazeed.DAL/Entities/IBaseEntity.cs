@@ -1,6 +1,6 @@
 ﻿namespace Mazeed.DAL.Entities
 {
-    public class BaseEntity
+    public interface IBaseEntity
     {
         public DateTime CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -10,6 +10,6 @@
 
         public DateTime? DeletedBy { get; set; }
         public DateTime? DeletedAt { get; set; }
-        public bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; }
     }
 }

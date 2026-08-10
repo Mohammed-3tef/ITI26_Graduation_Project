@@ -1,13 +1,15 @@
 ﻿using Mazeed.BLL.Mappers;
+using Mazeed.BLL.Services.Abstraction;
+using Mazeed.BLL.Services.Implementation;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Mazeed.PL.Extensions
+namespace Mazeed.BLL.Extensions
 {
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            //services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            //services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             // Auto Mapper Configuration
             services.AddAutoMapper(map => map.AddProfile(new DomainProfile()));

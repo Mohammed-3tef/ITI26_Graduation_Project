@@ -1,4 +1,4 @@
-using Mazeed.PL.Extensions;
+using Mazeed.BLL.Extensions;
 
 namespace Mazeed.PL;
 
@@ -19,7 +19,7 @@ public class Program
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Home/Error");
+            app.UseExceptionHandler("/Error/500");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
@@ -32,6 +32,7 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.UseStatusCodePagesWithReExecute("/Error/{0}");
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
