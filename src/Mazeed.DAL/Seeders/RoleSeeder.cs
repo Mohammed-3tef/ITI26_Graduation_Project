@@ -8,7 +8,7 @@ namespace Mazeed.DAL.Seeders
         private static readonly List<(string Name, string Stamp)> Roles = new()
         {
             ("Admin", "c7b013f2-9cb0-472d-be16-4ee9f022e380"),
-            ("Shopper", "a2f812d1-8be0-412e-ae12-3ee9f011e270")
+            ("User", "a2f812d1-8be0-412e-ae12-3ee9f011e270")
         };
 
         public static void Seed(ModelBuilder modelBuilder)

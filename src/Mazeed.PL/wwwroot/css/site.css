@@ -17,6 +17,160 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
+header .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+header .plus, footer .plus {
+    font-weight: 800;
+    color: #EF4444;
+}
+
+header .search-input {
+    padding: 8px 4px;
+    background-color: #F3F4F6;
+    padding-right: 16px;
+    padding-left: 16px;
+    gap: 8px;
+    opacity: 1;
+    border-radius: 20px;
+    border: 0;
+    outline: none;
+}
+
+/*------------- FOOTER ----------------*/
+
+footer {
+    background-color: #111827F5;
+    padding: 80px 80px 28px 80px;
+}
+
+footer a {
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    color: white;
+}
+
+footer .brand {
+    color: white;
+}
+
+footer .muted {
+    color: #9CA3AF;
+}
+
+/* Custom Styling for Mazeed Split Auth/Error Layout */
+.mazeed-split-container {
+    min-height: 100vh;
+    display: flex;
+}
+
+/* Left Content Panel */
+.mazeed-left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem 4rem;
+    background-color: #ffffff;
+}
+
+/* Right Decorative Panel */
+.mazeed-right-panel {
+    flex: 1;
+    background: radial-gradient(circle at 80% 20%, #fde047 0%, transparent 40%), radial-gradient(circle at 20% 10%, #fb923c 0%, transparent 50%), linear-gradient(135deg, #ef4444 0%, #06b6d4 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem;
+    color: #ffffff;
+}
+
+/* Typography & Components */
+.mazeed-left-panel .brand-logo {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0f172a;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+    transition: all 0.3s ease;
+}
+
+.brand-logo-container a:hover {
+    text-decoration: none;
+    color: #0f172a;
+}
+
+.brand-logo span {
+    color: #ef4444;
+}
+
+.error-badge {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #ef4444;
+    background-color: #fef2f2;
+    border-radius: 50rem;
+    margin-bottom: 1rem;
+}
+
+.btn-mazeed-primary {
+    background-color: #ef4444;
+    border-color: #ef4444;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+    .btn-mazeed-primary:hover {
+        background-color: #dc2626;
+        border-color: #dc2626;
+        color: #ffffff;
+    }
+
+.btn-mazeed-secondary {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+}
+
+    .btn-mazeed-secondary:hover {
+        background-color: #f1f5f9;
+        color: #0f172a;
+    }
+
+/* Feature Card Image Container */
+.featured-card-img {
+    width: 100%;
+    max-width: 520px;
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+}
+
+@media (max-width: 991.98px) {
+    .mazeed-split-container {
+        flex-direction: column;
+    }
+
+    .mazeed-left-panel {
+        padding: 2rem;
+    }
+
+    .mazeed-right-panel {
+        display: none; /* Hide decorative column on smaller screens */
+    }
 }

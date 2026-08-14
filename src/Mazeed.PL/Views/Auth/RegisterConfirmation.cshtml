@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Registration Successful";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden text-center">
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="mb-4">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle p-4" style="width: 80px; height: 80px;">
+                            <i class="bi bi-envelope-check-fill fs-1"></i>
+                        </div>
+                    </div>
+
+                    <h2 class="fw-bold mb-3">Check Your Email</h2>
+
+                    <p class="text-muted lead mb-4">
+                        @(ViewBag.Message ?? "We have sent a verification email to your address. Please check your inbox and click the link to activate your account.")
+                    </p>
+
+                    <div class="alert alert-warning border-0 bg-warning bg-opacity-10 text-dark small text-start rounded-3 mb-4">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-exclamation-triangle-fill text-warning me-2 fs-5 flex-shrink-0"></i>
+                            <div>
+                                <strong>Didn't receive the email?</strong>
+                                <p class="mb-0 text-muted">Check your spam or junk folder. If it still hasn't arrived, try logging in to resend the verification link.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Auth" asp-action="Login" class="btn btn-primary btn-lg rounded-3 fw-semibold">
+                            Go to Login
+                        </a>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-link text-decoration-none text-muted">
+                            Return to Home
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

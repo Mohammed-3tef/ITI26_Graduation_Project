@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace Mazeed.DAL.Entities
@@ -14,29 +15,20 @@ namespace Mazeed.DAL.Entities
         [MaxLength(500)]
         public string? ProfilePicture { get; set; }
 
-        public DateOnly? Birthdate { get; set; }
+        public DateOnly? BirthDate { get; set; }
         public char? Gender { get; set; }
 
-        // Address (الخاص بالشوبر)
+        // Shopper Address
+        [ForeignKey(nameof(City))]
+        public long? CityId { get; set; }
+        public City City { get; set; } = null!;
+
         [MaxLength(150)]
-        public string? Street { get; set; }
-
-        [MaxLength(50)]
-        public string? City { get; set; }
-
-        [MaxLength(50)]
-        public string? Country { get; set; }
-
-        // Preferences
-        [Required, MaxLength(5)]
-        public string Language { get; set; } = "en";
-
-        [Required, MaxLength(10)]
-        public string Theme { get; set; } = "light";
+        public string? Street { get; set; } 
 
         // Audit Fields
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public string CreatedBy { get; set; }
+        public string CreatedBy { get; set; } = null!;
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
         public bool IsDeleted { get; set; } = false;

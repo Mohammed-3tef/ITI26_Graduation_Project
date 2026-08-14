@@ -13,7 +13,11 @@ namespace Mazeed.DAL.Database
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        #region 
+        #region Tables
+        public DbSet<Province> Provinces { get; set; } = null!;
+        public DbSet<Governorate> Governorates { get; set; } = null!;
+        public DbSet<City> Cities { get; set; } = null!;
+
         public DbSet<Brand> Brands { get; set; } = null!;
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Item> Items { get; set; } = null!;
@@ -25,9 +29,7 @@ namespace Mazeed.DAL.Database
         public DbSet<Shipment> Shipments { get; set; } = null!;
         public DbSet<DiscountRule> DiscountRules { get; set; } = null!;
         public DbSet<Notification> Notifications { get; set; } = null!;
-        #endregion
 
-        #region 
         public DbSet<ItemCategory> ItemCategories { get; set; } = null!;
         public DbSet<ItemReview> ItemReviews { get; set; } = null!;
         public DbSet<ShopperCart> ShopperCarts { get; set; } = null!;
@@ -37,7 +39,7 @@ namespace Mazeed.DAL.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // أساسي جداً لتهيئة جداول Identity
+            // Ensure Identity configurations are applied
             base.OnModelCreating(modelBuilder);
 
             #region Identity Custom Table Names (With long Key)
@@ -112,8 +114,8 @@ namespace Mazeed.DAL.Database
                 .HasForeignKey<Shipment>(s => s.OrderId);
             #endregion
 
-            RoleSeeder.Seed(modelBuilder);
-            UserSeeder.Seed(modelBuilder);
+            // Seed initial data
+            DbInitializer.Seed(modelBuilder);
         }
     }
 }

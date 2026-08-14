@@ -1,5 +1,654 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Mazeed.BLL.ViewModels.User.RegisterVM
+
 @{
+    Layout = null;
+    ViewData["Title"] = "Register";
 }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Mazeed</title>
+
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <style>
+        .mazeed-split-container {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .mazeed-left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2.5rem 3.5rem;
+            background-color: #ffffff;
+        }
+
+        .brand-logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #0f172a;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+            .brand-logo span {
+                color: #ef4444;
+            }
+
+        /* Step Progress Bar */
+        .step-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+            .step-progress::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background-color: #e2e8f0;
+                z-index: 1;
+                transform: translateY(-50%);
+            }
+
+        .step-progress-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 2px;
+            background-color: #ef4444;
+            z-index: 1;
+            transform: translateY(-50%);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            border: 2px solid #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #64748b;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+            .step-circle.active {
+                border-color: #ef4444;
+                background-color: #ef4444;
+                color: #ffffff;
+            }
+
+            .step-circle.completed {
+                border-color: #ef4444;
+                background-color: #ef4444;
+                color: #ffffff;
+            }
+
+        /* Form step visibility */
+        .form-step {
+            display: none;
+        }
+
+            .form-step.active {
+                display: block;
+                animation: fadeIn 0.3s ease-in-out;
+            }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Input Controls */
+        .input-icon-wrapper {
+            position: relative;
+        }
+
+            .input-icon-wrapper i.input-prefix-icon {
+                position: absolute;
+                left: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #64748b;
+                font-size: 1rem;
+                z-index: 5;
+            }
+
+            .input-icon-wrapper .form-control,
+            .input-icon-wrapper .form-select {
+                padding-left: 2.75rem;
+                height: 48px;
+                border-radius: 8px;
+                border: 1px solid #e2e8f0;
+                font-size: 0.95rem;
+            }
+
+                .input-icon-wrapper .form-control:focus,
+                .input-icon-wrapper .form-select:focus {
+                    border-color: #ef4444;
+                    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+                }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0;
+            z-index: 5;
+        }
+
+        /* Buttons */
+        .btn-google {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #1e293b;
+            font-weight: 500;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+            .btn-google:hover {
+                background-color: #f8fafc;
+                border-color: #cbd5e1;
+            }
+
+        .btn-mazeed-submit {
+            background-color: #ef4444;
+            border: none;
+            color: #ffffff;
+            font-weight: 600;
+            height: 48px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+            .btn-mazeed-submit:hover {
+                background-color: #dc2626;
+                color: #ffffff;
+            }
+
+        .btn-mazeed-secondary {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            font-weight: 600;
+            height: 48px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+            .btn-mazeed-secondary:hover {
+                background-color: #f1f5f9;
+                color: #0f172a;
+            }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin: 1.25rem 0;
+        }
+
+            .divider::before, .divider::after {
+                content: '';
+                flex: 1;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .divider span {
+                padding: 0 0.75rem;
+            }
+
+        .text-mazeed-primary {
+            color: #ef4444 !important;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .text-mazeed-primary:hover {
+                text-decoration: underline;
+            }
+
+        @@media (max-width: 991.98px) {
+            .mazeed-split-container {
+                flex-direction: column;
+            }
+
+            .mazeed-left-panel {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mazeed-split-container">
+
+        <!-- Left Panel Form -->
+        <div class="mazeed-left-panel">
+
+            <!-- Top Header Logo -->
+            <div>
+                <a asp-controller="Home" asp-action="Index" class="brand-logo">Mazeed<span>+</span></a>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="my-auto py-4 mx-auto w-100" style="max-width: 440px;">
+                <h1 class="fw-bold fs-2 text-dark mb-1">Create an account</h1>
+                <p class="text-muted small mb-4">Join thousands of happy shoppers today</p>
+
+                <!-- Step Indicator -->
+                <div class="step-progress">
+                    <div class="step-progress-line" id="progressLine"></div>
+                    <div class="step-circle active" id="circle1">1</div>
+                    <div class="step-circle" id="circle2">2</div>
+                    <div class="step-circle" id="circle3">3</div>
+                </div>
+
+                <!-- Registration Form -->
+                <form id="registerForm" asp-action="Register" method="post">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    <!-- ==================== STEP 1: ACCOUNT CREDENTIALS ==================== -->
+                    <div class="form-step active" id="step1">
+
+                        <!-- Google OAuth Option (formnovalidate added) -->
+                        <button type="submit" formnovalidate formaction="@Url.Action("ExternalLogin", "Auth")" name="provider" value="Google" class="btn btn-google mb-3">
+                            <svg width="18" height="18" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                            </svg>
+                            Continue with Google
+                        </button>
+
+                        <div class="divider">
+                            <span>or register with email</span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label small fw-semibold text-dark"></label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-envelope input-prefix-icon"></i>
+                                <input asp-for="Email" class="form-control" placeholder="you@domain.com" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label small fw-semibold text-dark"></label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-lock input-prefix-icon"></i>
+                                <input asp-for="Password" id="passwordInput" type="password" class="form-control" placeholder="Minimum 8 characters" />
+                                <button type="button" class="password-toggle-btn" id="togglePasswordBtn">
+                                    <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label small fw-semibold text-dark"></label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-shield-lock input-prefix-icon"></i>
+                                <input asp-for="ConfirmPassword" id="confirmPasswordInput" type="password" class="form-control" placeholder="Repeat your password" />
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+
+                        <button type="button" class="btn btn-mazeed-submit w-100" onclick="nextStep(1)">
+                            Next: Personal Details <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                    </div>
+
+                    <!-- ==================== STEP 2: PERSONAL INFORMATION ==================== -->
+                    <div class="form-step" id="step2">
+
+                        <!-- First & Last Name Row -->
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label asp-for="FirstName" class="form-label small fw-semibold text-dark"></label>
+                                <div class="input-icon-wrapper">
+                                    <i class="bi bi-person input-prefix-icon"></i>
+                                    <input asp-for="FirstName" class="form-control" placeholder="John" />
+                                </div>
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-6">
+                                <label asp-for="LastName" class="form-label small fw-semibold text-dark"></label>
+                                <div class="input-icon-wrapper">
+                                    <i class="bi bi-person input-prefix-icon"></i>
+                                    <input asp-for="LastName" class="form-control" placeholder="Doe" />
+                                </div>
+                                <span asp-validation-for="LastName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Username -->
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label small fw-semibold text-dark"></label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-at input-prefix-icon"></i>
+                                <input asp-for="UserName" class="form-control" placeholder="johndoe99" />
+                            </div>
+                            <span asp-validation-for="UserName" class="text-danger small"></span>
+                        </div>
+
+                        <!-- BirthDate & Gender Row -->
+                        <div class="row g-2 mb-4">
+                            <div class="col-7">
+                                <label asp-for="BirthDate" class="form-label small fw-semibold text-dark"></label>
+                                <div class="input-icon-wrapper">
+                                    <i class="bi bi-calendar-event input-prefix-icon"></i>
+                                    <input asp-for="BirthDate" type="date" class="form-control" />
+                                </div>
+                                <span asp-validation-for="BirthDate" class="text-danger small"></span>
+                            </div>
+                            <div class="col-5">
+                                <label asp-for="Gender" class="form-label small fw-semibold text-dark"></label>
+                                <div class="input-icon-wrapper">
+                                    <i class="bi bi-gender-ambiguous input-prefix-icon"></i>
+                                    <select asp-for="Gender" class="form-select">
+                                        <option value="">Select</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="Gender" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-mazeed-secondary w-50" onclick="prevStep(2)">
+                                <i class="bi bi-arrow-left me-1"></i> Back
+                            </button>
+                            <button type="button" class="btn btn-mazeed-submit w-50" onclick="nextStep(2)">
+                                Next: Location <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ==================== STEP 3: CONTACT & LOCATION ==================== -->
+                    <div class="form-step" id="step3">
+
+                        <!-- Phone Number -->
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label small fw-semibold text-dark"></label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-telephone input-prefix-icon"></i>
+                                <input asp-for="PhoneNumber" class="form-control" placeholder="+20 100 000 0000" />
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+
+                        <!-- 1. Governorate Dropdown -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-dark">Governorate</label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-geo-alt input-prefix-icon"></i>
+                                <select id="governorateSelect" class="form-select" asp-items="ViewBag.Governorates" required>
+                                    <option value="">Select Governorate</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 2. City Dropdown -->
+                        <div class="mb-3">
+                            <label asp-for="CityId" class="form-label small fw-semibold text-dark"></label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-building input-prefix-icon"></i>
+                                <select asp-for="CityId" id="citySelect" class="form-select" required disabled>
+                                    <option value="">Select Governorate First</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="CityId" class="text-danger small"></span>
+                        </div>
+
+                        <!-- 3. Street Address -->
+                        <div class="mb-4">
+                            <label asp-for="Street" class="form-label small fw-semibold text-dark"></label>
+                            <div class="input-icon-wrapper">
+                                <i class="bi bi-signpost-2 input-prefix-icon"></i>
+                                <input asp-for="Street" class="form-control" placeholder="123 Main Street, Apt 4B" />
+                            </div>
+                            <span asp-validation-for="Street" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-mazeed-secondary w-50" onclick="prevStep(3)">
+                                <i class="bi bi-arrow-left me-1"></i> Back
+                            </button>
+                            <button type="submit" class="btn btn-mazeed-submit w-50">
+                                Complete Registration
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+
+                <!-- Footer Sign In Link -->
+                <p class="text-center small text-muted mt-4 mb-0">
+                    Already have an account? <a asp-action="Login" class="text-mazeed-primary">Sign in</a>
+                </p>
+            </div>
+
+            <!-- Bottom Copyright -->
+            <div class="text-center">
+                <p class="text-muted small mb-0">&copy; 2026 Mazeed Shopping Inc. All rights reserved.</p>
+            </div>
+        </div>
+
+        <!-- Right Panel Partial -->
+        @await Html.PartialAsync("_RightPanel")
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        // --- Dynamic Governorate & City Cascading via Fetch API ---
+        const governorateSelect = document.getElementById('governorateSelect');
+        const citySelect = document.getElementById('citySelect');
+
+        if (governorateSelect && citySelect) {
+            governorateSelect.addEventListener('change', async function () {
+                const governorateId = this.value;
+
+                citySelect.innerHTML = '<option value="">Loading cities...</option>';
+                citySelect.disabled = true;
+
+                if (!governorateId) {
+                    citySelect.innerHTML = '<option value="">Select Governorate First</option>';
+                    return;
+                }
+
+                try {
+                    const url = `@Url.Action("GetCitiesByGovernorate", "Auth")?governorateId=${governorateId}`;
+                    const response = await fetch(url);
+
+                    if (!response.ok) {
+                        throw new Error(`Server returned status: ${response.status}`);
+                    }
+
+                    const cities = await response.json();
+
+                    citySelect.innerHTML = '<option value="">Select City</option>';
+
+                    if (cities && cities.length > 0) {
+                        cities.forEach(city => {
+                            const option = document.createElement('option');
+
+                            // Safe parsing: handles string arrays, camelCase, or PascalCase object DTOs
+                            let val = city;
+                            let text = city;
+
+                            if (typeof city === 'object' && city !== null) {
+                                val = city.name ?? city.Name ?? city.id ?? city.Id;
+                                text = city.name ?? city.Name ?? city.englishName ?? city.EnglishName;
+                            }
+
+                            option.value = val;
+                            option.textContent = text;
+                            citySelect.appendChild(option);
+                        });
+                        citySelect.disabled = false;
+                    } else {
+                        citySelect.innerHTML = '<option value="">No cities available</option>';
+                    }
+                } catch (error) {
+                    console.error('Error loading cities:', error);
+                    citySelect.innerHTML = '<option value="">Error loading cities</option>';
+                }
+            });
+        }
+
+        // --- Enable disabled inputs before submit so browser sends values ---
+        document.getElementById('registerForm')?.addEventListener('submit', function () {
+            if (citySelect) {
+                citySelect.disabled = false;
+            }
+        });
+
+        // --- Step Wizard Logic ---
+        let currentStep = 1;
+
+        function updateStepUI(step) {
+            document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+
+            const progressLine = document.getElementById('progressLine');
+            if (progressLine) {
+                if (step === 1) progressLine.style.width = '0%';
+                else if (step === 2) progressLine.style.width = '50%';
+                else if (step === 3) progressLine.style.width = '100%';
+            }
+
+            for (let i = 1; i <= 3; i++) {
+                const circle = document.getElementById('circle' + i);
+                if (!circle) continue;
+
+                circle.classList.remove('active', 'completed');
+                if (i < step) {
+                    circle.classList.add('completed');
+                    circle.innerHTML = '<i class="bi bi-check-lg"></i>';
+                } else if (i === step) {
+                    circle.classList.add('active');
+                    circle.innerText = i;
+                } else {
+                    circle.innerText = i;
+                }
+            }
+        }
+
+        // --- Validation per Step ---
+        function validateCurrentStep(step) {
+            var $form = $("#registerForm");
+
+            if (!$form.data('validator')) {
+                $.validator.unobtrusive.parse($form);
+            }
+
+            var isValid = true;
+
+            $('#step' + step).find('input, select, textarea').each(function () {
+                if ($(this).is(':button') || $(this).attr('type') === 'submit') return;
+
+                // Validate ASP.NET Unobtrusive fields if data-val exists
+                if ($(this).attr('data-val') === 'true') {
+                    if (!$form.validate().element(this)) {
+                        isValid = false;
+                    }
+                } else if (this.hasAttribute('required')) {
+                    // Fallback for custom controls like governorateSelect
+                    if (!this.checkValidity()) {
+                        isValid = false;
+                        this.reportValidity();
+                    }
+                }
+            });
+
+            return isValid;
+        }
+
+        function nextStep(step) {
+            if (validateCurrentStep(step)) {
+                currentStep = step + 1;
+                updateStepUI(currentStep);
+            }
+        }
+
+        function prevStep(step) {
+            currentStep = step - 1;
+            updateStepUI(currentStep);
+        }
+
+        // --- Password Show/Hide Toggle ---
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+        const passwordInput = document.getElementById('passwordInput');
+        const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+
+        if (togglePasswordBtn && passwordInput && togglePasswordIcon) {
+            togglePasswordBtn.addEventListener('click', function () {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                if (confirmPasswordInput) confirmPasswordInput.setAttribute('type', type);
+
+                togglePasswordIcon.classList.toggle('bi-eye');
+                togglePasswordIcon.classList.toggle('bi-eye-slash');
+            });
+        }
+    </script>
+</body>
+</html>

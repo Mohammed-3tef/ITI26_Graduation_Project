@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Confirm Email";
+    bool isSuccess = ViewBag.Success != null && (bool)ViewBag.Success;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden text-center">
+                <div class="card-body p-4 p-md-5">
+
+                    @if (isSuccess)
+                    {
+                        <!-- Success State -->
+                        <div class="mb-4">
+                            <div class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 text-success rounded-circle p-4" style="width: 80px; height: 80px;">
+                                <i class="bi bi-patch-check-fill fs-1"></i>
+                            </div>
+                        </div>
+
+                        <h2 class="fw-bold text-success mb-3">Email Confirmed!</h2>
+
+                        <p class="text-muted lead mb-4">
+                            Thank you for verifying your email address. Your account is now fully activated and ready to use.
+                        </p>
+
+                        <div class="d-grid gap-2">
+                            <a asp-controller="Auth" asp-action="Login" class="btn btn-success btn-lg rounded-3 fw-semibold">
+                                Proceed to Login
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Failure / Invalid Token State -->
+                        <div class="mb-4">
+                            <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 text-danger rounded-circle p-4" style="width: 80px; height: 80px;">
+                                <i class="bi bi-x-circle-fill fs-1"></i>
+                            </div>
+                        </div>
+
+                        <h2 class="fw-bold text-danger mb-3">Confirmation Failed</h2>
+
+                        <p class="text-muted mb-4">
+                            @(ViewBag.ErrorMessage ?? "The confirmation link is invalid or has expired.")
+                        </p>
+
+                        <div class="d-grid gap-2">
+                            <a asp-controller="Auth" asp-action="Login" class="btn btn-outline-danger btn-lg rounded-3 fw-semibold">
+                                Go to Login
+                            </a>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-link text-decoration-none text-muted">
+                                Return to Home
+                            </a>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

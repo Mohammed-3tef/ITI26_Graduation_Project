@@ -7,7 +7,6 @@ namespace Mazeed.DAL.Repos.Abstraction
         Task<IEnumerable<T>> GetAllAsync();
         Task<T?> GetByIdAsync(int id);
 
-        // ميثود مرنة للبحث بشرط (expression) وإمكانية إدخال Include للـ Navigation Properties
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
 
         Task AddAsync(T entity);
