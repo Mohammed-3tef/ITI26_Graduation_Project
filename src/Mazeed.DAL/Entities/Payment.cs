@@ -26,7 +26,8 @@ namespace Mazeed.DAL.Entities
         public DateTime? PaidAt { get; set; }
 
         // Foreign Key
-        public int OrderId { get; set; }
+        [ForeignKey(nameof(Order))]
+        public long OrderId { get; set; }
         public Order Order { get; set; } = null!;
     }
 }

@@ -30,7 +30,8 @@ namespace Mazeed.DAL.Entities
         public int LowStockThreshold { get; set; } = 5;
 
         // Foreign Key
-        public int ItemId { get; set; }
+        [ForeignKey(nameof(Item))]
+        public long ItemId { get; set; }
         public Item Item { get; set; } = null!;
 
         // Navigation Properties

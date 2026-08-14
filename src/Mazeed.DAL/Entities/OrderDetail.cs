@@ -22,10 +22,12 @@ namespace Mazeed.DAL.Entities
         public decimal TotalPrice => Quantity * PricePerItem;
 
         // Foreign Keys
-        public int OrderId { get; set; }
+        [ForeignKey(nameof(Order))]
+        public long OrderId { get; set; }
         public Order Order { get; set; } = null!;
 
-        public int ItemVariantId { get; set; }
+        [ForeignKey(nameof(ItemVariant))]
+        public long ItemVariantId { get; set; }
         public ItemVariant ItemVariant { get; set; } = null!;
     }
 }

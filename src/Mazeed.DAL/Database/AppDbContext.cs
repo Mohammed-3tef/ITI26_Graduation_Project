@@ -1,19 +1,19 @@
 ﻿using Mazeed.DAL.Entities;
+using Mazeed.DAL.Seeders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mazeed.DAL.Database
 {
-    public class AppDbContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
+    
+    public class AppDbContext : IdentityDbContext<User, IdentityRole<long>, long>
     {
         public AppDbContext() { }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        #region Domain DbSets
-        public DbSet<Shopper> Shoppers { get; set; } = null!;
-        public DbSet<Admin> Admins { get; set; } = null!;
+        #region 
         public DbSet<Brand> Brands { get; set; } = null!;
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Item> Items { get; set; } = null!;
@@ -27,52 +27,48 @@ namespace Mazeed.DAL.Database
         public DbSet<Notification> Notifications { get; set; } = null!;
         #endregion
 
-        #region Join Tables & Feature DbSets
+        #region 
         public DbSet<ItemCategory> ItemCategories { get; set; } = null!;
         public DbSet<ItemReview> ItemReviews { get; set; } = null!;
         public DbSet<ShopperCart> ShopperCarts { get; set; } = null!;
         public DbSet<ShopperFavorite> ShopperFavorites { get; set; } = null!;
-        public DbSet<ShopperNotification> ShopperNotifications { get; set; } = null!;
-        public DbSet<AdminNotification> AdminNotifications { get; set; } = null!;
+        public DbSet<UserNotification> UserNotifications { get; set; } = null!;
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Essential for Identity schema configuration
+            // أساسي جداً لتهيئة جداول Identity
             base.OnModelCreating(modelBuilder);
 
-            #region Identity Custom Table Names (From Develop)
-            modelBuilder.Entity<IdentityUser<int>>(e => e.ToTable("Users"));
-            modelBuilder.Entity<IdentityRole<int>>(e => e.ToTable("Roles"));
-            modelBuilder.Entity<IdentityUserRole<int>>(e => e.ToTable("UserRoles"));
-            modelBuilder.Entity<IdentityUserClaim<int>>(e => e.ToTable("UserClaims"));
-            modelBuilder.Entity<IdentityRoleClaim<int>>(e => e.ToTable("RoleClaims"));
-            modelBuilder.Entity<IdentityUserLogin<int>>(e => e.ToTable("UserLogins"));
-            modelBuilder.Entity<IdentityUserToken<int>>(e => e.ToTable("UserTokens"));
+            #region Identity Custom Table Names (With long Key)
+            modelBuilder.Entity<User>(e => e.ToTable("Users"));
+            modelBuilder.Entity<IdentityRole<long>>(e => e.ToTable("Roles"));
+            modelBuilder.Entity<IdentityUserRole<long>>(e => e.ToTable("UserRoles"));
+            modelBuilder.Entity<IdentityUserClaim<long>>(e => e.ToTable("UserClaims"));
+            modelBuilder.Entity<IdentityRoleClaim<long>>(e => e.ToTable("RoleClaims"));
+            modelBuilder.Entity<IdentityUserLogin<long>>(e => e.ToTable("UserLogins"));
+            modelBuilder.Entity<IdentityUserToken<long>>(e => e.ToTable("UserTokens"));
             #endregion
 
-            #region Composite Keys Configuration (Pure Join Tables)
+            #region Composite Primary Key
             modelBuilder.Entity<ItemCategory>()
                 .HasKey(ic => new { ic.ItemId, ic.CategoryId });
 
             modelBuilder.Entity<ShopperCart>()
-                .HasKey(sc => new { sc.ShopperId, sc.ItemVariantId });
+                .HasKey(sc => new { sc.UserId, sc.ItemVariantId });
 
             modelBuilder.Entity<ShopperFavorite>()
-                .HasKey(sf => new { sf.ShopperId, sf.ItemId });
+                .HasKey(sf => new { sf.UserId, sf.ItemId });
 
-            modelBuilder.Entity<ShopperNotification>()
-                .HasKey(sn => new { sn.ShopperId, sn.NotificationId });
-
-            modelBuilder.Entity<AdminNotification>()
-                .HasKey(an => new { an.AdminId, an.NotificationId });
+            modelBuilder.Entity<UserNotification>()
+                .HasKey(un => new { un.UserId, un.NotificationId });
             #endregion
 
-            #region Relationships & Delete Behaviors
+            #region Relations & Foreign Keys
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Shopper)
-                .WithMany(s => s.Orders)
-                .HasForeignKey(o => o.ShopperId)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<OrderDetail>()
@@ -89,8 +85,8 @@ namespace Mazeed.DAL.Database
 
             modelBuilder.Entity<ItemReview>()
                 .HasOne(ir => ir.Shopper)
-                .WithMany(s => s.Reviews)
-                .HasForeignKey(ir => ir.ShopperId)
+                .WithMany(u => u.Reviews)
+                .HasForeignKey(ir => ir.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Order>()
@@ -104,7 +100,20 @@ namespace Mazeed.DAL.Database
                 .WithMany(iv => iv.OrderDetails)
                 .HasForeignKey(od => od.ItemVariantId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Payment)
+                .WithOne(p => p.Order)
+                .HasForeignKey<Payment>(p => p.OrderId);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Shipment)
+                .WithOne(s => s.Order)
+                .HasForeignKey<Shipment>(s => s.OrderId);
             #endregion
+
+            RoleSeeder.Seed(modelBuilder);
+            UserSeeder.Seed(modelBuilder);
         }
     }
 }

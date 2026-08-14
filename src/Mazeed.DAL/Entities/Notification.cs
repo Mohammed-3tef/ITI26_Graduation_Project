@@ -13,7 +13,7 @@ namespace Mazeed.DAL.Entities
         public string Type { get; set; } = string.Empty; // OrderStatus, Alert, Promotion
 
         // Navigation Properties
-        public ICollection<ShopperNotification> ShopperNotifications { get; set; } = new List<ShopperNotification>();
-        public ICollection<AdminNotification> AdminNotifications { get; set; } = new List<AdminNotification>();
+        public ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
+        
     }
 }

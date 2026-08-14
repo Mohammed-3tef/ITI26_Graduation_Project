@@ -1,10 +1,7 @@
-﻿using Mazeed.DAL.Database;
+﻿using Mazeed.BLL.Extensions;
+using Mazeed.DAL.Database;
 using Mazeed.DAL.Repos.Abstraction;
 using Mazeed.DAL.Repos.Implementation;
-using Mazeed.PL.Extensions;
-using Mazeed.BLL.Extensions;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Mazeed.PL;
 
@@ -14,31 +11,31 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // 1. Controllers
+        // ==========================================
+        // 1. Dependency Injection / Services Area
+        // ==========================================
+
+        // أ) إضافة الـ Controllers والـ Views
         builder.Services.AddControllersWithViews();
 
-        // 2. Extensions
+        // ب) تسجيل باقي الخدمات عبر الـ Extension Methods
+        // (ملف AddInfrastructureServices جواه الـ DbContext والـ Identity والـ Cookies)
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureServices(builder.Configuration);
 
-        // 3. DbContext
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(connectionString));
-
-        // 4. Identity (الحل هنا - يجب أن يتطابق مع IdentityUser<int>)
-        builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
-            .AddEntityFrameworkStores<AppDbContext>()
-            .AddDefaultTokenProviders();
-
-        // 5. Repositories
+        // ج) تسجيل الـ Repositories والـ Unit of Work
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
+        // ==========================================
+        // 2. Build Application
+        // ==========================================
         var app = builder.Build();
 
 
-        // --- Database Seeding Execution ---
+        // ==========================================
+        // 3. Database Seeding Execution (Runtime)
+        // ==========================================
         using (var scope = app.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
@@ -53,25 +50,32 @@ public class Program
             }
         }
 
+
+        // ==========================================
+        // 4. HTTP Request Pipeline (Middlewares)
+        // ==========================================
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error/500");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+
         app.UseRouting();
 
+        // الترتيب: Authentication ثم Authorization
         app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
+        // تشغيل التطبيق
         app.Run();
     }
 }

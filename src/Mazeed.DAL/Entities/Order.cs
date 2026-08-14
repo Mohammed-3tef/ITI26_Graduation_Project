@@ -28,10 +28,12 @@ namespace Mazeed.DAL.Entities
         public decimal ShippingFee { get; set; } = 0;
 
         // Foreign Keys
-        public int ShopperId { get; set; }
-        public Shopper Shopper { get; set; } = null!;
+        [ForeignKey(nameof(Shopper))]
+        public long UserId { get; set; }
+        public User Shopper { get; set; } = null!;
 
-        public int? DiscountRuleId { get; set; }
+        [ForeignKey(nameof(DiscountRule))]
+        public long? DiscountRuleId { get; set; }
         public DiscountRule? DiscountRule { get; set; }
 
         // Navigation Properties
