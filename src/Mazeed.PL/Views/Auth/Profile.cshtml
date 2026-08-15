@@ -138,7 +138,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text bg-light"><i class="fa-solid fa-map-location-dot"></i></span>
                                         <select id="governorateSelect" asp-for="Governorate" asp-items="ViewBag.Governorates" class="form-select" data-selected-governorate="@Model.Governorate">
-                                            <option value="">-- Select Governorate --</option>
+                                            <option value="">Select Governorate</option>
                                         </select>
                                     </div>
                                     <span asp-validation-for="Governorate" class="text-danger small"></span>
@@ -150,7 +150,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text bg-light"><i class="fa-solid fa-city"></i></span>
                                         <select id="citySelect" asp-for="City" class="form-select" data-selected-city="@Model.City">
-                                            <option value="">-- Select City --</option>
+                                            <option value="">Select City</option>
                                         </select>
                                     </div>
                                     <span asp-validation-for="City" class="text-danger small"></span>
@@ -209,89 +209,103 @@
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
     <!-- Cropper.js JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     <script>
-        // Cropper Logic
-        let cropper = null;
-        let selectedFileName = '';
-        const fileInput = document.getElementById('profileImageInput');
-        const imageToCrop = document.getElementById('imageToCrop');
-        const cropModalElement = document.getElementById('cropModal');
-        const cropModal = new bootstrap.Modal(cropModalElement);
-        const cropAndSaveBtn = document.getElementById('cropAndSaveBtn');
-        const avatarPreview = document.getElementById('avatarPreview');
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- CROPPER LOGIC ---
+            let cropper = null;
+            let selectedFileName = '';
+            let currentPreviewObjectUrl = null;
 
-        fileInput.addEventListener('change', function (e) {
-            const files = e.target.files;
-            if (files && files.length > 0) {
-                const file = files[0];
-                selectedFileName = file.name;
+            const fileInput = document.getElementById('profileImageInput');
+            const imageToCrop = document.getElementById('imageToCrop');
+            const cropModalElement = document.getElementById('cropModal');
+            const cropModal = new bootstrap.Modal(cropModalElement);
+            const cropAndSaveBtn = document.getElementById('cropAndSaveBtn');
+            const avatarPreview = document.getElementById('avatarPreview');
 
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    imageToCrop.src = event.target.result;
-                    cropModal.show();
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+            fileInput.addEventListener('change', function (e) {
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                    const file = files[0];
+                    selectedFileName = file.name;
 
-        cropModalElement.addEventListener('shown.bs.modal', function () {
-            cropper = new Cropper(imageToCrop, {
-                aspectRatio: 1,
-                viewMode: 1,
-                autoCropArea: 0.9,
-                responsive: true,
-                background: false
-            });
-        });
-
-        cropModalElement.addEventListener('hidden.bs.modal', function () {
-            if (cropper) {
-                cropper.destroy();
-                cropper = null;
-            }
-            imageToCrop.src = '';
-        });
-
-        cropAndSaveBtn.addEventListener('click', function () {
-            if (!cropper) return;
-
-            const canvas = cropper.getCroppedCanvas({
-                width: 400,
-                height: 400,
-                imageSmoothingEnabled: true,
-                imageSmoothingQuality: 'high'
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        imageToCrop.src = event.target.result;
+                        cropModal.show();
+                    };
+                    reader.readAsDataURL(file);
+                }
             });
 
-            canvas.toBlob(function (blob) {
-                if (!blob) return;
+            cropModalElement.addEventListener('shown.bs.modal', function () {
+                cropper = new Cropper(imageToCrop, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 0.9,
+                    responsive: true,
+                    background: false
+                });
+            });
 
-                const croppedFile = new File([blob], selectedFileName || "profile-image.jpg", {
-                    type: "image/jpeg",
-                    lastModified: Date.now()
+            cropModalElement.addEventListener('hidden.bs.modal', function () {
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+                imageToCrop.src = '';
+                // Reset file input value to allow selecting the same file again if canceled
+                if (!fileInput.files.length) {
+                    fileInput.value = '';
+                }
+            });
+
+            cropAndSaveBtn.addEventListener('click', function () {
+                if (!cropper) return;
+
+                const canvas = cropper.getCroppedCanvas({
+                    width: 400,
+                    height: 400,
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high'
                 });
 
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(croppedFile);
-                fileInput.files = dataTransfer.files;
+                canvas.toBlob(function (blob) {
+                    if (!blob) return;
 
-                avatarPreview.src = URL.createObjectURL(croppedFile);
-                cropModal.hide();
-            }, 'image/jpeg', 0.9);
-        });
+                    const croppedFile = new File([blob], selectedFileName || "profile-image.jpg", {
+                        type: "image/jpeg",
+                        lastModified: Date.now()
+                    });
 
-        // Cascading Governorate -> City AJAX Loading & Auto-Focus
-        document.addEventListener('DOMContentLoaded', function () {
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(croppedFile);
+                    fileInput.files = dataTransfer.files;
+
+                    // Revoke previous object URL to avoid memory leaks
+                    if (currentPreviewObjectUrl) {
+                        URL.revokeObjectURL(currentPreviewObjectUrl);
+                    }
+                    currentPreviewObjectUrl = URL.createObjectURL(croppedFile);
+                    avatarPreview.src = currentPreviewObjectUrl;
+
+                    cropModal.hide();
+                }, 'image/jpeg', 0.9);
+            });
+
+            // --- CASCADING DROPDOWN LOGIC ---
             const governorateSelect = document.getElementById('governorateSelect');
             const citySelect = document.getElementById('citySelect');
 
             const rawGovernorate = governorateSelect.getAttribute('data-selected-governorate');
             const initialCity = citySelect.getAttribute('data-selected-city');
 
-            // 1. إجبار تحديد المحافظة سواء كانت القيمة المخزنة Id أو Name
+            // 1. Select initial governorate if matching value/text is found
             if (rawGovernorate) {
                 for (let option of governorateSelect.options) {
                     if (option.value == rawGovernorate || option.textContent.trim().toLowerCase() === rawGovernorate.trim().toLowerCase()) {
@@ -301,20 +315,26 @@
                 }
             }
 
-            function loadCities(governorateId, selectedCity, setFocus = false) {
+            function loadCities(governorateId, selectedCity) {
                 if (!governorateId) {
-                    citySelect.innerHTML = '<option value="">-- Select City --</option>';
+                    citySelect.innerHTML = '<option value="">Select City</option>';
+                    citySelect.disabled = false;
                     return;
                 }
 
-                fetch(`/Auth/GetCitiesByGovernorate?governorateId=${governorateId}`)
-                    .then(response => response.json())
+                citySelect.disabled = true;
+                citySelect.innerHTML = '<option value="">Loading cities...</option>';
+
+                fetch(`/Auth/GetCitiesByGovernorate?governorateId=${encodeURIComponent(governorateId)}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Failed to load cities');
+                        return response.json();
+                    })
                     .then(data => {
-                        citySelect.innerHTML = '<option value="">-- Select City --</option>';
+                        citySelect.innerHTML = '<option value="">Select City</option>';
 
-                        data.forEach(city => {
+                        data.data.forEach(city => {
                             const option = document.createElement('option');
-
                             const cityId = city.id ?? city.Id;
                             const cityName = city.englishName ?? city.EnglishName ?? city.name ?? city.Name;
 
@@ -330,25 +350,23 @@
 
                             citySelect.appendChild(option);
                         });
-
-                        // 2. عمل Focus على حقل المدينة بعد اكتمال التحميل
-                        if (setFocus) {
-                            setTimeout(() => {
-                                citySelect.focus();
-                            }, 100);
-                        }
                     })
-                    .catch(err => console.error('Error fetching cities:', err));
+                    .catch(err => {
+                        console.error('Error fetching cities:', err);
+                        citySelect.innerHTML = '<option value="">Error loading cities</option>';
+                    })
+                    .finally(() => {
+                        citySelect.disabled = false;
+                    });
             }
 
-            // عند تغيير المحافظة يدويًا
             governorateSelect.addEventListener('change', function () {
-                loadCities(this.value, null, false);
+                loadCities(this.value, null);
             });
 
-            // 3. التحميل التلقائي للمدن والـ Focus عند فتح الصفحة
+            // Auto-load cities if governorate has an initial value
             if (governorateSelect.value) {
-                loadCities(governorateSelect.value, initialCity, true);
+                loadCities(governorateSelect.value, initialCity);
             }
         });
     </script>

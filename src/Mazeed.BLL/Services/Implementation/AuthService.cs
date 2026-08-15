@@ -43,7 +43,8 @@ namespace Mazeed.BLL.Services.Implementation
                 return ServiceResponse<bool>.FailureResponse("Username is already taken.");
 
             var user = _mapper.Map<User>(model);
-            user.CreatedBy = model.UserName;
+            //user.CreatedBy = model.UserName;
+            user.Create(_mapper.Map<User>(model), model.UserName);
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
@@ -120,6 +121,7 @@ namespace Mazeed.BLL.Services.Implementation
 
             return ServiceResponse<SignInResult>.SuccessResponse(result, "Logged in successfully.");
         }
+
         public async Task<ServiceResponse<bool>> LogoutAsync()
         {
             await _signInManager.SignOutAsync();
@@ -164,10 +166,7 @@ namespace Mazeed.BLL.Services.Implementation
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
-            {
-                // Mask non-existence
                 return ServiceResponse<bool>.SuccessResponse(true, "Password reset successful.");
-            }
 
             var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
             if (!result.Succeeded)

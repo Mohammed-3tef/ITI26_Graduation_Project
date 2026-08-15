@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Mazeed.BLL.Helpers;
+using Mazeed.BLL.Responses;
 using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.ViewModels.User;
 using Mazeed.DAL.Entities;
@@ -23,71 +24,86 @@ namespace Mazeed.BLL.Services.Implementation
             _cityRepository = cityRepository;
         }
 
-        public async Task<IEnumerable<UserVM>> GetAllUsersAsync()
+        public async Task<ServiceResponse<IEnumerable<UserVM>>> GetAllUsersAsync()
         {
             var users = await _unitOfWork.Repository<User>().GetAllAsync();
 
-            return _mapper.Map<IEnumerable<UserVM>>(users);
+            return ServiceResponse<IEnumerable<UserVM>>.SuccessResponse(
+                _mapper.Map<IEnumerable<UserVM>>(users),
+                "Users retrieved successfully."
+            );
         }
 
-        public async Task<UserVM?> GetUserByEmailAsync(string email)
+        public async Task<ServiceResponse<UserVM?>> GetUserByEmailAsync(string email)
         {
             var user = await _unitOfWork.Repository<User>().FindAsync(u => u.Email == email);
             var firstUser = user.FirstOrDefault();
-            if (firstUser == null) return null;
+            if (firstUser == null) 
+                return ServiceResponse<UserVM?>.FailureResponse("User not found.");
 
-            return _mapper.Map<UserVM>(firstUser);
+            return ServiceResponse<UserVM?>.SuccessResponse(
+                _mapper.Map<UserVM>(firstUser),
+                "User retrieved successfully."
+            );
         }
 
-        public async Task<UserVM?> GetUserByNameAsync(string name)
+        public async Task<ServiceResponse<UserVM?>> GetUserByNameAsync(string name)
         {
             var user = await _unitOfWork.Repository<User>().FindAsync(u => u.UserName == name);
             var firstUser = user.FirstOrDefault();
-            if (firstUser == null) return null;
+            if (firstUser == null)
+                return ServiceResponse<UserVM?>.FailureResponse("User not found.");
 
-            return _mapper.Map<UserVM>(firstUser);
+            return ServiceResponse<UserVM?>.SuccessResponse(
+                _mapper.Map<UserVM>(firstUser),
+                "User retrieved successfully."
+            );
         }
 
-        public async Task<UserVM?> GetUserByPhoneNumberAsync(string phoneNumber)
+        public async Task<ServiceResponse<UserVM?>> GetUserByPhoneNumberAsync(string phoneNumber)
         {
             var user = await _unitOfWork.Repository<User>().FindAsync(u => u.PhoneNumber == phoneNumber);
             var firstUser = user.FirstOrDefault();
-            if (firstUser == null) return null;
+            if (firstUser == null)
+                return ServiceResponse<UserVM?>.FailureResponse("User not found.");
 
-            return _mapper.Map<UserVM>(firstUser);
+            return ServiceResponse<UserVM?>.SuccessResponse(
+                _mapper.Map<UserVM>(firstUser),
+                "User retrieved successfully."
+            );
         }
 
-        public async Task<bool> UpdateUserProfileAsync(UserVM model)
+        public async Task<ServiceResponse<bool>> UpdateUserProfileAsync(UserVM model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) return false;
+            if (user == null) 
+                return ServiceResponse<bool>.FailureResponse("User not found.");
 
-            // 1. Handle image upload if a new picture is provided
+            // 1. Update properties
+            var city = await _cityRepository.GetByIdAsync(int.Parse(model.City));
+
+            // 2. Handle image upload if a new picture is provided
             if (model.ProfileImage != null)
             {
                 // Delete old image if present
                 if (!string.IsNullOrEmpty(user.ImageUrl))
-                {
                     DocumentSettings.DeleteFile(user.ImageUrl, "users");
-                }
 
-                user.ImageUrl = DocumentSettings.UploadFile(model.ProfileImage, "users");
+                user.Update(
+                    model.FirstName, model.LastName, model.PhoneNumber, model.BirthDate, 
+                    model.Gender, DocumentSettings.UploadFile(model.ProfileImage, "users"), 
+                    city?.Id, city, model.Street, user?.UserName);
+            }
+            else
+            {
+                user.Update(model.FirstName, model.LastName, model.PhoneNumber, model.BirthDate, 
+                    model.Gender, null, city?.Id, city, model.Street, user?.UserName);
             }
 
-            // 2. Update properties
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            user.PhoneNumber = model.PhoneNumber;
-            user.BirthDate = model.BirthDate;
-            user.Gender = model.Gender == "Male" ? 'M' : 'F';
-            user.CityId = int.Parse(model.City);
-            user.City = await _cityRepository.GetByIdAsync(int.Parse(model.City));
-            user.Street = model.Street;
-            user.UpdatedBy = user.UserName;
-            user.UpdatedAt = DateTime.UtcNow;
-
             var result = await _userManager.UpdateAsync(user);
-            return result.Succeeded;
+            return result.Succeeded
+                ? ServiceResponse<bool>.SuccessResponse(true, "User updated successfully.")
+                : ServiceResponse<bool>.FailureResponse("Update user failed.");
         }
     }
 }

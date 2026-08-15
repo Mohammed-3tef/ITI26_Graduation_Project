@@ -215,19 +215,21 @@
                     const response = await fetch(url);
                     if (!response.ok) throw new Error(`Server status: ${response.status}`);
 
-                    const cities = await response.json();
+                    const responseData = await response.json();
+
+                    // Extract array from ServiceResponse data property
+                    const cities = responseData.data ?? responseData.Data ?? responseData;
+
                     citySelect.innerHTML = '<option value="">Select City</option>';
 
-                    if (cities && cities.length > 0) {
+                    if (Array.isArray(cities) && cities.length > 0) {
                         cities.forEach(city => {
                             const option = document.createElement('option');
-                            let val = city, text = city;
-                            if (typeof city === 'object' && city !== null) {
-                                val = city.name ?? city.Name ?? city.id ?? city.Id;
-                                text = city.name ?? city.Name ?? city.englishName ?? city.EnglishName;
-                            }
-                            option.value = val;
-                            option.textContent = text;
+
+                            // Set value to ID and display text to Name
+                            option.value = city.id ?? city.Id;
+                            option.textContent = city.name ?? city.Name ?? city.englishName ?? city.EnglishName;
+
                             citySelect.appendChild(option);
                         });
                         citySelect.disabled = false;

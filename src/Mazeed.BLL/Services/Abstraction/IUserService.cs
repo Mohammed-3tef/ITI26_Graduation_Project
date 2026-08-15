@@ -1,13 +1,14 @@
-﻿using Mazeed.BLL.ViewModels.User;
+﻿using Mazeed.BLL.Responses;
+using Mazeed.BLL.ViewModels.User;
 
 namespace Mazeed.BLL.Services.Abstraction
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserVM>> GetAllUsersAsync();
-        Task<UserVM?> GetUserByEmailAsync(string email);
-        Task<UserVM?> GetUserByNameAsync(string name);
-        Task<UserVM?> GetUserByPhoneNumberAsync(string phoneNumber);
-        Task<bool> UpdateUserProfileAsync(UserVM model);
+        Task<ServiceResponse<IEnumerable<UserVM>>> GetAllUsersAsync();
+        Task<ServiceResponse<UserVM?>> GetUserByEmailAsync(string email);
+        Task<ServiceResponse<UserVM?>> GetUserByNameAsync(string name);
+        Task<ServiceResponse<UserVM?>> GetUserByPhoneNumberAsync(string phoneNumber);
+        Task<ServiceResponse<bool>> UpdateUserProfileAsync(UserVM model);
     }
 }

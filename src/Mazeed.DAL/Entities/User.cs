@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
+using System.IO;
+using System.Reflection;
 
 namespace Mazeed.DAL.Entities
 {
@@ -41,5 +43,42 @@ namespace Mazeed.DAL.Entities
         public ICollection<ShopperFavorite> Favorites { get; set; } = new List<ShopperFavorite>();
         public ICollection<ItemReview> Reviews { get; set; } = new List<ItemReview>();
         public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
+        public void Create(User user, string createdBy)
+        {
+            FirstName = user.FirstName ?? FirstName;
+            LastName = user.LastName ?? LastName;
+            PhoneNumber = user.PhoneNumber ?? PhoneNumber;
+            BirthDate = user.BirthDate ?? BirthDate;
+            Gender = user.Gender ?? Gender;
+            ImageUrl = user.ImageUrl ?? ImageUrl;
+            CityId = user.CityId ?? CityId;
+            City = user.City ?? City;
+            Street = user.Street ?? Street;
+            CreatedBy = createdBy;
+            CreatedAt = DateTime.UtcNow;
+        }
+
+        public void Update(string? firstName, string? lastName, string? phoneNumber, DateOnly? birthDate, string? gender, string? imageUrl, long? cityId, City? city, string? street, string? updatedBy)
+        {
+            FirstName = firstName ?? FirstName;
+            LastName = lastName ?? LastName;
+            PhoneNumber = phoneNumber ?? PhoneNumber;
+            BirthDate = birthDate ?? BirthDate;
+            Gender = gender == "Male" ? 'M' : 'F';
+            ImageUrl = imageUrl ?? ImageUrl;
+            CityId = cityId ?? CityId;
+            City = city ?? City;
+            Street = street ?? Street;
+            UpdatedBy = updatedBy ?? UpdatedBy;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void Delete(string deletedBy)
+        {
+            DeletedBy = deletedBy;
+            DeletedAt = DateTime.UtcNow;
+            IsDeleted = true;
+        }
     }
 }

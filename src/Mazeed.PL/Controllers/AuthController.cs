@@ -54,7 +54,7 @@ namespace Mazeed.PL.Controllers
         public async Task<IActionResult> Register()
         {
             var governorates = await _governorateService.GetAllGovernoratesAsync("en");
-            ViewBag.Governorates = new SelectList(governorates, "Id", "EnglishName");
+            ViewBag.Governorates = new SelectList(governorates.Data, "Id", "EnglishName");
             return View();
         }
 
@@ -64,7 +64,7 @@ namespace Mazeed.PL.Controllers
             if (!ModelState.IsValid)
             {
                 var governorates = await _governorateService.GetAllGovernoratesAsync("en");
-                ViewBag.Governorates = new SelectList(governorates, "Id", "EnglishName");
+                ViewBag.Governorates = new SelectList(governorates.Data, "Id", "EnglishName");
                 return View(model);
             }
 
@@ -154,7 +154,7 @@ namespace Mazeed.PL.Controllers
 
                 var placeholders = new Dictionary<string, string>
                 {
-                    { "UserName", (await _userService.GetUserByEmailAsync(model.Email))?.UserName ?? model.Email.Split('@')[0] },
+                    { "UserName", (await _userService.GetUserByEmailAsync(model.Email))?.Data?.UserName ?? model.Email.Split('@')[0] },
                     { "ResetLink", resetLink! }
                 };
 
@@ -273,9 +273,9 @@ namespace Mazeed.PL.Controllers
             var governorates = await _governorateService.GetAllGovernoratesAsync("en");
 
             // تمرير userModel.Governorate لتحديد المحافظة المختارة
-            ViewBag.Governorates = new SelectList(governorates, "Id", "EnglishName", userModel.Governorate);
+            ViewBag.Governorates = new SelectList(governorates.Data, "Id", "EnglishName", userModel?.Data?.Governorate);
 
-            return View(userModel);
+            return View(userModel?.Data);
         }
 
         [HttpPost, Authorize, ValidateAntiForgeryToken]
@@ -289,21 +289,21 @@ namespace Mazeed.PL.Controllers
             if (!ModelState.IsValid)
             {
                 var governorates = await _governorateService.GetAllGovernoratesAsync("en");
-                ViewBag.Governorates = new SelectList(governorates, "Id", "EnglishName", model.Governorate);
+                ViewBag.Governorates = new SelectList(governorates.Data, "Id", "EnglishName", model.Governorate);
 
                 TempData["Error"] = "Please correct the errors in the form.";
                 return View(model);
             }
 
             var updated = await _userService.UpdateUserProfileAsync(model);
-            if (updated)
+            if (updated.Data)
             {
                 TempData["Success"] = "Your profile has been updated successfully.";
                 return RedirectToAction(nameof(Profile));
             }
 
             var allGovernorates = await _governorateService.GetAllGovernoratesAsync("en");
-            ViewBag.Governorates = new SelectList(allGovernorates, "Id", "EnglishName", model.Governorate);
+            ViewBag.Governorates = new SelectList(allGovernorates.Data, "Id", "EnglishName", model.Governorate);
 
             TempData["Error"] = "Failed to update profile details.";
             return View(model);
