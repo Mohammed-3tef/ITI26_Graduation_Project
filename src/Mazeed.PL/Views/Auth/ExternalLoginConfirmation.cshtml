@@ -1,0 +1,43 @@
+﻿@model Mazeed.BLL.ViewModels.User.ExternalLoginConfirmationVM
+
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Complete Registration";
+}
+
+<div class="my-auto py-4 mx-auto w-100" style="max-width: 440px;">
+    <h1 class="fw-bold fs-2 text-dark mb-1">Almost there!</h1>
+    <p class="text-muted small mb-4">
+        You've authenticated with Google using <strong>@Model.Email</strong>. Choose a username to finalize setting up your account.
+    </p>
+
+    <form id="externalRegisterForm" asp-action="ExternalLoginConfirmation" asp-route-returnUrl="@Context.Request.Query["returnUrl"]" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label small fw-semibold text-dark">Email address</label>
+            <div class="input-icon-wrapper">
+                <i class="bi bi-envelope input-prefix-icon"></i>
+                <input asp-for="Email" class="form-control bg-light" readonly />
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="UserName" class="form-label small fw-semibold text-dark">Username</label>
+            <div class="input-icon-wrapper">
+                <i class="bi bi-at input-prefix-icon"></i>
+                <input asp-for="UserName" class="form-control" placeholder="Choose a username" autofocus />
+            </div>
+            <span asp-validation-for="UserName" class="text-danger small"></span>
+        </div>
+
+        <button type="submit" class="btn btn-mazeed-submit w-100">
+            Complete Account Creation <i class="bi bi-arrow-right ms-1"></i>
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

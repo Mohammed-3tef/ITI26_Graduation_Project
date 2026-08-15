@@ -57,15 +57,26 @@ namespace Mazeed.BLL.Services.Implementation
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmationLink = $"{origin}/Auth/ConfirmEmail?userId={user.Id}&token={Uri.EscapeDataString(token)}";
 
-            await _emailService.SendEmailAsync(
-                user.Email!,
-                "Confirm Your Email",
-                $"<p>Please confirm your account by <a href='{confirmationLink}'>clicking here</a>.</p>");
+            try
+            {
+                var placeholders = new Dictionary<string, string>
+                {
+                    { "UserName", user.UserName ?? user.Email! },
+                    { "ConfirmationLink", confirmationLink }
+                };
+
+                var emailBody = await _emailService.GetEmailTemplateAsync("ConfirmEmailTemplate", placeholders);
+                await _emailService.SendEmailAsync(user.Email!, "Confirm Your Email - Mazeed+", emailBody);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<bool>.SuccessResponse(true, "Registration successful, but we couldn't send the confirmation email right now.");
+            }
 
             return ServiceResponse<bool>.SuccessResponse(true, "Registration successful. Please check your email to confirm your account.");
         }
 
-        public async Task<ServiceResponse<SignInResult>> LoginAsync(LoginVM model)
+        public async Task<ServiceResponse<SignInResult>> LoginAsync(LoginVM model, string origin) // 👈 أضفنا origin
         {
             if (model == null)
                 return ServiceResponse<SignInResult>.FailureResponse("Invalid login request.");
@@ -74,8 +85,34 @@ namespace Mazeed.BLL.Services.Implementation
             if (user == null)
                 return ServiceResponse<SignInResult>.FailureResponse("Invalid email or password.");
 
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (!isPasswordValid)
+                return ServiceResponse<SignInResult>.FailureResponse("Invalid email or password.");
+
             if (!await _userManager.IsEmailConfirmedAsync(user))
-                return ServiceResponse<SignInResult>.FailureResponse("Please confirm your email before logging in.");
+            {
+                try
+                {
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var confirmationLink = $"{origin}/Auth/ConfirmEmail?userId={user.Id}&token={Uri.EscapeDataString(token)}";
+
+                    var placeholders = new Dictionary<string, string>
+                    {
+                        { "UserName", user.UserName ?? user.Email! },
+                        { "ConfirmationLink", confirmationLink }
+                    };
+
+                    var emailBody = await _emailService.GetEmailTemplateAsync("ConfirmEmailTemplate", placeholders);
+                    await _emailService.SendEmailAsync(user.Email!, "Confirm Your Email - Mazeed+", emailBody);
+                }
+                catch (Exception ex)
+                {}
+
+                return ServiceResponse<SignInResult>.SuccessResponse(
+                    SignInResult.NotAllowed,
+                    "Email is not confirmed. A new confirmation link has been sent."
+                );
+            }
 
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: true);
             if (!result.Succeeded)
@@ -83,7 +120,6 @@ namespace Mazeed.BLL.Services.Implementation
 
             return ServiceResponse<SignInResult>.SuccessResponse(result, "Logged in successfully.");
         }
-
         public async Task<ServiceResponse<bool>> LogoutAsync()
         {
             await _signInManager.SignOutAsync();

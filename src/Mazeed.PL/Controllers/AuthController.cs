@@ -2,6 +2,7 @@
 using Mazeed.BLL.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
@@ -12,12 +13,14 @@ namespace Mazeed.PL.Controllers
         private readonly IAuthService _authService;
         private readonly IEmailService _emailService;
         private readonly IGovernorateService _governorateService;
+        private readonly IUserService _userService;
 
-        public AuthController(IAuthService authService, IEmailService emailService, IGovernorateService governorateService)
+        public AuthController(IAuthService authService, IEmailService emailService, IGovernorateService governorateService, IUserService userService)
         {
             _authService = authService;
             _emailService = emailService;
             _governorateService = governorateService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -27,6 +30,25 @@ namespace Mazeed.PL.Controllers
             return Json(cities);
         }
 
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            base.OnActionExecuting(context);
+
+            // If the user is authenticated, redirect them to the Home page for any action except Logout and GetCitiesByGovernorate
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                var actionName = context.RouteData.Values["action"]?.ToString();
+
+                // Exclude Logout and GetCitiesByGovernorate actions from redirection
+                if (!string.Equals(actionName, nameof(Logout), StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(actionName, nameof(GetCitiesByGovernorate), StringComparison.OrdinalIgnoreCase))
+                {
+                    context.Result = RedirectToAction("Index", "Home");
+                }
+            }
+        }
+
+        #region Register
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Register()
         {
@@ -56,9 +78,9 @@ namespace Mazeed.PL.Controllers
             ModelState.AddModelError(string.Empty, result.Message ?? "Registration failed.");
             return View(model);
         }
+        #endregion
 
-        // --- EMAIL CONFIRMATION ---
-
+        #region Email Confirmation
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
@@ -73,9 +95,9 @@ namespace Mazeed.PL.Controllers
             ViewBag.ErrorMessage = result.Message;
             return View();
         }
+        #endregion
 
-        // --- LOGIN ---
-
+        #region Login
         [HttpGet, AllowAnonymous]
         public IActionResult Login() => View();
 
@@ -84,8 +106,16 @@ namespace Mazeed.PL.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var result = await _authService.LoginAsync(model);
-            if (result.Succeeded)
+            var origin = $"{Request.Scheme}://{Request.Host}";
+            var result = await _authService.LoginAsync(model, origin);
+
+            if (result.Data != null && result.Data.IsNotAllowed)
+            {
+                ViewBag.Message = "Your account is not activated yet. A new confirmation link has been sent to your email.";
+                return View("RegisterConfirmation");
+            }
+
+            if (result.Succeeded && result.Data != null && result.Data.Succeeded)
             {
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     return Redirect(returnUrl);
@@ -96,9 +126,9 @@ namespace Mazeed.PL.Controllers
             ModelState.AddModelError(string.Empty, result.Message ?? "Invalid login attempt.");
             return View(model);
         }
+        #endregion
 
-        // --- FORGOT & RESET PASSWORD ---
-
+        #region Forgot & Reset Password
         [HttpGet, AllowAnonymous]
         public IActionResult ForgotPassword() => View();
 
@@ -107,11 +137,25 @@ namespace Mazeed.PL.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
+            if (await _userService.GetUserByEmailAsync(model.Email) == null)
+            {
+                ViewBag.Message = "Your email is not registered.";
+                return View(model);
+            }
+
             var result = await _authService.GeneratePasswordResetTokenAsync(model.Email);
             if (!string.IsNullOrEmpty(result.Data))
             {
                 var resetLink = Url.Action("ResetPassword", "Auth", new { email = model.Email, token = result.Data }, Request.Scheme);
-                await _emailService.SendEmailAsync(model.Email, "Reset Password", $"<p>Reset your password by <a href='{resetLink}'>clicking here</a>.</p>");
+
+                var placeholders = new Dictionary<string, string>
+                {
+                    { "UserName", (await _userService.GetUserByEmailAsync(model.Email))?.UserName ?? model.Email.Split('@')[0] },
+                    { "ResetLink", resetLink! }
+                };
+
+                var emailBody = await _emailService.GetEmailTemplateAsync("ResetPasswordTemplate", placeholders);
+                await _emailService.SendEmailAsync(model.Email, "Reset Password - Mazeed", emailBody);
             }
 
             ViewBag.Message = "If your email is registered, a password reset link has been sent.";
@@ -144,9 +188,9 @@ namespace Mazeed.PL.Controllers
 
         [HttpGet, AllowAnonymous]
         public IActionResult ResetPasswordConfirmation() => View();
+        #endregion
 
-        // --- EXTERNAL LOGIN (GOOGLE) ---
-
+        #region External Login (Google)
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string provider, string? returnUrl = null)
         {
@@ -209,14 +253,15 @@ namespace Mazeed.PL.Controllers
             ModelState.AddModelError(string.Empty, result.Message ?? "External registration failed.");
             return View(model);
         }
+        #endregion
 
-        // --- LOGOUT ---
-
+        #region Logout
         [HttpPost, Authorize, ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await _authService.LogoutAsync();
             return RedirectToAction(nameof(Login));
         }
+        #endregion
     }
 }

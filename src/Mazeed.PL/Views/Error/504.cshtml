@@ -1,46 +1,10 @@
 ﻿@{
-    Layout = null; // Independent layout for standard full-bleed display
-    var errorCode = 504;
-    var errorMessage = "Gateway Timeout";
-    var errorDescription = "The server did not receive a timely response from an upstream server.";
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 504;
+    ViewData["ErrorMessage"] = "Gateway Timeout";
+    ViewData["ErrorDescription"] = "The server did not receive a timely response from an upstream server.";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@errorCode - @errorMessage | Mazeed</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body>
-    <div class="mazeed-split-container">
-        <!-- Left Panel -->
-        <div class="mazeed-left-panel">
-            <div class="brand-logo-container">
-                <a asp-controller="Home" asp-action="Index" class="brand-logo">Mazeed<span>+</span></a>
-            </div>
-
-            <!-- Error Content -->
-            <div class="my-auto py-5" style="max-width: 75%;">
-                <span class="error-badge">Error @errorCode</span>
-                <h1 class="fw-bold display-6 text-dark mb-2">@errorMessage</h1>
-                <p class="text-muted mb-4">@errorDescription</p>
-
-                <div class="d-grid gap-2">
-                    <a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
-                        Back to Home
-                    </a>
-                    <a href="javascript:history.back()" class="btn btn-mazeed-secondary text-center">
-                        Go Back
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right Panel -->
-        @await Html.PartialAsync("_RightPanel")
-    </div>
-</body>
-</html>
+<a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
+    Back to Home
+</a>

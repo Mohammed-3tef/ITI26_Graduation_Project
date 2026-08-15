@@ -1,7 +1,7 @@
 ﻿@{
-    Layout = null; // Independent layout for standard full-bleed display
-    var errorMessage = "Something Went Wrong";
-    var errorDescription = "An unexpected error occurred while processing your request. Please try again later.";
+    var errorCode = ViewData["ErrorCode"] ?? "Error";
+    var errorMessage = ViewData["ErrorMessage"] ?? ViewData["Title"] ?? "An Error Occurred";
+    var errorDescription = ViewData["ErrorDescription"] ?? "An unexpected error has occurred.";
 }
 
 <!DOCTYPE html>
@@ -9,9 +9,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@errorMessage | Mazeed</title>
+    <title>@errorCode - @errorMessage | Mazeed</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <partial name="_Notification" />
@@ -25,13 +26,12 @@
 
             <!-- Error Content -->
             <div class="my-auto py-5" style="max-width: 75%;">
-                <h1 class="fw-bold display-6 text-dark mb-2">Oops! @errorMessage</h1>
+                <span class="error-badge">Error @errorCode</span>
+                <h1 class="fw-bold display-6 text-dark mb-2">@errorMessage</h1>
                 <p class="text-muted mb-4">@errorDescription</p>
 
                 <div class="d-grid gap-2">
-                    <a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
-                        Back to Home
-                    </a>
+                    @RenderBody()
                     <a href="javascript:history.back()" class="btn btn-mazeed-secondary text-center">
                         Go Back
                     </a>
@@ -42,5 +42,7 @@
         <!-- Right Panel -->
         @await Html.PartialAsync("_RightPanel")
     </div>
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

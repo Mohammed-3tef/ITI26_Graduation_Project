@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mazeed.DAL.Entities
+﻿namespace Mazeed.DAL.Entities
 {
     public class EmailSettings
     {
@@ -15,5 +9,6 @@ namespace Mazeed.DAL.Entities
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public bool EnableSsl { get; set; } = true;
+        public string AdminEmail { get; set; } = string.Empty;
     }
 }

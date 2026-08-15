@@ -17,6 +17,7 @@ namespace Mazeed.BLL.Extensions
             services.AddScoped<IGovernorateRepository, GovernorateRepository>();
 
             services.AddScoped<IGovernorateService, GovernorateService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
 
             // Auto Mapper Configuration

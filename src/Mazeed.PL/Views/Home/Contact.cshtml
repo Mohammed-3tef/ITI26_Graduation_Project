@@ -1,0 +1,220 @@
+﻿@model Mazeed.BLL.ViewModels.ContactVM
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Contact Us";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Mazeed</title>
+
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <style>
+        .mazeed-split-container {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .mazeed-left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2.5rem 3.5rem;
+            background-color: #ffffff;
+        }
+
+        .brand-logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-logo span {
+            color: #ef4444;
+        }
+
+        /* Input styling with icons */
+        .input-icon-wrapper {
+            position: relative;
+        }
+
+        .input-icon-wrapper i.input-prefix-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 1rem;
+            z-index: 5;
+        }
+
+        .input-icon-wrapper textarea + i.input-prefix-icon,
+        .input-icon-wrapper.textarea-wrapper i.input-prefix-icon {
+            top: 1.2rem;
+            transform: none;
+        }
+
+        .input-icon-wrapper .form-control {
+            padding-left: 2.75rem;
+            padding-right: 1rem;
+            height: 48px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .input-icon-wrapper textarea.form-control {
+            height: auto;
+            padding-top: 0.85rem;
+        }
+
+        .input-icon-wrapper .form-control:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+        }
+
+        /* Buttons & Links */
+        .btn-mazeed-submit {
+            background-color: #ef4444;
+            border: none;
+            color: #ffffff;
+            font-weight: 600;
+            height: 48px;
+            border-radius: 8px;
+            width: 100%;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .btn-mazeed-submit:hover {
+            background-color: #dc2626;
+            color: #ffffff;
+        }
+
+        .text-mazeed-primary {
+            color: #ef4444 !important;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .text-mazeed-primary:hover {
+            text-decoration: underline;
+        }
+
+        @@media (max-width: 991.98px) {
+            .mazeed-split-container {
+                flex-direction: column;
+            }
+
+            .mazeed-left-panel {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mazeed-split-container">
+
+        <!-- Left Panel Form -->
+        <div class="mazeed-left-panel">
+
+            <!-- Top Header Logo -->
+            <div>
+                <a asp-controller="Home" asp-action="Index" class="brand-logo">Mazeed<span>+</span></a>
+            </div>
+
+            <!-- Main Form Content Area -->
+            <div class="my-auto py-4 mx-auto w-100" style="max-width: 460px;">
+                <h1 class="fw-bold fs-2 text-dark mb-1">Get in touch</h1>
+                <p class="text-muted small mb-4">Have a question or feedback? We'd love to hear from you.</p>
+
+                <!-- Success Alert -->
+                @* @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 8px; background-color: #f0fdf4; color: #166534;">
+                        <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                } *@
+
+                <!-- Contact Form -->
+                <form asp-controller="Home" asp-action="Contact" method="post">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    <!-- Name Field -->
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label small fw-semibold text-dark">Full Name</label>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-person input-prefix-icon"></i>
+                            <input asp-for="Name" class="form-control" placeholder="John Doe" />
+                        </div>
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label small fw-semibold text-dark">Email Address</label>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-envelope input-prefix-icon"></i>
+                            <input asp-for="Email" class="form-control" placeholder="you@domain.com" autocomplete="email" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Subject Field -->
+                    <div class="mb-3">
+                        <label asp-for="Subject" class="form-label small fw-semibold text-dark">Subject</label>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-chat-square-text input-prefix-icon"></i>
+                            <input asp-for="Subject" class="form-control" placeholder="How can we help?" />
+                        </div>
+                        <span asp-validation-for="Subject" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Message Field -->
+                    <div class="mb-4">
+                        <label asp-for="Message" class="form-label small fw-semibold text-dark">Message</label>
+                        <div class="input-icon-wrapper textarea-wrapper">
+                            <i class="bi bi-justify-left input-prefix-icon"></i>
+                            <textarea asp-for="Message" class="form-control" rows="4" placeholder="Type your message or complaint here..."></textarea>
+                        </div>
+                        <span asp-validation-for="Message" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-mazeed-submit d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-send"></i> Send Message
+                    </button>
+                </form>
+
+            </div>
+
+            <!-- Bottom Copyright -->
+            <div class="text-center">
+                <p class="text-muted small mb-0">&copy; 2026 Mazeed Shopping Inc. All rights reserved.</p>
+            </div>
+        </div>
+
+        <!-- Right Panel Partial -->
+        @await Html.PartialAsync("_RightPanel")
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

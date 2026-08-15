@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Mazeed.BLL.ViewModels;
 using Mazeed.BLL.ViewModels.User;
 using Mazeed.DAL.Entities;
 
@@ -10,6 +11,10 @@ namespace Mazeed.BLL.Mappers
         {
             // Add your mapping configurations here
             // Example:
+            CreateMap<ProvinceVM, Province>().ReverseMap();
+            CreateMap<GovernorateVM, Governorate>().ReverseMap();
+            CreateMap<CityVM, City>().ReverseMap();
+
             CreateMap<RegisterVM, User>()
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src =>
                     !string.IsNullOrEmpty(src.Gender)

@@ -1,27 +1,87 @@
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow py-2">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                Mazeed<span class="plus">+</span>
+            <!-- Brand Logo -->
+            <a class="navbar-brand brand-logo fs-4" asp-area="" asp-controller="Home" asp-action="Index">
+                Mazeed<span>+</span>
             </a>
-            <div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+
+            <!-- Toggler for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                    aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Collapsible Content -->
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <!-- Navigation Links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark fw-medium" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
+                </ul>
+
+                <!-- Search Bar -->
+                <div class="me-lg-3 mb-2 mb-lg-0">
+                    <input class="form-control search-input" type="search" name="name" placeholder="Search..." />
                 </div>
-            </div>
-            <div>
-                <input class="search-input" type="text" name="name" value="" placeholder="Search"/>
+
+                <!-- Account Dropdown Menu -->
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <a class="nav-link dropdown-toggle text-dark fw-semibold d-flex align-items-center gap-2"
+                               href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle fs-5 text-mazeed-primary"></i>
+                                <span>@User.Identity.Name</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="userMenu">
+                                <li>
+                                    <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Account" asp-action="Profile">
+                                        <i class="bi bi-person text-muted"></i> My Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Order" asp-action="Index">
+                                        <i class="bi bi-bag text-muted"></i> Orders
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                                        <button type="submit" class="dropdown-item py-2 text-danger d-flex align-items-center gap-2 w-100">
+                                            <i class="bi bi-box-arrow-right"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <a class="nav-link dropdown-toggle text-dark fw-semibold d-flex align-items-center gap-2"
+                               href="#" id="authMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person fs-5"></i>
+                                <span>Account</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="authMenu">
+                                <li>
+                                    <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Auth" asp-action="Login">
+                                        <i class="bi bi-box-arrow-in-right text-mazeed-primary"></i> Sign In
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Auth" asp-action="Register">
+                                        <i class="bi bi-person-plus text-muted"></i> Create Account
+                                    </a>
+                                </li>
+                            </ul>
+                        }
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
