@@ -41,7 +41,8 @@ namespace Mazeed.PL.Controllers
 
                 // Exclude Logout and GetCitiesByGovernorate actions from redirection
                 if (!string.Equals(actionName, nameof(Logout), StringComparison.OrdinalIgnoreCase) &&
-                    !string.Equals(actionName, nameof(GetCitiesByGovernorate), StringComparison.OrdinalIgnoreCase))
+                    !string.Equals(actionName, nameof(GetCitiesByGovernorate), StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(actionName, nameof(Profile), StringComparison.OrdinalIgnoreCase))
                 {
                     context.Result = RedirectToAction("Index", "Home");
                 }
@@ -72,6 +73,7 @@ namespace Mazeed.PL.Controllers
             if (result.Succeeded)
             {
                 ViewBag.Message = result.Message;
+                TempData["Success"] = result.Message;
                 return View("RegisterConfirmation");
             }
 
@@ -88,6 +90,7 @@ namespace Mazeed.PL.Controllers
             if (result.Succeeded)
             {
                 ViewBag.Success = true;
+                TempData["Success"] = result.Message;
                 return View();
             }
 
@@ -112,6 +115,7 @@ namespace Mazeed.PL.Controllers
             if (result.Data != null && result.Data.IsNotAllowed)
             {
                 ViewBag.Message = "Your account is not activated yet. A new confirmation link has been sent to your email.";
+                TempData["Info"] = "Your account is not activated yet. A new confirmation link has been sent to your email.";
                 return View("RegisterConfirmation");
             }
 
@@ -139,7 +143,7 @@ namespace Mazeed.PL.Controllers
 
             if (await _userService.GetUserByEmailAsync(model.Email) == null)
             {
-                ViewBag.Message = "Your email is not registered.";
+                TempData["Error"] = "No user found with the provided email address.";
                 return View(model);
             }
 
@@ -158,7 +162,7 @@ namespace Mazeed.PL.Controllers
                 await _emailService.SendEmailAsync(model.Email, "Reset Password - Mazeed", emailBody);
             }
 
-            ViewBag.Message = "If your email is registered, a password reset link has been sent.";
+            TempData["Success"] = "The password reset link has been sent.";
             return View("ForgotPasswordConfirmation");
         }
 
@@ -179,6 +183,7 @@ namespace Mazeed.PL.Controllers
             var result = await _authService.ResetPasswordAsync(model);
             if (result.Succeeded)
             {
+                TempData["Success"] = "Your password has been reset successfully.";
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
 
@@ -251,6 +256,56 @@ namespace Mazeed.PL.Controllers
             }
 
             ModelState.AddModelError(string.Empty, result.Message ?? "External registration failed.");
+            return View(model);
+        }
+        #endregion
+
+        #region User Profile
+        [HttpGet, Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var username = User.FindFirstValue(ClaimTypes.Name);
+            if (string.IsNullOrEmpty(username)) return RedirectToAction(nameof(Login));
+
+            var userModel = await _userService.GetUserByNameAsync(username);
+            if (userModel == null) return NotFound();
+
+            var governorates = await _governorateService.GetAllGovernoratesAsync("en");
+
+            // تمرير userModel.Governorate لتحديد المحافظة المختارة
+            ViewBag.Governorates = new SelectList(governorates, "Id", "EnglishName", userModel.Governorate);
+
+            return View(userModel);
+        }
+
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Profile(UserVM model)
+        {
+            var username = User.FindFirstValue(ClaimTypes.Name);
+            if (string.IsNullOrEmpty(username)) return RedirectToAction(nameof(Login));
+
+            model.UserName = username;
+
+            if (!ModelState.IsValid)
+            {
+                var governorates = await _governorateService.GetAllGovernoratesAsync("en");
+                ViewBag.Governorates = new SelectList(governorates, "Id", "EnglishName", model.Governorate);
+
+                TempData["Error"] = "Please correct the errors in the form.";
+                return View(model);
+            }
+
+            var updated = await _userService.UpdateUserProfileAsync(model);
+            if (updated)
+            {
+                TempData["Success"] = "Your profile has been updated successfully.";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            var allGovernorates = await _governorateService.GetAllGovernoratesAsync("en");
+            ViewBag.Governorates = new SelectList(allGovernorates, "Id", "EnglishName", model.Governorate);
+
+            TempData["Error"] = "Failed to update profile details.";
             return View(model);
         }
         #endregion

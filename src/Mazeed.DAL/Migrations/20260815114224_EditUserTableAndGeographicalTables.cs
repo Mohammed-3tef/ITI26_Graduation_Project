@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Mazeed.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class EditUserAndAddGeographicalTables : Migration
+    public partial class EditUserTableAndGeographicalTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,6 +33,11 @@ namespace Mazeed.DAL.Migrations
                 name: "Birthdate",
                 table: "Users",
                 newName: "BirthDate");
+
+            migrationBuilder.RenameColumn(
+                name: "ProfilePicture",
+                table: "Users",
+                newName: "ImageUrl");
 
             migrationBuilder.AddColumn<long>(
                 name: "CityId",
@@ -122,7 +127,7 @@ namespace Mazeed.DAL.Migrations
                 keyColumn: "Id",
                 keyValue: 1L,
                 columns: new[] { "CityId", "CreatedAt", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed" },
-                values: new object[] { null, new DateTime(2026, 8, 14, 20, 40, 59, 225, DateTimeKind.Utc).AddTicks(2814), "AQAAAAIAAYagAAAAEHOE7TBQrP2lx7H22OrnPFFPp1R+MCV0HmKqkX2iONi7COZ7OhV9ANnIMJuiTD3v9g==", "01234567890", true });
+                values: new object[] { null, new DateTime(2026, 8, 15, 11, 42, 23, 533, DateTimeKind.Utc).AddTicks(6638), "AQAAAAIAAYagAAAAEN+/6rxBr5lZ4p6ftZGJUxtae5Y11kvahvInEtDNWflstJrzGcv4NNdRheqJoo6ehg==", "01234567890", true });
 
             migrationBuilder.InsertData(
                 table: "Governorates",
@@ -612,6 +617,11 @@ namespace Mazeed.DAL.Migrations
                 name: "BirthDate",
                 table: "Users",
                 newName: "Birthdate");
+
+            migrationBuilder.RenameColumn(
+                name: "ImageUrl",
+                table: "Users",
+                newName: "ProfilePicture");
 
             migrationBuilder.AddColumn<string>(
                 name: "City",

@@ -20,6 +20,7 @@ public class HomeController : Controller
 
     public IActionResult Privacy() => View();
 
+    #region Contact Us
     [HttpGet]
     public IActionResult Contact() => View();
 
@@ -31,7 +32,7 @@ public class HomeController : Controller
         try
         {
             await _emailService.ProcessContactFormAsync(model);
-            TempData["SuccessMessage"] = "Your message has been sent successfully. We will get back to you soon.";
+            TempData["Success"] = "Your message has been sent successfully. We will get back to you soon.";
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
@@ -40,4 +41,5 @@ public class HomeController : Controller
             return View(model);
         }
     }
+    #endregion
 }

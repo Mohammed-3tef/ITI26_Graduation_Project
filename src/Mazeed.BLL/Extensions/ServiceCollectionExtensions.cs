@@ -15,6 +15,7 @@ namespace Mazeed.BLL.Extensions
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IGovernorateRepository, GovernorateRepository>();
+            services.AddScoped<ICityRepository, CityRepository>();
 
             services.AddScoped<IGovernorateService, GovernorateService>();
             services.AddScoped<IUserService, UserService>();

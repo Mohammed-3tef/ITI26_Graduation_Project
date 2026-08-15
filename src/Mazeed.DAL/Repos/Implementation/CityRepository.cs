@@ -14,6 +14,26 @@ namespace Mazeed.DAL.Repos.Implementation
             _context = context;
         }
 
+        public async Task<City?> GetByArabicNameAsync(string name)
+        {
+            return await _context.Set<City>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.ArabicName == name);
+        }
+
+        public Task<City?> GetByEnglishNameAsync(string name)
+        {
+            return _context.Set<City>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.EnglishName == name);
+        }
+
+        public async Task<City?> GetByIdAsync(long id)
+        {
+            return await _context.Set<City>().AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
         public async Task<IEnumerable<City>> GetCitiesWithGovernoratesAsync()
         {
             return await _context.Set<City>()

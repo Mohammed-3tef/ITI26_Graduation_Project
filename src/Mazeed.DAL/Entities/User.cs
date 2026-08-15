@@ -13,7 +13,7 @@ namespace Mazeed.DAL.Entities
         public string LastName { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string? ProfilePicture { get; set; }
+        public string? ImageUrl { get; set; }
 
         public DateOnly? BirthDate { get; set; }
         public char? Gender { get; set; }
@@ -21,7 +21,7 @@ namespace Mazeed.DAL.Entities
         // Shopper Address
         [ForeignKey(nameof(City))]
         public long? CityId { get; set; }
-        public City City { get; set; } = null!;
+        public City? City { get; set; }
 
         [MaxLength(150)]
         public string? Street { get; set; } 

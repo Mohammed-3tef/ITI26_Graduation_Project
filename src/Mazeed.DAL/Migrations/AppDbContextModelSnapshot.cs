@@ -3856,6 +3856,10 @@ namespace Mazeed.DAL.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(1)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -3886,10 +3890,6 @@ namespace Mazeed.DAL.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("ProfilePicture")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -3931,7 +3931,7 @@ namespace Mazeed.DAL.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "e9e4f2b1-6c23-5322-a3bc-987654321def",
-                            CreatedAt = new DateTime(2026, 8, 14, 20, 40, 59, 225, DateTimeKind.Utc).AddTicks(2814),
+                            CreatedAt = new DateTime(2026, 8, 15, 11, 42, 23, 533, DateTimeKind.Utc).AddTicks(6638),
                             CreatedBy = "SystemSeeder",
                             Email = "admin@mazeed.com",
                             EmailConfirmed = true,
@@ -3941,7 +3941,7 @@ namespace Mazeed.DAL.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAZEED.COM",
                             NormalizedUserName = "SYSTEM_ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHOE7TBQrP2lx7H22OrnPFFPp1R+MCV0HmKqkX2iONi7COZ7OhV9ANnIMJuiTD3v9g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN+/6rxBr5lZ4p6ftZGJUxtae5Y11kvahvInEtDNWflstJrzGcv4NNdRheqJoo6ehg==",
                             PhoneNumber = "01234567890",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "d8d3f1a0-5b12-4211-92ab-123456789abc",
