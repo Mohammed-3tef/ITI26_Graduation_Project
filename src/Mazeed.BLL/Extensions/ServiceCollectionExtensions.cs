@@ -16,10 +16,16 @@ namespace Mazeed.BLL.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IGovernorateRepository, GovernorateRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IWishlistRepository, WishlistRepository>();
+            services.AddScoped<IDiscountRuleRepository, DiscountRuleRepository>();
 
             services.AddScoped<IGovernorateService, GovernorateService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IWishlistService, WishlistService>();
+            services.AddScoped<IDiscountService, DiscountService>();
 
             // Auto Mapper Configuration
             services.AddAutoMapper(map => map.AddProfile(new DomainProfile()));
