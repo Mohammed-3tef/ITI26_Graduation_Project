@@ -20,9 +20,14 @@ public class HomeController : Controller
 
     public IActionResult Privacy() => View();
 
-    #region Contact Us
+    #region 
     [HttpGet]
     public IActionResult Contact() => View();
+
+    [HttpGet]
+    public IActionResult About() =>  View(); 
+    public IActionResult Help() => View();
+
 
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Contact(ContactVM model)

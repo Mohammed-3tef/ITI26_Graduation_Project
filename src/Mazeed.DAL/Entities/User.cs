@@ -14,8 +14,7 @@ namespace Mazeed.DAL.Entities
         [Required, MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
 
-        [MaxLength(500)]
-        public string? ImageUrl { get; set; }
+        public byte[]? ProfileImage { get; set; }
 
         public DateOnly? BirthDate { get; set; }
         public char? Gender { get; set; }
@@ -51,7 +50,7 @@ namespace Mazeed.DAL.Entities
             PhoneNumber = user.PhoneNumber ?? PhoneNumber;
             BirthDate = user.BirthDate ?? BirthDate;
             Gender = user.Gender ?? Gender;
-            ImageUrl = user.ImageUrl ?? ImageUrl;
+            ProfileImage = user.ProfileImage ?? ProfileImage;
             CityId = user.CityId ?? CityId;
             City = user.City ?? City;
             Street = user.Street ?? Street;
@@ -59,14 +58,14 @@ namespace Mazeed.DAL.Entities
             CreatedAt = DateTime.UtcNow;
         }
 
-        public void Update(string? firstName, string? lastName, string? phoneNumber, DateOnly? birthDate, string? gender, string? imageUrl, long? cityId, City? city, string? street, string? updatedBy)
+        public void Update(string? firstName, string? lastName, string? phoneNumber, DateOnly? birthDate, string? gender, byte[]? profileImage, long? cityId, City? city, string? street, string? updatedBy)
         {
             FirstName = firstName ?? FirstName;
             LastName = lastName ?? LastName;
             PhoneNumber = phoneNumber ?? PhoneNumber;
             BirthDate = birthDate ?? BirthDate;
             Gender = gender == "Male" ? 'M' : 'F';
-            ImageUrl = imageUrl ?? ImageUrl;
+            ProfileImage = profileImage ?? ProfileImage;
             CityId = cityId ?? CityId;
             City = city ?? City;
             Street = street ?? Street;

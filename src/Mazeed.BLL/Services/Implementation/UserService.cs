@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Mazeed.BLL.Helpers;
 using Mazeed.BLL.Responses;
 using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.ViewModels.User;
@@ -38,7 +37,7 @@ namespace Mazeed.BLL.Services.Implementation
         {
             var user = await _unitOfWork.Repository<User>().FindAsync(u => u.Email == email);
             var firstUser = user.FirstOrDefault();
-            if (firstUser == null) 
+            if (firstUser == null)
                 return ServiceResponse<UserVM?>.FailureResponse("User not found.");
 
             return ServiceResponse<UserVM?>.SuccessResponse(
@@ -76,29 +75,30 @@ namespace Mazeed.BLL.Services.Implementation
         public async Task<ServiceResponse<bool>> UpdateUserProfileAsync(UserVM model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) 
+            if (user == null)
                 return ServiceResponse<bool>.FailureResponse("User not found.");
 
-            // 1. Update properties
             var city = await _cityRepository.GetByIdAsync(int.Parse(model.City));
 
-            // 2. Handle image upload if a new picture is provided
-            if (model.ProfileImage != null)
+            byte[]? imageBytes = null;
+            if (model.ProfileImage != null && model.ProfileImage.Length > 0)
             {
-                // Delete old image if present
-                if (!string.IsNullOrEmpty(user.ImageUrl))
-                    DocumentSettings.DeleteFile(user.ImageUrl, "users");
+                using var memoryStream = new MemoryStream();
+                await model.ProfileImage.CopyToAsync(memoryStream);
+                imageBytes = memoryStream.ToArray();
+            }
 
-                user.Update(
-                    model.FirstName, model.LastName, model.PhoneNumber, model.BirthDate, 
-                    model.Gender, DocumentSettings.UploadFile(model.ProfileImage, "users"), 
-                    city?.Id, city, model.Street, user?.UserName);
-            }
-            else
-            {
-                user.Update(model.FirstName, model.LastName, model.PhoneNumber, model.BirthDate, 
-                    model.Gender, null, city?.Id, city, model.Street, user?.UserName);
-            }
+            user.Update(
+                model.FirstName,
+                model.LastName,
+                model.PhoneNumber,
+                model.BirthDate,
+                model.Gender,
+                imageBytes, // Pass byte array directly
+                city?.Id,
+                city,
+                model.Street,
+                user?.UserName);
 
             var result = await _userManager.UpdateAsync(user);
             return result.Succeeded

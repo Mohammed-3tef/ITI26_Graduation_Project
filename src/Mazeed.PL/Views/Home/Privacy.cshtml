@@ -1,6 +1,210 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+
+<style>
+    /* Styling for Privacy Policy Container */
+    .privacy-wrapper {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+        color: #111827; /* اللون المحدد */
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .privacy-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+        .privacy-header h1 {
+            font-size: 2.25rem;
+            font-weight: 80;
+            color: #111827;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .privacy-header .last-updated {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+    .policy-intro {
+        background-color: #f8fafc;
+        border-left: 4px solid #ff3b30; /* لون العلامة المأخوذ من مزيد+ */
+        padding: 1.25rem 1.5rem;
+        border-radius: 0 12px 12px 0;
+        margin-bottom: 2.5rem;
+        font-size: 0.975rem;
+        color: #111827;
+        line-height: 1.7;
+    }
+
+    .policy-section {
+        margin-bottom: 2.25rem;
+    }
+
+        .policy-section h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.85rem;
+            letter-spacing: -0.01em;
+        }
+
+        .policy-section p {
+            font-size: 0.95rem;
+            color: #111827;
+            line-height: 1.65;
+            margin-bottom: 0.75rem;
+        }
+
+    .policy-list {
+        margin: 0;
+        padding-left: 1.25rem;
+        list-style-type: disc;
+    }
+
+        .policy-list li {
+            font-size: 0.935rem;
+            color: #111827;
+            margin-bottom: 0.65rem;
+            line-height: 1.6;
+        }
+
+            .policy-list li strong {
+                color: #111827;
+                font-weight: 600;
+            }
+
+    .contact-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.925rem;
+        color: #111827;
+        margin-bottom: 0.5rem;
+    }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-item strong {
+            min-width: 130px;
+            color: #111827;
+        }
+</style>
+
+<div class="privacy-wrapper">
+    <!-- Header -->
+    <div class="privacy-header">
+        <h1>Privacy Policy</h1>
+        <p class="last-updated">Effective Date: August 2026 &nbsp;|&nbsp; Last Updated: August 2026</p>
+    </div>
+
+    <!-- Intro Box -->
+    <div class="policy-intro">
+        At <strong>Mazeed+</strong>, we are committed to protecting your privacy and ensuring a transparent, secure online shopping experience. This Privacy Policy outlines how we collect, use, and safeguard your personal information when you use our platform.
+    </div>
+
+    <!-- Section 1 -->
+    <div class="policy-section">
+        <h2>1. Information We Collect</h2>
+        <p>We collect information necessary to process your orders and enhance your shopping journey:</p>
+        <ul class="policy-list">
+            <li><strong>Account Information:</strong> Name, email address, phone number, and account password when you register.</li>
+            <li><strong>Shipping & Order Details:</strong> Delivery address, order history, and preferences required for fulfillment.</li>
+            <li><strong>Payment Information:</strong> Payment card details and transaction history processed securely through encrypted gateway providers.</li>
+            <li><strong>Device & Usage Data:</strong> IP address, browser type, cookies, and browsing history on our site to improve site performance and user experience.</li>
+        </ul>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="policy-section">
+        <h2>2. How We Use Your Information</h2>
+        <p>Your data is strictly used to deliver and improve our services:</p>
+        <ul class="policy-list">
+            <li><strong>Order Processing:</strong> Fulfilling purchases, processing payments, sending invoices, and delivering products to your doorstep.</li>
+            <li><strong>Customer Support:</strong> Resolving inquiries, managing returns, and providing order tracking updates.</li>
+            <li><strong>Personalized Experience:</strong> Recommending tailored products, offers, and deals based on your browsing preferences.</li>
+            <li><strong>Communications:</strong> Sending transactional updates, service notices, and optional promotional newsletters.</li>
+        </ul>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="policy-section">
+        <h2>3. Data Protection & Security</h2>
+        <ul class="policy-list">
+            <li><strong>Encryption:</strong> We utilize industry-standard SSL encryption to secure all personal data and payment transactions during transmission.</li>
+            <li><strong>Access Control:</strong> Only authorized personnel with strict confidentiality obligations have access to user data.</li>
+            <li><strong>No Unlawful Selling:</strong> We <strong>never</strong> sell, rent, or trade your personal information to third parties for marketing purposes.</li>
+        </ul>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="policy-section">
+        <h2>4. Sharing Information with Third Parties</h2>
+        <p>We only share your data with trusted partners essential to providing our service:</p>
+        <ul class="policy-list">
+            <li><strong>Logistics & Delivery Partners:</strong> Courier and shipping services to deliver your physical orders accurately.</li>
+            <li><strong>Payment Gateways:</strong> Secure financial service providers to verify and process online payments.</li>
+            <li><strong>Legal Compliance:</strong> Authorities when required by applicable law, regulation, or court order.</li>
+        </ul>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="policy-section">
+        <h2>5. Cookies & Tracking</h2>
+        <ul class="policy-list">
+            <li><strong>Functional Cookies:</strong> Maintain your shopping cart, remember your preferred language (Arabic/English), and retain theme settings (Light/Dark mode).</li>
+            <li><strong>Analytics Cookies:</strong> Help us analyze traffic patterns and user interactions to optimize website layout and loading speeds.</li>
+            <li><strong>Cookie Control:</strong> You can manage or disable cookie preferences directly through your browser settings at any time.</li>
+        </ul>
+    </div>
+
+    <!-- Section 6 -->
+    <div class="policy-section">
+        <h2>6. Your Rights & Choices</h2>
+        <p>As a registered user, you have full control over your information:</p>
+        <ul class="policy-list">
+            <li><strong>Access & Update:</strong> View, edit, or update your personal account details directly from your Account Dashboard.</li>
+            <li><strong>Data Deletion:</strong> Request the deletion of your personal account and associated data by contacting our support team.</li>
+            <li><strong>Marketing Opt-Out:</strong> Unsubscribe from promotional communications at any time using the link provided in our emails.</li>
+        </ul>
+    </div>
+
+    <!-- Section 7 -->
+    <div class="policy-section">
+        <h2>7. Updates to This Policy</h2>
+        <p>We may update this Privacy Policy periodically to reflect changes in our legal requirements or operational processes. Any revisions will be published on this page with an updated date.</p>
+    </div>
+
+    <!-- Section 8 -->
+    <div class="policy-section">
+        <h2>8. Contact Us</h2>
+        <p>If you have any questions or concerns regarding this Privacy Policy or your data, please contact us:</p>
+        <div class="contact-card">
+            <div class="contact-item">
+                <strong>Email:</strong> support@mazeed.com
+            </div>
+            <div class="contact-item">
+                <strong>Customer Support:</strong> +20 100 000 0000
+            </div>
+        </div>
+    </div>
+</div>

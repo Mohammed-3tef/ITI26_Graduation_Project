@@ -1,43 +1,89 @@
-html {
-  font-size: 14px;
+﻿html {
+ 
+
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+/* Focus States */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* Brand Styling */
 header .navbar-brand {
     font-size: 1.5rem;
     font-weight: 700;
 }
 
-header .plus, footer .plus {
+header .plus,
+footer .plus {
     font-weight: 800;
     color: #EF4444;
 }
 
+/* Search Bar */
 header .search-input {
-    padding: 8px 4px;
+    padding: 8px 16px;
     background-color: #F3F4F6;
-    padding-right: 16px;
-    padding-left: 16px;
     gap: 8px;
     opacity: 1;
     border-radius: 20px;
     border: 0;
     outline: none;
 }
+
+/* =========================================================
+   Navbar Links (Hover, Active & Underline for Main Menu Only)
+   ========================================================= */
+
+/* نطبق التأثير فقط على اللينكات اللي مش dropdown-toggle */
+header .navbar-nav .nav-link:not(.dropdown-toggle) {
+    position: relative;
+    color: #111827 !important;
+    transition: color 0.25s ease-in-out;
+    padding-bottom: 6px !important;
+}
+
+    /* Hover Effect: Red Color (#EF4444) */
+    header .navbar-nav .nav-link:not(.dropdown-toggle):hover {
+        color: #EF4444 !important;
+    }
+
+    /* Underline Setup */
+    header .navbar-nav .nav-link:not(.dropdown-toggle)::after {
+        content: '';
+        position: absolute;
+        width: 0%;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #EF4444;
+        transition: width 0.3s ease-in-out;
+    }
+
+
+
+    /* Active / Clicked State: Keeps Red Color & Underline */
+    header .navbar-nav .nav-link:not(.dropdown-toggle).active {
+        color: #EF4444 !important;
+        font-weight: 600;
+    }
+
+        header .navbar-nav .nav-link:not(.dropdown-toggle).active::after {
+            width: 100%;
+        }
 
 /*------------- FOOTER ----------------*/
 

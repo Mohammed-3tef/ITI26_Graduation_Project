@@ -24,7 +24,9 @@
                         <div class="card border-0 shadow-sm rounded-3 text-center p-4">
                             <div class="position-relative d-inline-block mx-auto mb-3">
                                 <img id="avatarPreview"
-                                     src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/assets/images/users/default-avatar.png" : $"/assets/images/users/{Model.ImageUrl}")"
+                                     src="@(Model.ExistingImage != null && Model.ExistingImage.Length > 0
+                                              ? $"data:image/jpeg;base64,{Convert.ToBase64String(Model.ExistingImage)}"
+                                              : "/assets/images/users/default-avatar.png")"
                                      alt="Profile Picture"
                                      class="rounded-circle img-thumbnail object-fit-cover"
                                      style="width: 140px; height: 140px;" />

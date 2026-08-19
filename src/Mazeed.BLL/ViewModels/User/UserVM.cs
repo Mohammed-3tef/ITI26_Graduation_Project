@@ -45,7 +45,7 @@ namespace Mazeed.BLL.ViewModels.User
         public string Street { get; set; } = null!;
 
         // Holds the current filename stored in the database
-        public string? ImageUrl { get; set; }
+        public byte[]? ExistingImage { get; set; }
 
         [Display(Name = "Profile Picture")]
         public IFormFile? ProfileImage { get; set; }

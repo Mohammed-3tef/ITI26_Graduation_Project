@@ -37,7 +37,10 @@ namespace Mazeed.BLL.Mappers
                         ? src.City.Governorate.Id.ToString()
                         : string.Empty))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src =>
-                    src.City != null ? src.City.Id.ToString() : string.Empty));
+                    src.City != null ? src.City.Id.ToString() : string.Empty))
+                // Prevent mapping byte[] to IFormFile & map byte[] to ExistingImage
+                .ForMember(dest => dest.ProfileImage, opt => opt.Ignore())
+                .ForMember(dest => dest.ExistingImage, opt => opt.MapFrom(src => src.ProfileImage));
 
             // UserVM -> User Mapping
             CreateMap<UserVM, User>()
@@ -46,9 +49,15 @@ namespace Mazeed.BLL.Mappers
                         ? (src.Gender.StartsWith("M", StringComparison.OrdinalIgnoreCase) ? 'M' : 'F')
                         : (char?)null))
                 .ForMember(dest => dest.CityId, opt => opt.MapFrom(src => ParseNullableLong(src.City)))
+<<<<<<< HEAD
                 .ForMember(dest => dest.City, opt => opt.Ignore());
 
             CreateMap<Brand, BrandVM>().ReverseMap();
+=======
+                .ForMember(dest => dest.City, opt => opt.Ignore())
+                // Ignore updating byte[] image via AutoMapper (handled in UserService)
+                .ForMember(dest => dest.ProfileImage, opt => opt.Ignore());
+>>>>>>> 552ffe07e8e1f76ef63665bb87a387633e6ffdf8
         }
 
         private static long? ParseNullableLong(string? value)

@@ -1,0 +1,178 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+}
+
+<style>
+    .about-wrapper {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+        color: #111827;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .about-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+        .about-header h1 {
+            font-size: 2.25rem;
+            font-weight: 80;
+            color: #111827;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .about-header .brand-highlight {
+            color: #ff3b30;
+        }
+
+        .about-header .sub-text {
+            font-size: 0.95rem;
+            color: #6b7280;
+            margin: 0;
+            font-weight: 500;
+        }
+
+    .about-intro {
+        background-color: #f8fafc;
+        border-left: 4px solid #ff3b30;
+        padding: 1.25rem 1.5rem;
+        border-radius: 0 12px 12px 0;
+        margin-bottom: 2.5rem;
+        font-size: 1.05rem;
+        color: #111827;
+        line-height: 1.7;
+        font-weight: 500;
+    }
+
+    .about-section {
+        margin-bottom: 2.5rem;
+    }
+
+        .about-section h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.85rem;
+            letter-spacing: -0.01em;
+        }
+
+        .about-section p {
+            font-size: 0.95rem;
+            color: #111827;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+        }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.25rem;
+        margin-top: 1rem;
+    }
+
+    .value-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .value-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+        }
+
+        .value-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .value-card p {
+            font-size: 0.875rem;
+            color: #111827;
+            margin: 0;
+            line-height: 1.5;
+        }
+    /* Styling for the Value Cards */
+    .value-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        /* إضافة transition ناعمة للتغيير */
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+        /* Hover Effect with Red Shadow (#ef4444) */
+        .value-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(239, 68, 68, 0.4);
+            /* الشادو بالأحمر EF4444 */
+            box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.25), 0 8px 10px -6px rgba(239, 68, 68, 0.15);
+        }
+</style>
+
+<div class="about-wrapper">
+    <!-- Header -->
+    <div class="about-header">
+        <h1>About Mazeed<span class="brand-highlight">+</span></h1>
+        <p class="sub-text">Redefining Your Everyday Shopping Journey</p>
+    </div>
+
+    <!-- Intro Box -->
+    <div class="about-intro">
+        Welcome to <strong>Mazeed+</strong> — your premier online destination designed to deliver a seamless, reliable, and modern e-commerce shopping experience. We bring together high-quality curated products, transparent pricing, and lightning-fast fulfillment all under one roof.
+    </div>
+
+    <!-- Mission & Vision -->
+    <div class="about-section">
+        <h2>Our Mission</h2>
+        <p>
+            At Mazeed+, we believe online shopping should be effortless, intuitive, and enjoyable. Our mission is to connect everyday shoppers with exceptional products through an innovative platform built on trust, efficiency, and customer satisfaction.
+        </p>
+    </div>
+
+    <!-- Core Pillars / Why Choose Us -->
+    <div class="about-section">
+        <h2>Why Choose Mazeed+?</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <h3>🛍️ Curated Quality</h3>
+                <p>Every product listed on our platform is handpicked and verified to meet strict standards of authenticity and craftsmanship.</p>
+            </div>
+            <div class="value-card">
+                <h3>🚀 Fast & Trackable Delivery</h3>
+                <p>Enjoy reliable doorstep shipping with real-time tracking from our fulfillment center directly to your hands.</p>
+            </div>
+            <div class="value-card">
+                <h3>🛡️ Secure Checkout</h3>
+                <p>Shop with confidence using industry-standard SSL encryption and multi-layered security for all transaction channels.</p>
+            </div>
+            <div class="value-card">
+                <h3>🤝 Customer-First Support</h3>
+                <p>Our dedicated support team is always ready to assist you with order inquiries, product guidance, and quick returns.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Our Promise -->
+    <div class="about-section">
+        <h2>Our Commitment</h2>
+        <p>
+            Whether you are looking for the latest tech essentials, everyday lifestyle goods, or exclusive trends, Mazeed+ is built to give you <em>more</em> — more value, more selection, and more satisfaction with every click.
+        </p>
+    </div>
+</div>

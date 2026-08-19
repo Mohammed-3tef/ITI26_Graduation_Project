@@ -206,7 +206,7 @@ namespace Mazeed.BLL.Services.Implementation
             if (string.IsNullOrEmpty(email))
                 return ServiceResponse<bool>.FailureResponse("Email claims not provided by external login.");
 
-            var user = new User { UserName = userName, Email = email, EmailConfirmed = true };
+            var user = new User { UserName = userName, Email = email, EmailConfirmed = true, CreatedBy = "ExternalLogin" };
             var createResult = await _userManager.CreateAsync(user);
 
             if (!createResult.Succeeded)
