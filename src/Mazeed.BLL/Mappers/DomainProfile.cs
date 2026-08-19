@@ -49,15 +49,12 @@ namespace Mazeed.BLL.Mappers
                         ? (src.Gender.StartsWith("M", StringComparison.OrdinalIgnoreCase) ? 'M' : 'F')
                         : (char?)null))
                 .ForMember(dest => dest.CityId, opt => opt.MapFrom(src => ParseNullableLong(src.City)))
-<<<<<<< HEAD
-                .ForMember(dest => dest.City, opt => opt.Ignore());
-
-            CreateMap<Brand, BrandVM>().ReverseMap();
-=======
                 .ForMember(dest => dest.City, opt => opt.Ignore())
                 // Ignore updating byte[] image via AutoMapper (handled in UserService)
                 .ForMember(dest => dest.ProfileImage, opt => opt.Ignore());
->>>>>>> 552ffe07e8e1f76ef63665bb87a387633e6ffdf8
+
+            CreateMap<Brand, BrandVM>().ReverseMap();
+
         }
 
         private static long? ParseNullableLong(string? value)
