@@ -47,6 +47,8 @@ namespace Mazeed.BLL.Mappers
                         : (char?)null))
                 .ForMember(dest => dest.CityId, opt => opt.MapFrom(src => ParseNullableLong(src.City)))
                 .ForMember(dest => dest.City, opt => opt.Ignore());
+
+            CreateMap<Brand, BrandVM>().ReverseMap();
         }
 
         private static long? ParseNullableLong(string? value)

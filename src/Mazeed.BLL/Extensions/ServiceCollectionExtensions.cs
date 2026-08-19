@@ -19,6 +19,7 @@ namespace Mazeed.BLL.Extensions
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IWishlistRepository, WishlistRepository>();
             services.AddScoped<IDiscountRuleRepository, DiscountRuleRepository>();
+            services.AddScoped<IBrandRepository, BrandRepository>();
 
             services.AddScoped<IGovernorateService, GovernorateService>();
             services.AddScoped<IUserService, UserService>();
@@ -26,6 +27,7 @@ namespace Mazeed.BLL.Extensions
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IWishlistService, WishlistService>();
             services.AddScoped<IDiscountService, DiscountService>();
+            services.AddScoped<IBrandService, BrandService>();
 
             // Auto Mapper Configuration
             services.AddAutoMapper(map => map.AddProfile(new DomainProfile()));
