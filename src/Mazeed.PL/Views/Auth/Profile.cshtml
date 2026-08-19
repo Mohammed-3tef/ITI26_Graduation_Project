@@ -7,178 +7,339 @@
 @section Styles {
     <!-- Cropper.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+    <style>
+        .profile-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .nav-tabs-custom {
+            border-bottom: 2px solid #f0f0f0;
+            white-space: nowrap;
+        }
+
+        .nav-tabs-custom .nav-link {
+            border: none;
+            color: #6c757d;
+            font-weight: 600;
+            padding-bottom: 12px;
+            position: relative;
+            background: transparent;
+        }
+
+        .nav-tabs-custom .nav-link.active {
+            color: #e53935;
+            background: transparent;
+        }
+
+        .nav-tabs-custom .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #e53935;
+        }
+
+        .badge-count {
+            background-color: #e53935;
+            color: #fff;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+        }
+
+        .product-card {
+            border: none;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .product-img-wrapper {
+            position: relative;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            margin: 10px;
+            overflow: hidden;
+            height: 220px;
+        }
+
+        .product-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .fav-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e53935;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .category-subtitle {
+            font-size: 0.75rem;
+            color: #9e9e9e;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .btn-dark-custom {
+            background-color: #121624;
+            color: #ffffff;
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 10px;
+        }
+
+        .btn-dark-custom:hover {
+            background-color: #1c2237;
+            color: #ffffff;
+        }
+
+        /* Responsive Improvements */
+        @@media (max-width: 575.98px) {
+            .nav-tabs-custom {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .nav-tabs-custom .nav-item {
+                flex: 0 0 auto;
+            }
+        }
+    </style>
 }
 
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <h2 class="mb-4 fw-bold text-dark">
-                <i class="fa-solid fa-user-gear me-2 text-primary"></i>Account Profile
-            </h2>
+<div class="container py-3 py-md-4">
+    <!-- Top Header Banner -->
+    <div class="profile-card p-3 p-md-4 mb-4">
+        <div class="d-flex flex-column flex-sm-row align-items-center gap-3 gap-md-4 text-center text-sm-start">
+            <div class="position-relative flex-shrink-0">
+                <img id="avatarPreview"
+                     src="@(Model.ExistingImage != null && Model.ExistingImage.Length > 0
+                                                      ? $"data:image/jpeg;base64,{Convert.ToBase64String(Model.ExistingImage)}"
+                                                      : "/assets/images/users/default-avatar.png")"
+                     alt="Profile Picture"
+                     class="rounded-circle object-fit-cover shadow-sm"
+                     style="width: 100px; height: 100px; background-color: #f0f2f5;" />
 
-            <form asp-controller="Auth" asp-action="Profile" method="post" enctype="multipart/form-data">
-                <div class="row g-4">
+                <label for="profileImageInput" class="btn btn-sm btn-light border rounded-circle position-absolute bottom-0 end-0 shadow-sm" title="Edit Avatar">
+                    <i class="fa-solid fa-pen text-secondary small"></i>
+                </label>
+                <input type="file" id="profileImageInput" class="d-none" accept="image/*" />
+            </div>
 
-                    <!-- Left Column: Avatar & Account Summary -->
-                    <div class="col-md-4">
-                        <div class="card border-0 shadow-sm rounded-3 text-center p-4">
-                            <div class="position-relative d-inline-block mx-auto mb-3">
-                                <img id="avatarPreview"
-                                     src="@(Model.ExistingImage != null && Model.ExistingImage.Length > 0
-                                              ? $"data:image/jpeg;base64,{Convert.ToBase64String(Model.ExistingImage)}"
-                                              : "/assets/images/users/default-avatar.png")"
-                                     alt="Profile Picture"
-                                     class="rounded-circle img-thumbnail object-fit-cover"
-                                     style="width: 140px; height: 140px;" />
+            <div class="w-100">
+                <div class="d-flex align-items-center justify-content-center justify-content-sm-start gap-2 mb-1">
+                    <h3 class="fw-bold mb-0 text-dark fs-4 fs-md-3">@Model.UserName</h3>
+                    <button type="button" class="btn btn-link p-0 text-danger border-0" data-bs-toggle="modal" data-bs-target="#editProfileModal" title="Edit Profile">
+                        <i class="fa-solid fa-pen small"></i>
+                    </button>
+                </div>
+                <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start justify-content-center justify-content-sm-start gap-2 gap-sm-4 text-muted small">
+                    <span><i class="fa-regular fa-envelope me-1"></i>@Model.Email</span>
+                    <span><i class="fa-regular fa-calendar me-1"></i>Member since @Model.CreatedAt.ToString("MMM yyyy")</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                <label for="profileImageInput" class="btn btn-sm btn-primary rounded-circle position-absolute bottom-0 end-0 p-2 shadow" title="Upload New Photo">
-                                    <i class="fa-solid fa-camera"></i>
-                                </label>
-                                <input type="file" id="profileImageInput" asp-for="ProfileImage" class="d-none" accept="image/*" />
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs nav-tabs-custom mb-4" id="profileTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active d-flex align-items-center gap-2 px-3" id="favorites-tab" data-bs-toggle="tab" data-bs-target="#favorites" type="button" role="tab">
+                <i class="fa-regular fa-heart"></i> Favorites <span class="badge-count">3</span>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link d-flex align-items-center gap-2 px-3" id="cart-tab" data-bs-toggle="tab" data-bs-target="#cart" type="button" role="tab">
+                <i class="fa-solid fa-cart-shopping"></i> Cart
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link d-flex align-items-center gap-2 px-3" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab">
+                <i class="fa-solid fa-money-bill-1"></i> Orders
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Contents -->
+    <div class="tab-content" id="profileTabsContent">
+        <!-- Favorites Tab -->
+        <div class="tab-pane fade show active" id="favorites" role="tabpanel">
+            <div class="row g-3 g-md-4">
+                <!-- Product 1 -->
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="card product-card h-100">
+                        <div class="product-img-wrapper">
+                            <button class="fav-btn" type="button"><i class="fa-solid fa-heart"></i></button>
+                            <img src="/assets/images/products/headphones.jpg" alt="Headphones" />
+                        </div>
+                        <div class="card-body pt-2 px-3 pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="category-subtitle">ELECTRONICS</span>
+                                <span class="small fw-bold"><i class="fa-solid fa-star text-warning me-1"></i>4.9</span>
                             </div>
-
-                            <h5 class="fw-bold mb-1">@Model.FirstName @Model.LastName</h5>
-                            <p class="text-muted small mb-2">&#064;@Model.UserName</p>
-                            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill small">
-                                <i class="fa-solid fa-envelope me-1 text-secondary"></i>@Model.Email
-                            </span>
-
-                            <span asp-validation-for="ProfileImage" class="text-danger small mt-2 d-block"></span>
+                            <h6 class="fw-bold text-dark mb-2">Mazeed SoundPro Air Headphones</h6>
+                            <div class="d-flex align-items-baseline gap-2 mb-3">
+                                <span class="fs-5 fw-bold text-danger">$189.00</span>
+                                <span class="text-muted text-decoration-line-through small">$249.00</span>
+                            </div>
+                            <button class="btn btn-dark-custom w-100">Details</button>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Right Column: Edit Profile Form -->
-                    <div class="col-md-8">
-                        <div class="card border-0 shadow-sm rounded-3 p-4">
-                            <h5 class="card-title fw-bold border-bottom pb-3 mb-4">Personal Details</h5>
-
-                            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
-
-                            <div class="row g-3">
-                                <!-- First Name -->
-                                <div class="col-md-6">
-                                    <label asp-for="FirstName" class="form-label fw-semibold"></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fa-solid fa-user"></i></span>
-                                        <input asp-for="FirstName" class="form-control" placeholder="Enter first name" />
-                                    </div>
-                                    <span asp-validation-for="FirstName" class="text-danger small"></span>
-                                </div>
-
-                                <!-- Last Name -->
-                                <div class="col-md-6">
-                                    <label asp-for="LastName" class="form-label fw-semibold"></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fa-solid fa-user"></i></span>
-                                        <input asp-for="LastName" class="form-control" placeholder="Enter last name" />
-                                    </div>
-                                    <span asp-validation-for="LastName" class="text-danger small"></span>
-                                </div>
-
-                                <!-- Phone Number -->
-                                <div class="col-md-6">
-                                    <label asp-for="PhoneNumber" class="form-label fw-semibold"></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fa-solid fa-phone"></i></span>
-                                        <input asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" />
-                                    </div>
-                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
-                                </div>
-
-                                <!-- Birth Date -->
-                                <div class="col-md-6">
-                                    <label asp-for="BirthDate" class="form-label fw-semibold"></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fa-solid fa-calendar-days"></i></span>
-                                        <input asp-for="BirthDate" type="date" class="form-control" />
-                                    </div>
-                                    <span asp-validation-for="BirthDate" class="text-danger small"></span>
-                                </div>
-
-                                <!-- Gender -->
-                                <div class="col-md-6">
-                                    <label asp-for="Gender" class="form-label fw-semibold"></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fa-solid fa-venus-mars"></i></span>
-                                        <select asp-for="Gender" class="form-select">
-                                            <option value="">-- Select Gender --</option>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
-                                    </div>
-                                    <span asp-validation-for="Gender" class="text-danger small"></span>
-                                </div>
-
-                                <!-- Username (Readonly) -->
-                                <div class="col-md-6">
-                                    <label asp-for="UserName" class="form-label fw-semibold"></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fa-solid fa-at"></i></span>
-                                        <input asp-for="UserName" class="form-control bg-light" readonly />
-                                    </div>
-                                </div>
-
-                                <!-- Email (Readonly) -->
-                                <div class="col-12">
-                                    <label asp-for="Email" class="form-label fw-semibold"></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fa-solid fa-envelope"></i></span>
-                                        <input asp-for="Email" class="form-control bg-light" readonly />
-                                    </div>
-                                </div>
+                <!-- Product 2 -->
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="card product-card h-100">
+                        <div class="product-img-wrapper">
+                            <button class="fav-btn" type="button"><i class="fa-solid fa-heart"></i></button>
+                            <img src="/assets/images/products/facial-elixir.jpg" alt="Facial Elixir" />
+                        </div>
+                        <div class="card-body pt-2 px-3 pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="category-subtitle">BEAUTY</span>
+                                <span class="small fw-bold"><i class="fa-solid fa-star text-warning me-1"></i>4.9</span>
                             </div>
-
-                            <!-- Address Section -->
-                            <h5 class="card-title fw-bold border-bottom pb-3 my-4">
-                                <i class="fa-solid fa-location-dot text-primary me-2"></i>Address Information
-                            </h5>
-
-                            <div class="row g-3">
-                                <!-- Governorate -->
-                                <div class="col-md-6">
-                                    <label asp-for="Governorate" class="form-label fw-semibold"></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fa-solid fa-map-location-dot"></i></span>
-                                        <select id="governorateSelect" asp-for="Governorate" asp-items="ViewBag.Governorates" class="form-select" data-selected-governorate="@Model.Governorate">
-                                            <option value="">Select Governorate</option>
-                                        </select>
-                                    </div>
-                                    <span asp-validation-for="Governorate" class="text-danger small"></span>
-                                </div>
-
-                                <!-- City -->
-                                <div class="col-md-6">
-                                    <label asp-for="City" class="form-label fw-semibold"></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fa-solid fa-city"></i></span>
-                                        <select id="citySelect" asp-for="City" class="form-select" data-selected-city="@Model.City">
-                                            <option value="">Select City</option>
-                                        </select>
-                                    </div>
-                                    <span asp-validation-for="City" class="text-danger small"></span>
-                                </div>
-
-                                <!-- Street -->
-                                <div class="col-12">
-                                    <label asp-for="Street" class="form-label fw-semibold"></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fa-solid fa-road"></i></span>
-                                        <input asp-for="Street" class="form-control" placeholder="Enter street address" />
-                                    </div>
-                                    <span asp-validation-for="Street" class="text-danger small"></span>
-                                </div>
+                            <h6 class="fw-bold text-dark mb-2">Bio-Restore Facial Elixir Oil</h6>
+                            <div class="d-flex align-items-baseline gap-2 mb-3">
+                                <span class="fs-5 fw-bold text-danger">$34.00</span>
                             </div>
-
-                            <!-- Form Actions -->
-                            <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
-                                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
-                                <button type="submit" class="btn btn-primary px-4">
-                                    <i class="fa-solid fa-floppy-disk me-1"></i> Save Changes
-                                </button>
-                            </div>
+                            <button class="btn btn-dark-custom w-100">Details</button>
                         </div>
                     </div>
+                </div>
 
+                <!-- Product 3 -->
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="card product-card h-100">
+                        <div class="product-img-wrapper">
+                            <button class="fav-btn" type="button"><i class="fa-solid fa-heart"></i></button>
+                            <img src="/assets/images/products/smartwatch.jpg" alt="Smartwatch" />
+                        </div>
+                        <div class="card-body pt-2 px-3 pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="category-subtitle">ELECTRONICS</span>
+                                <span class="small fw-bold"><i class="fa-solid fa-star text-warning me-1"></i>4.9</span>
+                            </div>
+                            <h6 class="fw-bold text-dark mb-2">AeroFit Active Smartwatch</h6>
+                            <div class="d-flex align-items-baseline gap-2 mb-3">
+                                <span class="fs-5 fw-bold text-danger">$119.00</span>
+                                <span class="text-muted text-decoration-line-through small">$159.00</span>
+                            </div>
+                            <button class="btn btn-dark-custom w-100">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Tab Placeholder -->
+        <div class="tab-pane fade" id="cart" role="tabpanel">
+            <div class="profile-card p-4 p-md-5 text-center text-muted">Your cart items will display here.</div>
+        </div>
+
+        <!-- Orders Tab Placeholder -->
+        <div class="tab-pane fade" id="orders" role="tabpanel">
+            <div class="profile-card p-4 p-md-5 text-center text-muted">Your order history will display here.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-bold">Edit Personal Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="profileForm" asp-controller="Auth" asp-action="Profile" method="post" enctype="multipart/form-data">
+                <div class="modal-body p-3 p-md-4">
+                    <input type="file" id="profileImageInputModal" asp-for="ProfileImage" class="d-none" accept="image/*" />
+                    <input type="hidden" asp-for="Email" />
+                    <input type="hidden" asp-for="UserName" />
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="FirstName" class="form-label fw-semibold"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="LastName" class="form-label fw-semibold"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="PhoneNumber" class="form-label fw-semibold"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="BirthDate" class="form-label fw-semibold"></label>
+                            <input asp-for="BirthDate" type="date" class="form-control" />
+                            <span asp-validation-for="BirthDate" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Gender" class="form-label fw-semibold"></label>
+                            <select asp-for="Gender" class="form-select">
+                                <option value="">-- Select Gender --</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Governorate" class="form-label fw-semibold"></label>
+                            <select id="governorateSelect" asp-for="Governorate" asp-items="ViewBag.Governorates" class="form-select" data-selected-governorate="@Model.Governorate">
+                                <option value="">Select Governorate</option>
+                            </select>
+                            <span asp-validation-for="Governorate" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="City" class="form-label fw-semibold"></label>
+                            <select id="citySelect" asp-for="City" class="form-select" data-selected-city="@Model.City">
+                                <option value="">Select City</option>
+                            </select>
+                            <span asp-validation-for="City" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Street" class="form-label fw-semibold"></label>
+                            <input asp-for="Street" class="form-control" />
+                            <span asp-validation-for="Street" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -186,13 +347,11 @@
 </div>
 
 <!-- Image Crop Modal -->
-<div class="modal fade" id="cropModal" tabindex="-1" aria-labelledby="cropModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade" id="cropModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="cropModalLabel">
-                    <i class="fa-solid fa-crop-simple text-primary me-2"></i>Crop Profile Image
-                </h5>
+                <h5 class="modal-title fw-bold">Crop Profile Image</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center p-0 overflow-hidden" style="max-height: 500px; background-color: #f8f9fa;">
@@ -202,9 +361,7 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" id="cropAndSaveBtn" class="btn btn-primary px-4">
-                    <i class="fa-solid fa-check me-1"></i> Crop & Apply
-                </button>
+                <button type="button" id="cropAndSaveBtn" class="btn btn-primary px-4">Crop & Apply</button>
             </div>
         </div>
     </div>
@@ -212,30 +369,27 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
-    <!-- Cropper.js JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // --- CROPPER LOGIC ---
             let cropper = null;
             let selectedFileName = '';
             let currentPreviewObjectUrl = null;
 
             const fileInput = document.getElementById('profileImageInput');
+            const fileInputModal = document.getElementById('profileImageInputModal');
             const imageToCrop = document.getElementById('imageToCrop');
             const cropModalElement = document.getElementById('cropModal');
             const cropModal = new bootstrap.Modal(cropModalElement);
             const cropAndSaveBtn = document.getElementById('cropAndSaveBtn');
             const avatarPreview = document.getElementById('avatarPreview');
+            const profileForm = document.getElementById('profileForm');
 
             fileInput.addEventListener('change', function (e) {
                 const files = e.target.files;
                 if (files && files.length > 0) {
                     const file = files[0];
                     selectedFileName = file.name;
-
                     const reader = new FileReader();
                     reader.onload = function (event) {
                         imageToCrop.src = event.target.result;
@@ -261,7 +415,6 @@
                     cropper = null;
                 }
                 imageToCrop.src = '';
-                // Reset file input value to allow selecting the same file again if canceled
                 if (!fileInput.files.length) {
                     fileInput.value = '';
                 }
@@ -285,29 +438,53 @@
                         lastModified: Date.now()
                     });
 
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(croppedFile);
-                    fileInput.files = dataTransfer.files;
+                    // Prepare FormData
+                    const formData = new FormData();
+                    formData.append('image', croppedFile);
 
-                    // Revoke previous object URL to avoid memory leaks
-                    if (currentPreviewObjectUrl) {
-                        URL.revokeObjectURL(currentPreviewObjectUrl);
+                    // Append AntiForgeryToken directly to FormData
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                    if (token) {
+                        formData.append('__RequestVerificationToken', token);
                     }
-                    currentPreviewObjectUrl = URL.createObjectURL(croppedFile);
-                    avatarPreview.src = currentPreviewObjectUrl;
 
-                    cropModal.hide();
+                    fetch('/Auth/UpdateProfileImage', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Server returned HTTP status ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            if (currentPreviewObjectUrl) {
+                                URL.revokeObjectURL(currentPreviewObjectUrl);
+                            }
+                            currentPreviewObjectUrl = URL.createObjectURL(croppedFile);
+                            avatarPreview.src = currentPreviewObjectUrl;
+
+                            cropModal.hide();
+                        } else {
+                            alert(data.message || 'An error occurred while uploading the image.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Upload Error:', err);
+                        alert('Failed to connect to the server or invalid response received.');
+                    });
+
                 }, 'image/jpeg', 0.9);
             });
 
-            // --- CASCADING DROPDOWN LOGIC ---
+            // Cascading Dropdown Logic
             const governorateSelect = document.getElementById('governorateSelect');
             const citySelect = document.getElementById('citySelect');
-
             const rawGovernorate = governorateSelect.getAttribute('data-selected-governorate');
             const initialCity = citySelect.getAttribute('data-selected-city');
 
-            // 1. Select initial governorate if matching value/text is found
             if (rawGovernorate) {
                 for (let option of governorateSelect.options) {
                     if (option.value == rawGovernorate || option.textContent.trim().toLowerCase() === rawGovernorate.trim().toLowerCase()) {
@@ -334,7 +511,6 @@
                     })
                     .then(data => {
                         citySelect.innerHTML = '<option value="">Select City</option>';
-
                         data.data.forEach(city => {
                             const option = document.createElement('option');
                             const cityId = city.id ?? city.Id;
@@ -349,7 +525,6 @@
                             )) {
                                 option.selected = true;
                             }
-
                             citySelect.appendChild(option);
                         });
                     })
@@ -366,7 +541,6 @@
                 loadCities(this.value, null);
             });
 
-            // Auto-load cities if governorate has an initial value
             if (governorateSelect.value) {
                 loadCities(governorateSelect.value, initialCity);
             }

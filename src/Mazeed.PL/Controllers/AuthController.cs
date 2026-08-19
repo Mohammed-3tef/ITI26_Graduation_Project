@@ -34,15 +34,16 @@ namespace Mazeed.PL.Controllers
         {
             base.OnActionExecuting(context);
 
-            // If the user is authenticated, redirect them to the Home page for any action except Logout and GetCitiesByGovernorate
+            // If the user is authenticated, redirect them to the Home page for any action except exempted ones
             if (User.Identity?.IsAuthenticated == true)
             {
                 var actionName = context.RouteData.Values["action"]?.ToString();
 
-                // Exclude Logout and GetCitiesByGovernorate actions from redirection
+                // Exclude Logout, GetCitiesByGovernorate, Profile, and UpdateProfileImage actions from redirection
                 if (!string.Equals(actionName, nameof(Logout), StringComparison.OrdinalIgnoreCase) &&
                     !string.Equals(actionName, nameof(GetCitiesByGovernorate), StringComparison.OrdinalIgnoreCase) &&
-                    !string.Equals(actionName, nameof(Profile), StringComparison.OrdinalIgnoreCase))
+                    !string.Equals(actionName, nameof(Profile), StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(actionName, nameof(UpdateProfileImage), StringComparison.OrdinalIgnoreCase))
                 {
                     context.Result = RedirectToAction("Index", "Home");
                 }
@@ -307,6 +308,20 @@ namespace Mazeed.PL.Controllers
 
             TempData["Error"] = "Failed to update profile details.";
             return View(model);
+        }
+
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProfileImage(IFormFile image)
+        {
+            if (image == null || image.Length == 0)
+                return Json(new { success = false, message = "Please select a valid image." });
+
+            var username = User.FindFirstValue(ClaimTypes.Name);
+            if (string.IsNullOrEmpty(username))
+                return Json(new { success = false, message = "Unauthorized user." });
+
+            var result = await _userService.UpdateUserProfileImageAsync(username, image);
+            return Json(new { success = result.Succeeded, message = result.Message });
         }
         #endregion
 
