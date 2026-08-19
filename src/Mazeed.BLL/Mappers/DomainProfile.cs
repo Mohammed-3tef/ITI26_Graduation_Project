@@ -52,6 +52,9 @@ namespace Mazeed.BLL.Mappers
                 .ForMember(dest => dest.City, opt => opt.Ignore())
                 // Ignore updating byte[] image via AutoMapper (handled in UserService)
                 .ForMember(dest => dest.ProfileImage, opt => opt.Ignore());
+
+            CreateMap<Brand, BrandVM>().ReverseMap();
+
         }
 
         private static long? ParseNullableLong(string? value)
