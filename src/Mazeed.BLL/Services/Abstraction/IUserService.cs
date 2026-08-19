@@ -1,5 +1,6 @@
 ﻿using Mazeed.BLL.Responses;
 using Mazeed.BLL.ViewModels.User;
+using Microsoft.AspNetCore.Http;
 
 namespace Mazeed.BLL.Services.Abstraction
 {
@@ -10,5 +11,6 @@ namespace Mazeed.BLL.Services.Abstraction
         Task<ServiceResponse<UserVM?>> GetUserByNameAsync(string name);
         Task<ServiceResponse<UserVM?>> GetUserByPhoneNumberAsync(string phoneNumber);
         Task<ServiceResponse<bool>> UpdateUserProfileAsync(UserVM model);
+        Task<ServiceResponse<bool>> UpdateUserProfileImageAsync(string username, IFormFile image);
     }
 }

@@ -4,6 +4,7 @@ using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.ViewModels.User;
 using Mazeed.DAL.Entities;
 using Mazeed.DAL.Repos.Abstraction;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace Mazeed.BLL.Services.Implementation
@@ -80,7 +81,10 @@ namespace Mazeed.BLL.Services.Implementation
 
             var city = await _cityRepository.GetByIdAsync(int.Parse(model.City));
 
-            byte[]? imageBytes = null;
+            // Retain existing image byte array by default
+            byte[]? imageBytes = user.ProfileImage;
+
+            // Only overwrite if a new photo file was actually selected & uploaded
             if (model.ProfileImage != null && model.ProfileImage.Length > 0)
             {
                 using var memoryStream = new MemoryStream();
@@ -94,7 +98,7 @@ namespace Mazeed.BLL.Services.Implementation
                 model.PhoneNumber,
                 model.BirthDate,
                 model.Gender,
-                imageBytes, // Pass byte array directly
+                imageBytes,
                 city?.Id,
                 city,
                 model.Street,
@@ -104,6 +108,23 @@ namespace Mazeed.BLL.Services.Implementation
             return result.Succeeded
                 ? ServiceResponse<bool>.SuccessResponse(true, "User updated successfully.")
                 : ServiceResponse<bool>.FailureResponse("Update user failed.");
+        }
+
+        public async Task<ServiceResponse<bool>> UpdateUserProfileImageAsync(string username, IFormFile image)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                return ServiceResponse<bool>.FailureResponse("المستخدم غير موجود.");
+
+            using var memoryStream = new MemoryStream();
+            await image.CopyToAsync(memoryStream);
+
+            user.ProfileImage = memoryStream.ToArray();
+
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded
+                ? ServiceResponse<bool>.SuccessResponse(true, "تم تحديث الصورة بنجاح.")
+                : ServiceResponse<bool>.FailureResponse("فشل تحديث الصورة.");
         }
     }
 }

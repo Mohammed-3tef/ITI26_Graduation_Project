@@ -49,5 +49,7 @@ namespace Mazeed.BLL.ViewModels.User
 
         [Display(Name = "Profile Picture")]
         public IFormFile? ProfileImage { get; set; }
+
+        public DateTime CreatedAt { get; set; }
     }
 }
