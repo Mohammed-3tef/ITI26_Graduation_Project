@@ -1,0 +1,279 @@
+﻿@{
+    ViewData["Title"] = "Help";
+}
+
+<style>
+    .help-wrapper {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+        color: #111827;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Hero Banner */
+    .help-hero {
+        text-align: center;
+        background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+        color: #ffffff;
+        padding: 3rem 1.5rem;
+        border-radius: 16px;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+        .help-hero h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.025em;
+        }
+
+        .help-hero .brand-highlight {
+            color: #ef4444;
+        }
+
+        .help-hero p {
+            font-size: 1rem;
+            color: #9ca3af;
+            margin: 0;
+        }
+
+    /* Section Titles */
+    .section-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 1.25rem;
+        letter-spacing: -0.01em;
+    }
+
+    /* Topic Cards Grid */
+    .topics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 3rem;
+    }
+
+    .topic-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: left;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+        .topic-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(239, 68, 68, 0.4);
+            box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.15), 0 8px 10px -6px rgba(239, 68, 68, 0.1);
+        }
+
+    .topic-icon {
+        width: 44px;
+        height: 44px;
+        background-color: #fef2f2;
+        color: #ef4444;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .topic-card h3 {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0.4rem;
+    }
+
+    .topic-card p {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* FAQ Accordion Styling */
+    .faq-section {
+        margin-bottom: 3rem;
+    }
+
+    .faq-item {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        padding: 1.25rem 1.5rem;
+        transition: border-color 0.2s ease;
+    }
+
+        .faq-item:hover {
+            border-color: #d1d5db;
+        }
+
+    .faq-question {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .faq-answer {
+        font-size: 0.925rem;
+        color: #4b5563;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Contact Banner */
+    .contact-card {
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+    }
+
+        .contact-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card p {
+            font-size: 0.925rem;
+            color: #6b7280;
+            margin-bottom: 1.25rem;
+        }
+
+    .btn-contact {
+        background-color: #ef4444;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 0.65rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+        .btn-contact:hover {
+            background-color: #dc2626;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+</style>
+
+<div class="help-wrapper">
+
+    <!-- Hero Section -->
+    <div class="help-hero">
+        <h1>How can we help you, <span class="brand-highlight">Mazeed+</span> shopper?</h1>
+        <p>Explore our guides, FAQs, or contact our support team directly.</p>
+    </div>
+
+    <!-- Quick Help Categories -->
+    <h2 class="section-title">Browse Support Topics</h2>
+    <div class="topics-grid">
+        <a href="#orders" class="topic-card">
+            <div class="topic-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <h3>Orders & Tracking</h3>
+            <p>Track packages, modify active orders, or check delivery timelines.</p>
+        </a>
+
+        <a href="#shipping" class="topic-card">
+            <div class="topic-icon">
+                <i class="bi bi-truck"></i>
+            </div>
+            <h3>Shipping & Delivery</h3>
+            <p>Learn about shipping methods, fees, and coverage areas.</p>
+        </a>
+
+        <a href="#returns" class="topic-card">
+            <div class="topic-icon">
+                <i class="bi bi-arrow-return-left"></i>
+            </div>
+            <h3>Returns & Refunds</h3>
+            <p>Understand our 14-day return policy and refund processes.</p>
+        </a>
+
+        <a href="#account" class="topic-card">
+            <div class="topic-icon">
+                <i class="bi bi-shield-lock"></i>
+            </div>
+            <h3>Account & Security</h3>
+            <p>Manage your profile, reset password, and address safety.</p>
+        </a>
+    </div>
+
+    <!-- Frequently Asked Questions -->
+    <div class="faq-section">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="bi bi-question-circle-fill text-danger"></i>
+                How do I track my order status?
+            </div>
+            <p class="faq-answer">
+                You can easily track your order by navigating to <strong>My Account > Orders</strong>. Click on any active order to view real-time status updates and shipping details.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="bi bi-question-circle-fill text-danger"></i>
+                What is the return policy at Mazeed+?
+            </div>
+            <p class="faq-answer">
+                We offer a hassle-free <strong>14-day return window</strong> for most items, provided they are unused, in original packaging, and accompanied by proof of purchase.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="bi bi-question-circle-fill text-danger"></i>
+                What payment methods do you accept?
+            </div>
+            <p class="faq-answer">
+                We accept major Credit/Debit Cards (Visa, MasterCard), Cash on Delivery (COD), and secure online wallet payments during checkout.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="bi bi-question-circle-fill text-danger"></i>
+                How long does delivery take?
+            </div>
+            <p class="faq-answer">
+                Standard delivery typically takes <strong>2 to 4 business days</strong> depending on your location. Express delivery options are available at checkout.
+            </p>
+        </div>
+    </div>
+
+    <!-- Contact Support CTA -->
+    <div class="contact-card">
+        <h3>Still need help?</h3>
+        <p>Our support team is available 24/7 to assist you with any questions or order issues.</p>
+        <a href="mailto:support@mazeed.com" class="btn-contact">
+            <i class="bi bi-envelope-fill"></i> Contact Support
+        </a>
+    </div>
+
+</div>
