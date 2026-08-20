@@ -54,7 +54,16 @@ namespace Mazeed.BLL.Mappers
                 .ForMember(dest => dest.ProfileImage, opt => opt.Ignore());
 
             CreateMap<Brand, BrandVM>().ReverseMap();
+            CreateMap<Category, CategoryVM>().ReverseMap();
+            CreateMap<Item, ItemVM>()
+    .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand != null ? src.Brand.Name : string.Empty))
+    .ForMember(dest => dest.CategoryIds, opt => opt.MapFrom(src => src.ItemCategories.Select(ic => ic.CategoryId)))
+    .ForMember(dest => dest.CategoryNames, opt => opt.MapFrom(src => src.ItemCategories.Select(ic => ic.Category.Name)));
 
+            CreateMap<ItemVM, Item>()
+                .ForMember(dest => dest.Brand, opt => opt.Ignore())
+                .ForMember(dest => dest.ItemCategories, opt => opt.MapFrom(src =>
+                    src.CategoryIds.Select(cId => new ItemCategory { CategoryId = cId })));
         }
 
         private static long? ParseNullableLong(string? value)

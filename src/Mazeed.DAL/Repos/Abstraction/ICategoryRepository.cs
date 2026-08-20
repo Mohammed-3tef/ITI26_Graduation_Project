@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Mazeed.DAL.Entities;
 
 namespace Mazeed.DAL.Repos.Abstraction
 {
-    internal interface Interface1
+    public interface ICategoryRepository : IGenericRepository<Category>
     {
     }
 }
