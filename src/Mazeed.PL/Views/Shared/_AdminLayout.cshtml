@@ -1,0 +1,369 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <partial name="_MetaDataPartial" />
+    <title>@ViewData["Title"] - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background-color: #ffffff;
+            border-right: 1px solid #e9ecef;
+            flex-shrink: 0;
+        }
+
+            .sidebar .profile-section {
+                padding: 30px 15px;
+                text-align: center;
+            }
+
+            .sidebar .avatar-wrapper {
+                position: relative;
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 10px;
+                cursor: pointer;
+            }
+
+            .sidebar .avatar-img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid #e9ecef;
+            }
+
+            .sidebar .avatar-placeholder {
+                width: 100%;
+                height: 100%;
+                background-color: #e9ecef;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #adb5bd;
+                font-size: 32px;
+            }
+
+            .sidebar .avatar-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.4);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                opacity: 0;
+                transition: opacity 0.2s ease-in-out;
+            }
+
+            .sidebar .avatar-wrapper:hover .avatar-overlay {
+                opacity: 1;
+            }
+
+            .sidebar .nav-link {
+                color: #8d99ae;
+                font-size: 1.1rem;
+                padding: 12px 25px;
+                border-left: 4px solid transparent;
+            }
+
+                .sidebar .nav-link.active {
+                    color: #ff4d4d;
+                    background-color: #ffe6e6;
+                    border-left-color: #ff4d4d;
+                    font-weight: 600;
+                }
+
+        .top-nav {
+            background: #fff;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+            .top-nav .nav-link {
+                color: #495057;
+                font-weight: 500;
+                padding: 12px 20px;
+                border-bottom: 3px solid transparent;
+            }
+
+                .top-nav .nav-link.active {
+                    color: #ff4d4d;
+                    border-bottom-color: #ff4d4d;
+                }
+
+        .kpi-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e0e6ed;
+            border-top: 4px solid #1a73e8;
+        }
+
+        .dashboard-container {
+            background: #f0f4f8;
+            border-radius: 16px;
+            padding: 15px;
+        }
+
+        @@media (min-width: 768px) {
+            .dashboard-container {
+                border-radius: 24px;
+                padding: 25px;
+            }
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex flex-column flex-lg-row min-vh-100">
+        <!-- Mobile Top Navbar Toggle -->
+        <div class="d-lg-none bg-white border-bottom p-3 d-flex align-items-center justify-content-between">
+            <span class="fw-bold fs-5 text-danger">Mazeed Admin</span>
+            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Sidebar (Offcanvas on Mobile, Normal Sidebar on Desktop) -->
+        <div class="offcanvas-lg offcanvas-start sidebar" tabindex="-1" id="sidebarOffcanvas">
+            <div class="offcanvas-header d-lg-none border-bottom">
+                <h5 class="offcanvas-title fw-bold">Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarOffcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body d-block p-0">
+                <div class="profile-section">
+                    <div class="avatar-wrapper" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        @if (Model != null && Model?.ExistingImage != null && Model?.ExistingImage.Length > 0)
+                        {
+                            string base64 = Convert.ToBase64String(Model?.ExistingImage);
+                            <img src="data:image/png;base64,@base64" class="avatar-img" id="sidebarAvatar" alt="Profile" />
+                        }
+                        else
+                        {
+                            <div class="avatar-placeholder" id="sidebarAvatarPlaceholder">
+                                <i class="fa-regular fa-user"></i>
+                            </div>
+                        }
+                        <div class="avatar-overlay">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                    </div>
+
+                    <h6 class="mb-0 fw-bold">
+                        @(Model != null && !string.IsNullOrEmpty(Model?.FirstName) ? $"{Model?.FirstName} {Model?.LastName}" : "Admin Name")
+                    </h6>
+                    <small class="text-muted d-block mb-2">@(Model?.Email ?? "admin@mazeed.com")</small>
+
+                    <button class="btn btn-sm btn-outline-danger px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="fa-solid fa-pen-to-square me-1"></i> Edit Profile
+                    </button>
+                </div>
+
+                <nav class="nav flex-column mt-2">
+                    <a class="nav-link active" asp-controller="Admin" asp-action="Index">Dashboard</a>
+                    <a class="nav-link" asp-controller="Admin" asp-action="Catalog">Catalog</a>
+                    <a class="nav-link" asp-controller="Admin" asp-action="Sales">Sales & Orders</a>
+                    <a class="nav-link" asp-controller="Admin" asp-action="Users">Users & Roles</a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow-1 w-100 overflow-hidden">
+            <div class="top-nav d-flex justify-content-center">
+                <ul class="nav">
+                    <li class="nav-item"><a class="nav-link" href="#">Sales</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#">Stock</a></li>
+                </ul>
+            </div>
+
+            <div class="p-3 p-md-4">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <partial name="_Footer" />
+
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-bold" id="editProfileModalLabel">
+                        <i class="fa-solid fa-user-gear me-2"></i>Edit Profile
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form asp-controller="Admin" asp-action="EditProfile" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Email" value="@Model?.Email" />
+                    <input type="hidden" name="UserName" value="@Model?.UserName" />
+
+                    <div class="modal-body p-3 p-md-4">
+                        <!-- Image Upload Preview -->
+                        <div class="text-center mb-4">
+                            <div class="mx-auto mb-2" style="width: 100px; height: 100px; position: relative;">
+                                @if (Model != null && Model?.ExistingImage != null && Model?.ExistingImage.Length > 0)
+                                {
+                                    string modalBase64 = Convert.ToBase64String(Model?.ExistingImage);
+                                    <img id="modalImgPreview" src="data:image/png;base64,@modalBase64" class="rounded-circle w-100 h-100 object-fit-cover border" alt="Preview" />
+                                }
+                                else
+                                {
+                                    <img id="modalImgPreview" src="~/assets/images/users/default-avatar.png" class="rounded-circle w-100 h-100 object-fit-cover border" alt="Preview" />
+                                }
+                            </div>
+                            <label for="ProfileImage" class="btn btn-sm btn-outline-primary rounded-pill">
+                                <i class="fa-solid fa-upload me-1"></i> Change Photo
+                            </label>
+                            <input type="file" id="ProfileImage" name="ProfileImage" class="d-none" accept="image/*" onchange="previewImage(this)" />
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold">First Name</label>
+                                <input type="text" name="FirstName" class="form-control" value="@Model?.FirstName" required />
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold">Last Name</label>
+                                <input type="text" name="LastName" class="form-control" value="@Model?.LastName" required />
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold">Phone Number</label>
+                                <input type="tel" name="PhoneNumber" class="form-control" value="@Model?.PhoneNumber" required />
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold">Birth Date</label>
+                                <input type="date" name="BirthDate" class="form-control" value="@Model?.BirthDate.ToString("yyyy-MM-dd")" required />
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold">Gender</label>
+                                <select name="Gender" class="form-select" required>
+                                    <option value="Male" selected="@(Model?.Gender == "Male")">Male</option>
+                                    <option value="Female" selected="@(Model?.Gender == "Female")">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold">Governorate</label>
+                                <select id="governorateSelect" name="Governorate" class="form-select" required>
+                                    <option value="">Select Governorate</option>
+                                    @if (ViewBag.Governorates != null)
+                                    {
+                                        foreach (SelectListItem gov in ViewBag.Governorates)
+                                        {
+                                            <option value="@gov.Value" selected="@gov.Selected">@gov.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold">City</label>
+                                <select id="citySelect" name="City" class="form-select" data-selected-city="@Model?.City" required>
+                                    <option value="">Select City</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold">Street</label>
+                                <input type="text" name="Street" class="form-control" value="@Model?.Street" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger px-4">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('modalImgPreview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const govSelect = document.getElementById("governorateSelect");
+            const citySelect = document.getElementById("citySelect");
+            const initialCityId = citySelect.getAttribute("data-selected-city");
+
+            function loadCities(governorateId, selectedCityId = null) {
+                if (!governorateId) {
+                    citySelect.innerHTML = '<option value="">Select City</option>';
+                    return;
+                }
+
+                fetch(`/Admin/GetCitiesByGovernorate?governorateId=${governorateId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        citySelect.innerHTML = '<option value="">Select City</option>';
+                        data.forEach(city => {
+                            const option = document.createElement("option");
+                            option.value = city.id;
+                            option.textContent = city.name;
+                            if (selectedCityId && city.id.toString() === selectedCityId.toString()) {
+                                option.selected = true;
+                            }
+                            citySelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error("Error fetching cities:", error));
+            }
+
+            govSelect.addEventListener("change", function () {
+                loadCities(this.value);
+            });
+
+            if (govSelect.value) {
+                loadCities(govSelect.value, initialCityId);
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -89,7 +89,6 @@ header .navbar-nav .nav-link:not(.dropdown-toggle) {
 
 footer {
     background-color: #111827F5;
-    padding: 80px 80px 28px 80px;
 }
 
 footer a {
@@ -99,15 +98,32 @@ footer a {
 
 footer a:hover {
     text-decoration: underline;
-    color: white;
+    color: #ffffff;
 }
 
 footer .brand {
-    color: white;
+    color: #ffffff;
+    font-size: 1.75rem;
 }
 
 footer .muted {
     color: #9CA3AF;
+}
+
+/* Footer Responsive Adjustments */
+@media (max-width: 767px) {
+    /* Keep SHOP and SUPPORT sub-headings left-aligned for clear grid reading */
+    footer .col-6 {
+        text-align: start;
+    }
+
+    footer .brand {
+        font-size: 1.5rem;
+    }
+
+    footer hr {
+        opacity: 0.15;
+    }
 }
 
 /* Custom Styling for Mazeed Split Auth/Error Layout */

@@ -5,10 +5,18 @@
 <style>
     .hero-banner {
         background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.35)), url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
-        border-radius: 20px;
-        padding: 90px 60px;
+        border-radius: 16px;
+        padding: 40px 20px;
         color: #ffffff;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
+    }
+
+    @@media (min-width: 768px) {
+        .hero-banner {
+            border-radius: 20px;
+            padding: 90px 60px;
+            margin-bottom: 40px;
+        }
     }
 
     .badge-pill-red {
@@ -37,6 +45,21 @@
         z-index: 2;
     }
 
+    /* Horizontal Filter Scroll on Small Viewports */
+    .filter-scroll-container {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+        .filter-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
     .btn-filter {
         border-radius: 50px;
         padding: 6px 18px;
@@ -47,6 +70,7 @@
         color: #4b5563;
         text-decoration: none;
         transition: all 0.2s ease;
+        flex-shrink: 0;
     }
 
     .btn-filter.active {
@@ -61,21 +85,30 @@
         overflow: hidden;
         background: #ffffff;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
-    .product-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    }
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
 
     .product-img-wrapper {
         position: relative;
         background-color: #f4f4f5;
-        height: 240px;
+        height: 200px;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
+    }
+
+    @@media (min-width: 576px) {
+        .product-img-wrapper {
+            height: 240px;
+        }
     }
 
     .product-img-wrapper img {
@@ -86,6 +119,10 @@
 
     .product-card-body {
         padding: 16px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: space-between;
     }
 
     .category-tag {
@@ -154,10 +191,10 @@
         display: block;
     }
 
-    .btn-action-dark:hover {
-        background-color: #1f2937;
-        color: #ffffff;
-    }
+        .btn-action-dark:hover {
+            background-color: #1f2937;
+            color: #ffffff;
+        }
 
     .btn-action-light {
         background-color: #ffffff;
@@ -173,22 +210,22 @@
         display: block;
     }
 
-    .btn-action-light:hover {
-        background-color: #f9fafb;
-        color: #374151;
-    }
+        .btn-action-light:hover {
+            background-color: #f9fafb;
+            color: #374151;
+        }
 </style>
 
 <div class="container-fluid px-0">
     <!-- Hero Section -->
     <div class="hero-banner">
-        <div class="col-lg-6">
-            <span class="badge-pill-red mb-3">Limited Time Drop</span>
-            <h1 class="display-4 fw-bold text-white mb-3">Seasonal Renewal</h1>
+        <div class="col-12 col-md-10 col-lg-6">
+            <span class="badge-pill-red mb-2 mb-md-3">Limited Time Drop</span>
+            <h1 class="display-5 display-md-4 fw-bold text-white mb-2 mb-md-3">Seasonal Renewal</h1>
             <p class="text-white-50 mb-4 fs-6 leading-relaxed">
                 Discover curated designs from international makers. Transform your routine with bespoke objects crafted for modern life.
             </p>
-            <div class="d-flex align-items-center gap-3">
+            <div class="d-flex flex-wrap align-items-center gap-3">
                 <a href="#" class="btn btn-light rounded-2 px-4 py-2 fw-semibold fs-7">Shop The Sale</a>
                 <a href="#" class="text-white text-decoration-none fw-semibold fs-7">Learn More &rarr;</a>
             </div>
@@ -196,12 +233,12 @@
     </div>
 
     <!-- Section Header & Filters -->
-    <div class="d-flex justify-content-between align-items-end mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end gap-3 mb-4">
         <div>
             <span class="badge-pill-red mb-1" style="background: none; color: #ff4d4f; padding: 0; font-size: 10px;">CURATED FINDS</span>
             <h2 class="fw-bold fs-3 text-dark mb-0">Featured Marketplace</h2>
         </div>
-        <div class="d-flex gap-2">
+        <div class="filter-scroll-container w-100 w-md-auto justify-content-md-end">
             <a href="#" class="btn-filter active">All Products</a>
             <a href="#" class="btn-filter">Trending Now</a>
             <a href="#" class="btn-filter">Hot Deals</a>
@@ -209,26 +246,28 @@
     </div>
 
     <!-- Product Grid -->
-    <div class="row g-4">
+    <div class="row g-3 g-md-4">
         <!-- Item 1 -->
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4">
             <div class="product-card">
                 <div class="product-img-wrapper">
                     <span class="badge-sale">SALE</span>
                     <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop" alt="Mazeed SoundPro Air Headphones" />
                 </div>
                 <div class="product-card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="category-tag">ELECTRONICS</span>
-                        <span class="rating">&#9734; 4.9</span>
-                    </div>
-                    <div class="product-title">Mazeed SoundPro Air Headphones</div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <span class="current-price">$189.00</span>
-                            <span class="original-price">$240.00</span>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="category-tag">ELECTRONICS</span>
+                            <span class="rating">&#9734; 4.9</span>
                         </div>
-                        <button class="wishlist-btn" type="button">&#9825;</button>
+                        <div class="product-title">Mazeed SoundPro Air Headphones</div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="current-price">$189.00</span>
+                                <span class="original-price">$240.00</span>
+                            </div>
+                            <button class="wishlist-btn" type="button">&#9825;</button>
+                        </div>
                     </div>
                     <div class="row g-2">
                         <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
@@ -239,22 +278,24 @@
         </div>
 
         <!-- Item 2 -->
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4">
             <div class="product-card">
                 <div class="product-img-wrapper">
                     <img src="https://images.unsplash.com/photo-1608248597261-833258657640?q=80&w=800&auto=format&fit=crop" alt="Bio-Restore Facial Elixir Oil" />
                 </div>
                 <div class="product-card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="category-tag">BEAUTY</span>
-                        <span class="rating">&#9734; 4.9</span>
-                    </div>
-                    <div class="product-title">Bio-Restore Facial Elixir Oil</div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <span class="current-price dark">$34.00</span>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="category-tag">BEAUTY</span>
+                            <span class="rating">&#9734; 4.9</span>
                         </div>
-                        <button class="wishlist-btn" type="button">&#9825;</button>
+                        <div class="product-title">Bio-Restore Facial Elixir Oil</div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="current-price dark">$34.00</span>
+                            </div>
+                            <button class="wishlist-btn" type="button">&#9825;</button>
+                        </div>
                     </div>
                     <div class="row g-2">
                         <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
@@ -265,24 +306,26 @@
         </div>
 
         <!-- Item 3 -->
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4">
             <div class="product-card">
                 <div class="product-img-wrapper">
                     <span class="badge-sale">SALE</span>
                     <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop" alt="AeroFit Active Smartwatch" />
                 </div>
                 <div class="product-card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="category-tag">ELECTRONICS</span>
-                        <span class="rating">&#9734; 4.9</span>
-                    </div>
-                    <div class="product-title">AeroFit Active Smartwatch</div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <span class="current-price">$119.00</span>
-                            <span class="original-price">$159.00</span>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="category-tag">ELECTRONICS</span>
+                            <span class="rating">&#9734; 4.9</span>
                         </div>
-                        <button class="wishlist-btn" type="button">&#9825;</button>
+                        <div class="product-title">AeroFit Active Smartwatch</div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="current-price">$119.00</span>
+                                <span class="original-price">$159.00</span>
+                            </div>
+                            <button class="wishlist-btn" type="button">&#9825;</button>
+                        </div>
                     </div>
                     <div class="row g-2">
                         <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
@@ -293,22 +336,24 @@
         </div>
 
         <!-- Item 4 -->
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4">
             <div class="product-card">
                 <div class="product-img-wrapper">
                     <img src="https://images.unsplash.com/photo-1612196808214-b7e239e5f6b7?q=80&w=800&auto=format&fit=crop" alt="Artisan Ceramic Dune Vases" />
                 </div>
                 <div class="product-card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="category-tag">HOME</span>
-                        <span class="rating">&#9734; 4.9</span>
-                    </div>
-                    <div class="product-title">Artisan Ceramic Dune Vases</div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <span class="current-price dark">$58.00</span>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="category-tag">HOME</span>
+                            <span class="rating">&#9734; 4.9</span>
                         </div>
-                        <button class="wishlist-btn" type="button">&#9825;</button>
+                        <div class="product-title">Artisan Ceramic Dune Vases</div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="current-price dark">$58.00</span>
+                            </div>
+                            <button class="wishlist-btn" type="button">&#9825;</button>
+                        </div>
                     </div>
                     <div class="row g-2">
                         <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
@@ -319,24 +364,26 @@
         </div>
 
         <!-- Item 5 -->
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4">
             <div class="product-card">
                 <div class="product-img-wrapper">
                     <span class="badge-sale">SALE</span>
                     <img src="https://images.unsplash.com/photo-1602143407151-7111542de6e8?q=80&w=800&auto=format&fit=crop" alt="Termo-Flask Hydra Bottle" />
                 </div>
                 <div class="product-card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="category-tag">SPORTS</span>
-                        <span class="rating">&#9734; 4.9</span>
-                    </div>
-                    <div class="product-title">Termo-Flask Hydra Bottle</div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <span class="current-price">$28.00</span>
-                            <span class="original-price">$39.00</span>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="category-tag">SPORTS</span>
+                            <span class="rating">&#9734; 4.9</span>
                         </div>
-                        <button class="wishlist-btn" type="button">&#9825;</button>
+                        <div class="product-title">Termo-Flask Hydra Bottle</div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="current-price">$28.00</span>
+                                <span class="original-price">$39.00</span>
+                            </div>
+                            <button class="wishlist-btn" type="button">&#9825;</button>
+                        </div>
                     </div>
                     <div class="row g-2">
                         <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
@@ -347,22 +394,24 @@
         </div>
 
         <!-- Item 6 -->
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4">
             <div class="product-card">
                 <div class="product-img-wrapper">
                     <img src="https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=800&auto=format&fit=crop" alt="Heritage Double-Breasted Coat" />
                 </div>
                 <div class="product-card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="category-tag">FASHION</span>
-                        <span class="rating">&#9734; 4.9</span>
-                    </div>
-                    <div class="product-title">Heritage Double-Breasted Coat</div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <span class="current-price dark">$240.00</span>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="category-tag">FASHION</span>
+                            <span class="rating">&#9734; 4.9</span>
                         </div>
-                        <button class="wishlist-btn" type="button">&#9825;</button>
+                        <div class="product-title">Heritage Double-Breasted Coat</div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="current-price dark">$240.00</span>
+                            </div>
+                            <button class="wishlist-btn" type="button">&#9825;</button>
+                        </div>
                     </div>
                     <div class="row g-2">
                         <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
