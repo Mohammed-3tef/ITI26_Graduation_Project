@@ -1,0 +1,171 @@
+﻿@model Mazeed.BLL.ViewModels.ShopCatalogVM
+
+@{
+    ViewData["Title"] = "Store Catalog";
+}
+
+<div class="container my-4">
+    <!-- Search Query Banner & Filter Trigger -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            @if (!string.IsNullOrEmpty(Model.SearchQuery))
+            {
+                <span class="text-muted small">Your search Results for:</span>
+                <h1 class="fw-bold text-uppercase m-0">"@Model.SearchQuery" <span class="fs-6 text-muted">(@Model.TotalCount)</span></h1>
+            }
+            else
+            {
+                <h1 class="fw-bold text-uppercase m-0">ALL PRODUCTS <span class="fs-6 text-muted">(@Model.TotalCount)</span></h1>
+            }
+        </div>
+
+        <!-- Filter & Sort Trigger Button -->
+        <button class="btn btn-outline-dark px-4 py-2 fw-semibold border-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
+            Filter & Sort <i class="fa-solid fa-sliders ms-2"></i>
+        </button>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @if (Model.Items.Any())
+        {
+            @foreach (var item in Model.Items)
+            {
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm position-relative">
+                        <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm" aria-label="Wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 260px;">
+                            <i class="fa-solid fa-box-open fa-3x text-secondary"></i>
+                        </div>
+                        <div class="card-body d-flex flex-column justify-content-between p-3">
+                            <div>
+                                <h6 class="card-title fw-bold text-uppercase mb-1">@item.Name</h6>
+                                <p class="text-muted small mb-2">@item.BrandName</p>
+                            </div>
+                            <div>
+                                <p class="fw-bold fs-6 mb-0">EGP @item.Price.ToString("N2")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <i class="fa-solid fa-magnifying-glass fa-3x text-muted mb-3"></i>
+                <h5>No items found matching your filter criteria.</h5>
+                <a asp-action="Index" class="btn btn-dark mt-2">Clear Filters</a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Offcanvas Sidebar Filter & Sort -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel" style="width: 380px;">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold" id="filterOffcanvasLabel">Filter & Sort</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <form asp-action="Index" method="get" class="d-flex flex-column h-100">
+        <!-- Preserve existing search term -->
+        <input type="hidden" name="searchQuery" value="@Model.SearchQuery" />
+
+        <div class="offcanvas-body">
+            <div class="accordion accordion-flush" id="filterAccordion">
+
+                <!-- Sort By Accordion -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingSort">
+                        <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort">
+                            Sort By
+                        </button>
+                    </h2>
+                    <div id="collapseSort" class="accordion-collapse collapse show">
+                        <div class="accordion-body">
+                            <select name="sortBy" class="form-select">
+                                <option value="">Default Order</option>
+                                <option value="price_low_high" selected="@(Model.SortBy == "price_low_high")">Price: Low to High</option>
+                                <option value="price_high_low" selected="@(Model.SortBy == "price_high_low")">Price: High to Low</option>
+                                <option value="name_asc" selected="@(Model.SortBy == "name_asc")">Name: A to Z</option>
+                                <option value="name_desc" selected="@(Model.SortBy == "name_desc")">Name: Z to A</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingCategory">
+                        <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory">
+                            Product Category
+                        </button>
+                    </h2>
+                    <div id="collapseCategory" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            @foreach (var category in Model.Categories)
+                            {
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="categoryId" id="cat_@category.Id" value="@category.Id" @(Model.CategoryId == category.Id ? "checked" : "") />
+                                    <label class="form-check-label ms-1" for="cat_@category.Id">@category.Name</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brand Filter -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingBrand">
+                        <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrand">
+                            Brand
+                        </button>
+                    </h2>
+                    <div id="collapseBrand" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            @foreach (var brand in Model.Brands)
+                            {
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="brandId" id="brand_@brand.Id" value="@brand.Id" @(Model.BrandId == brand.Id ? "checked" : "") />
+                                    <label class="form-check-label ms-1" for="brand_@brand.Id">@brand.Name</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Range Filter -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingPrice">
+                        <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
+                            Price
+                        </button>
+                    </h2>
+                    <div id="collapsePrice" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number" name="minPrice" class="form-control" placeholder="Min" value="@Model.MinPrice" />
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" name="maxPrice" class="form-control" placeholder="Max" value="@Model.MaxPrice" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Offcanvas Apply Button -->
+        <div class="p-3 border-top bg-white">
+            <button type="submit" class="btn btn-dark w-100 py-2 fw-bold text-uppercase">
+                Apply (@Model.TotalCount) <i class="fa-solid fa-arrow-right ms-2"></i>
+            </button>
+        </div>
+    </form>
+</div>

@@ -26,7 +26,13 @@
                         <a class="nav-link fw-medium @(currentController == "Home" && currentAction == "Index" ? "active" : "")"
                            asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
-       
+
+                    <!-- Store Section Link Added Here -->
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium @(currentController == "Store" ? "active" : "")"
+                           asp-area="" asp-controller="Store" asp-action="Index">Store</a>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link fw-medium" asp-area="" asp-controller="Home" asp-action="return">Electronics</a>
                     </li>
@@ -41,10 +47,15 @@
                     </li>
                 </ul>
 
-                <!-- Search Bar -->
-                <div class="me-lg-3 mb-2 mb-lg-0">
-                    <input class="form-control search-input" type="search" name="name" placeholder="Search..." />
-                </div>
+                <!-- Updated Search Bar Form -->
+                <form asp-controller="Store" asp-action="Index" method="get" class="me-lg-3 mb-2 mb-lg-0">
+                    <div class="input-group">
+                        <input class="form-control search-input" type="search" name="searchQuery" placeholder="Search..." value="@Context.Request.Query["searchQuery"]" />
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </form>
 
                 <!-- Account Dropdown Menu -->
                 <ul class="navbar-nav">
