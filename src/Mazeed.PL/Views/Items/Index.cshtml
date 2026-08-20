@@ -19,13 +19,10 @@
                 @Html.DisplayNameFor(model => model.Price)
             </th>
             <th>
-                Category Name
+                Categories
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.BrandId)
-            </th>
-            <th>
-                Brand Name
             </th>
             <th></th>
         </tr>
@@ -42,9 +39,6 @@
                 <td>
                     @string.Join(", ", item.CategoryNames)
                 </td>
-            <td>
-                @Html.DisplayFor(model => item.BrandId)
-            </td>
             <td>
                 @Html.DisplayFor(model => item.BrandName)
             </td>

@@ -40,6 +40,8 @@ namespace Mazeed.BLL.Services.Implementation
         public async Task<ServiceResponse<CategoryVM>> CreateAsync(CategoryVM model)
         {
             var categoryEntity = _mapper.Map<Category>(model);
+            categoryEntity.CreatedBy = "Admin";
+            categoryEntity.CreatedAt = DateTime.Now;
             await _unitOfWork.Repository<Category>().AddAsync(categoryEntity);
             var result = await _unitOfWork.CompleteAsync();
 
@@ -61,6 +63,8 @@ namespace Mazeed.BLL.Services.Implementation
             }
 
             _mapper.Map(model, existingCategory);
+            existingCategory.UpdatedAt = DateTime.Now;
+            existingCategory.UpdatedBy = "Admin";
             _unitOfWork.Repository<Category>().Update(existingCategory);
             var result = await _unitOfWork.CompleteAsync();
 

@@ -64,11 +64,14 @@ namespace Mazeed.BLL.Mappers
                 .ForMember(dest => dest.Brand, opt => opt.Ignore())
                 .ForMember(dest => dest.ItemCategories, opt => opt.MapFrom(src =>
                     src.CategoryIds.Select(cId => new ItemCategory { CategoryId = cId })));
+
             CreateMap<ItemVariant, ItemVariantVM>()
     .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item != null ? src.Item.Name : string.Empty));
 
             CreateMap<ItemVariantVM, ItemVariant>()
-                .ForMember(dest => dest.Item, opt => opt.Ignore());
+                .ForMember(dest => dest.Item, opt => opt.Ignore())
+                .ForMember(dest => dest.CartItems, opt => opt.Ignore())
+                .ForMember(dest => dest.OrderDetails, opt => opt.Ignore());
         }
 
         private static long? ParseNullableLong(string? value)

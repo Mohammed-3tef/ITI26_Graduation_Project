@@ -67,7 +67,7 @@ namespace Mazeed.Web.Controllers
                 ModelState.AddModelError(string.Empty, response.Message ?? "Failed to create item.");
             }
 
-            await PopulateDropdownsAsync(item.CategoryId, item.BrandId);
+            await PopulateDropdownsAsync(item.CategoryIds, item.BrandId);
             return View(item);
         }
 
@@ -85,14 +85,14 @@ namespace Mazeed.Web.Controllers
                 return NotFound();
             }
 
-            await PopulateDropdownsAsync(response.Data.CategoryId, response.Data.BrandId);
+            await PopulateDropdownsAsync(response.Data.CategoryIds, response.Data.BrandId);
             return View(response.Data);
         }
 
         // POST: ITEMS/Edit/5[cite: 23]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Price,CategoryId,BrandId")] ItemVM item)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Price,CategoryIds,BrandId")] ItemVM item)
         {
             if (id != item.Id)
             {
@@ -109,7 +109,7 @@ namespace Mazeed.Web.Controllers
                 ModelState.AddModelError(string.Empty, response.Message ?? "Failed to update item.");
             }
 
-            await PopulateDropdownsAsync(item.CategoryId, item.BrandId);
+            await PopulateDropdownsAsync(item.CategoryIds, item.BrandId);
             return View(item);
         }
 
@@ -139,13 +139,25 @@ namespace Mazeed.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task PopulateDropdownsAsync(long? selectedCategoryId = null, long? selectedBrandId = null)
+        private async Task PopulateDropdownsAsync(IEnumerable<long>? selectedCategoryIds = null, long? selectedBrandId = null)
         {
             var categoriesResponse = await _categoryService.GetAllAsync();
+
             var brandsResponse = await _brandService.GetAllAsync();
 
-            ViewData["CategoryId"] = new SelectList(categoriesResponse.Data ?? new List<CategoryVM>(), "Id", "Name", selectedCategoryId);
-            ViewData["BrandId"] = new SelectList(brandsResponse.Data ?? new List<BrandVM>(), "Id", "Name", selectedBrandId);
+            ViewData["Categories"] = new MultiSelectList(
+                categoriesResponse.Data ?? new List<CategoryVM>(),
+                "Id",
+                "Name",
+                selectedCategoryIds
+            );
+
+            ViewData["BrandId"] = new SelectList(
+                brandsResponse.Data ?? new List<BrandVM>(),
+                "Id",
+                "Name",
+                selectedBrandId
+            );
         }
     }
 }

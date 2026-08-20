@@ -45,6 +45,8 @@ namespace Mazeed.BLL.Services.Implementation
         public async Task<ServiceResponse<ItemVariantVM>> CreateAsync(ItemVariantVM model)
         {
             var variantEntity = _mapper.Map<ItemVariant>(model);
+            variantEntity.CreatedBy = "Admin";
+            variantEntity.CreatedAt = DateTime.Now;
             await _unitOfWork.Repository<ItemVariant>().AddAsync(variantEntity);
             var result = await _unitOfWork.CompleteAsync();
 
@@ -66,6 +68,8 @@ namespace Mazeed.BLL.Services.Implementation
             }
 
             _mapper.Map(model, existingVariant);
+            existingVariant.UpdatedBy = "Admin";
+            existingVariant.UpdatedAt = DateTime.Now;
             _unitOfWork.Repository<ItemVariant>().Update(existingVariant);
             var result = await _unitOfWork.CompleteAsync();
 

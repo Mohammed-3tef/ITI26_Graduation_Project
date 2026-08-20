@@ -42,6 +42,8 @@ namespace Mazeed.BLL.Services.Implementation
         public async Task<ServiceResponse<ItemVM>> CreateAsync(ItemVM model)
         {
             var itemEntity = _mapper.Map<Item>(model);
+            itemEntity.CreatedBy = "Admin";
+            itemEntity.CreatedAt = DateTime.Now;
             await _unitOfWork.Repository<Item>().AddAsync(itemEntity);
             var result = await _unitOfWork.CompleteAsync();
 
@@ -56,14 +58,32 @@ namespace Mazeed.BLL.Services.Implementation
 
         public async Task<ServiceResponse<bool>> UpdateAsync(ItemVM model)
         {
-            var existingItem = await _unitOfWork.Repository<Item>().GetByIdAsync(model.Id);
+            // 1. Fetch existing item including its current ItemCategories from DB
+            var existingItem = await _itemRepository.GetByIdWithDetailsAsync(model.Id);
             if (existingItem == null)
             {
                 return ServiceResponse<bool>.FailureResponse("Item not found.");
             }
 
+            // 2. Map basic properties (Name, Price, BrandId)
             _mapper.Map(model, existingItem);
+
+            // 3. Clear existing join records in memory
+            existingItem.ItemCategories.Clear();
+
+            // 4. Re-add new join records based on submitted CategoryIds
+            foreach (var categoryId in model.CategoryIds)
+            {
+                existingItem.ItemCategories.Add(new ItemCategory
+                {
+                    ItemId = existingItem.Id,
+                    CategoryId = categoryId
+                });
+            }
+
             _unitOfWork.Repository<Item>().Update(existingItem);
+
+            // 5. THIS IS WHEN DELETIONS & INSERTS SAVE TO THE ItemCategory TABLE
             var result = await _unitOfWork.CompleteAsync();
 
             if (result > 0)
@@ -73,7 +93,6 @@ namespace Mazeed.BLL.Services.Implementation
 
             return ServiceResponse<bool>.FailureResponse("Failed to update item.");
         }
-
         public async Task<ServiceResponse<bool>> DeleteAsync(long id)
         {
             var item = await _unitOfWork.Repository<Item>().GetByIdAsync(id);

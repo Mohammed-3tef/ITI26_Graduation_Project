@@ -40,6 +40,8 @@ namespace Mazeed.BLL.Services.Implementation
         public async Task<ServiceResponse<BrandVM>> CreateAsync(BrandVM model)
         {
             var brandEntity = _mapper.Map<Brand>(model);
+            brandEntity.CreatedBy = "Admin";
+            brandEntity.CreatedAt = DateTime.Now;
             await _unitOfWork.Repository<Brand>().AddAsync(brandEntity);
             var result = await _unitOfWork.CompleteAsync();
 
@@ -61,6 +63,8 @@ namespace Mazeed.BLL.Services.Implementation
             }
 
             _mapper.Map(model, existingBrand);
+            existingBrand.UpdatedAt = DateTime.Now;
+            existingBrand.UpdatedBy = "Admin";
             _unitOfWork.Repository<Brand>().Update(existingBrand);
             var result = await _unitOfWork.CompleteAsync();
 

@@ -19,20 +19,17 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Price)
         </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-            <td>
+         <dd class="col-sm-10">
+             @Html.DisplayFor(model => model.Price)
+        </dd>
+         <dt class="col-sm-2">
+            Categories
+        </dt>
+        <dd class="col-sm-10">    
                 @string.Join(", ", Model.CategoryNames)
-            </td>
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.BrandId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.BrandId)
-        </dd>
-        <dt class="col-sm-2">
-            Brand
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.BrandName)

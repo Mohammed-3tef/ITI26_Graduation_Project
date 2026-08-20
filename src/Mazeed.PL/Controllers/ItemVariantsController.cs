@@ -18,41 +18,35 @@ namespace Mazeed.Web.Controllers
             _itemService = itemService;
         }
 
-        // GET: ITEMVARIANTS[cite: 31]
+        // GET: ItemVariants
         public async Task<IActionResult> Index()
         {
             var response = await _itemVariantService.GetAllAsync();
             return View(response.Data ?? new List<ItemVariantVM>());
         }
 
-        // GET: ITEMVARIANTS/Details/5[cite: 31]
+        // GET: ItemVariants/Details/5
         public async Task<IActionResult> Details(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var response = await _itemVariantService.GetByIdAsync(id.Value);
-            if (!response.Succeeded)
-            {
-                return NotFound();
-            }
+            if (!response.Succeeded) return NotFound();
 
             return View(response.Data);
         }
 
-        // GET: ITEMVARIANTS/Create[cite: 31]
+        // GET: ItemVariants/Create
         public async Task<IActionResult> Create()
         {
             await PopulateItemsDropdownAsync();
             return View();
         }
 
-        // POST: ITEMVARIANTS/Create[cite: 31]
+        // POST: ItemVariants/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Value,ItemId")] ItemVariantVM itemVariant)
+        public async Task<IActionResult> Create([Bind("Id,SKU,Color,Size,PriceAdjustment,StockQuantity,LowStockThreshold,ItemId")] ItemVariantVM itemVariant)
         {
             if (ModelState.IsValid)
             {
@@ -68,33 +62,24 @@ namespace Mazeed.Web.Controllers
             return View(itemVariant);
         }
 
-        // GET: ITEMVARIANTS/Edit/5[cite: 31]
+        // GET: ItemVariants/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var response = await _itemVariantService.GetByIdAsync(id.Value);
-            if (!response.Succeeded || response.Data == null)
-            {
-                return NotFound();
-            }
+            if (!response.Succeeded || response.Data == null) return NotFound();
 
             await PopulateItemsDropdownAsync(response.Data.ItemId);
             return View(response.Data);
         }
 
-        // POST: ITEMVARIANTS/Edit/5[cite: 31]
+        // POST: ItemVariants/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Value,ItemId")] ItemVariantVM itemVariant)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,SKU,Color,Size,PriceAdjustment,StockQuantity,LowStockThreshold,ItemId")] ItemVariantVM itemVariant)
         {
-            if (id != itemVariant.Id)
-            {
-                return NotFound();
-            }
+            if (id != itemVariant.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -110,24 +95,18 @@ namespace Mazeed.Web.Controllers
             return View(itemVariant);
         }
 
-        // GET: ITEMVARIANTS/Delete/5[cite: 31]
+        // GET: ItemVariants/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var response = await _itemVariantService.GetByIdAsync(id.Value);
-            if (!response.Succeeded)
-            {
-                return NotFound();
-            }
+            if (!response.Succeeded) return NotFound();
 
             return View(response.Data);
         }
 
-        // POST: ITEMVARIANTS/Delete/5[cite: 31]
+        // POST: ItemVariants/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)

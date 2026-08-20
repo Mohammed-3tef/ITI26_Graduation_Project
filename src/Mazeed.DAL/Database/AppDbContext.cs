@@ -56,6 +56,17 @@ namespace Mazeed.DAL.Database
             modelBuilder.Entity<ItemCategory>()
                 .HasKey(ic => new { ic.ItemId, ic.CategoryId });
 
+            modelBuilder.Entity<ItemCategory>()
+               .HasOne(ic => ic.Item)
+               .WithMany(i => i.ItemCategories)
+               .HasForeignKey(ic => ic.ItemId);
+
+            // Configure Many-to-One relationship to Category
+            modelBuilder.Entity<ItemCategory>()
+                .HasOne(ic => ic.Category)
+                .WithMany(c => c.ItemCategories)
+                .HasForeignKey(ic => ic.CategoryId);
+
             modelBuilder.Entity<ShopperCart>()
                 .HasKey(sc => new { sc.UserId, sc.ItemVariantId });
 
