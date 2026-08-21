@@ -284,14 +284,6 @@ footer .muted {
         line-height: inherit;
     }
 
-    .footer {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        white-space: nowrap;
-        line-height: 60px;
-    }
-
     /* Enhancements for CRUD Views */
     .card {
         border-radius: 0.5rem;

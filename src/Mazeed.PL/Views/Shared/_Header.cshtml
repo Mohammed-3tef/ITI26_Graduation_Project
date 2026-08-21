@@ -1,5 +1,4 @@
 ﻿@{
-    // جلب اسم الكنترولر والأكشن الحالي لمعرفة الصفحة النشطة
     var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
 }
@@ -68,6 +67,14 @@
                                 <span>@User.Identity.Name</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="userMenu">
+                                @if(User.IsInRole("Admin"))
+                                {
+                                    <li>
+                                        <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Admin" asp-action="Index">
+                                            <i class="bi bi-speedometer2 text-muted"></i> Admin Dashboard
+                                        </a>
+                                    </li>
+                                }
                                 <li>
                                     <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Auth" asp-action="Profile">
                                         <i class="bi bi-person text-muted"></i> My Profile

@@ -26,7 +26,7 @@ namespace Mazeed.BLL.Services.Implementation
 
         public async Task<ServiceResponse<IEnumerable<UserVM>>> GetAllUsersAsync()
         {
-            var users = await _unitOfWork.Repository<User>().GetAllAsync();
+            var users = await _unitOfWork.Repository<User>().GetAllAsync(user => !user.IsDeleted);
 
             return ServiceResponse<IEnumerable<UserVM>>.SuccessResponse(
                 _mapper.Map<IEnumerable<UserVM>>(users),
@@ -71,6 +71,58 @@ namespace Mazeed.BLL.Services.Implementation
                 _mapper.Map<UserVM>(firstUser),
                 "User retrieved successfully."
             );
+        }
+
+        public async Task<ServiceResponse<bool>> CreateUserAsync(UserVM model)
+        {
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
+                return ServiceResponse<bool>.FailureResponse("User with this email already exists.");
+
+            byte[]? imageBytes = null;
+            if (model.ProfileImage != null && model.ProfileImage.Length > 0)
+            {
+                using var memoryStream = new MemoryStream();
+                await model.ProfileImage.CopyToAsync(memoryStream);
+                imageBytes = memoryStream.ToArray();
+            }
+
+            long? cityId = int.TryParse(model.City, out int cId) ? cId : null;
+
+            var user = new User
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                BirthDate = model.BirthDate,
+                Gender = model.Gender == "Male" ? 'M' : 'F',
+                ProfileImage = imageBytes,
+                CityId = cityId,
+                Street = model.Street,
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = "Admin"
+            };
+
+            var result = await _userManager.CreateAsync(user, "DefaultPassword123!");
+            return result.Succeeded
+                ? ServiceResponse<bool>.SuccessResponse(true, "User created successfully.")
+                : ServiceResponse<bool>.FailureResponse(string.Join(", ", result.Errors.Select(e => e.Description)));
+        }
+
+        public async Task<ServiceResponse<bool>> DeleteUserByEmailAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return ServiceResponse<bool>.FailureResponse("User not found.");
+
+            user.Delete("Admin");
+            var result = await _userManager.UpdateAsync(user);
+
+            return result.Succeeded
+                ? ServiceResponse<bool>.SuccessResponse(true, "User deleted successfully.")
+                : ServiceResponse<bool>.FailureResponse("Failed to delete user.");
         }
 
         public async Task<ServiceResponse<bool>> UpdateUserProfileAsync(UserVM model)

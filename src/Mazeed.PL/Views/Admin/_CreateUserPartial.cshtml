@@ -1,0 +1,86 @@
+﻿@model Mazeed.BLL.ViewModels.User.UserVM
+
+<div class="bg-white rounded-4 shadow-sm p-4 mx-auto" style="max-width: 800px;">
+    <h5 class="fw-bold mb-4 text-danger"><i class="fa-solid fa-user-plus me-2"></i>Create New User</h5>
+    <form asp-controller="Admin" asp-action="CreateUser" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="row g-3">
+            <div class="col-12 col-md-6">
+                <label class="form-label fw-semibold">Username</label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger small"></span>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label fw-semibold">Email Address</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label fw-semibold">First Name</label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger small"></span>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label fw-semibold">Last Name</label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger small"></span>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label fw-semibold">Phone Number</label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label fw-semibold">Birth Date</label>
+                <input asp-for="BirthDate" type="date" class="form-control" />
+                <span asp-validation-for="BirthDate" class="text-danger small"></span>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label fw-semibold">Gender</label>
+                <select asp-for="Gender" class="form-select">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-danger small"></span>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label fw-semibold">Profile Picture</label>
+                <input asp-for="ProfileImage" type="file" class="form-control" accept="image/*" />
+                <span asp-validation-for="ProfileImage" class="text-danger small"></span>
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label fw-semibold">Governorate</label>
+                <select id="addGovSelect" asp-for="Governorate" class="form-select">
+                    <option value="">Select Governorate</option>
+                    @if (ViewBag.Governorates != null)
+                    {
+                        foreach (SelectListItem gov in ViewBag.Governorates)
+                        {
+                            <option value="@gov.Value">@gov.Text</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="Governorate" class="text-danger small"></span>
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label fw-semibold">City</label>
+                <select id="addCitySelect" asp-for="City" class="form-select">
+                    <option value="">Select City</option>
+                </select>
+                <span asp-validation-for="City" class="text-danger small"></span>
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label fw-semibold">Street</label>
+                <input asp-for="Street" class="form-control" />
+                <span asp-validation-for="Street" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mt-4 text-end">
+            <button type="submit" class="btn btn-danger px-4 rounded-pill">
+                <i class="fa-solid fa-plus me-1"></i> Add User
+            </button>
+        </div>
+    </form>
+</div>

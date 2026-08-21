@@ -27,6 +27,7 @@ namespace Mazeed.BLL.Extensions
 
             services.AddScoped<IGovernorateService, GovernorateService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IWishlistService, WishlistService>();
