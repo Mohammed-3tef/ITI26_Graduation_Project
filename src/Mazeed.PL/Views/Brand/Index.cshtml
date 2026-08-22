@@ -1,51 +1,371 @@
-@model IEnumerable<Mazeed.BLL.ViewModels.BrandVM>
-
+﻿@model IEnumerable<Mazeed.BLL.ViewModels.BrandVM>
 @{
+    Layout = "_AdminLayout";
     ViewData["Title"] = "Brands";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Brands</h2>
-    <a asp-action="Create" class="btn btn-primary">Create New Brand</a>
-</div>
+@section Styles {
+    <style>
+        .nav-tabs-custom {
+            border-bottom: 2px solid #e9ecef;
+        }
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+        .nav-tabs-custom .nav-link {
+            border: none;
+            color: #6c757d;
+            font-weight: 500;
+            padding: 10px 30px;
+            position: relative;
+            background: transparent;
+        }
+
+        .nav-tabs-custom .nav-link.active {
+            color: #dc3545;
+            font-weight: 600;
+            background: transparent;
+        }
+
+        .nav-tabs-custom .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #dc3545;
+        }
+
+        .btn-action-view {
+            background-color: #e3f2fd;
+            color: #0d6efd;
+            border: 1px solid #b6d4fe;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-action-view:hover {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+
+        .btn-action-edit {
+            background-color: #fff8dd;
+            color: #ffc107;
+            border: 1px solid #ffe69c;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-action-edit:hover {
+            background-color: #ffc107;
+            color: #fff;
+        }
+
+        .btn-action-delete {
+            background-color: #ffe6e6;
+            color: #dc3545;
+            border: 1px solid #f5c2c7;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-action-delete:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .brand-logo-sm {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        .brand-logo-lg {
+            max-width: 150px;
+            max-height: 150px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .brand-logo-placeholder {
+            width: 45px;
+            height: 45px;
+            border-radius: 6px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+        }
+    </style>
 }
 
-<table class="table table-striped align-middle">
-    <thead>
-        <tr>
-            <th>Logo</th>
-            <th>Name</th>
-            <th class="text-end">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.Logo))
-                    {
-                        <img src="@item.Logo" alt="@item.Name" class="img-thumbnail" style="max-height: 50px;" />
-                    }
-                    else
-                    {
-                        <span class="text-muted">No Logo</span>
-                    }
-                </td>
-                <td>@item.Name</td>
-                <td class="text-end">
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
-                </td>
-            </tr>
+<!-- Top Navigation Tabs -->
+<ul class="nav nav-tabs nav-tabs-custom justify-content-center mb-4" id="brandTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="view-tab" data-bs-toggle="tab" data-bs-target="#view-tab-pane" type="button" role="tab">
+            View All Brands
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="add-tab" data-bs-toggle="tab" data-bs-target="#add-tab-pane" type="button" role="tab">
+            Add Brand
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="brandTabsContent">
+    <!-- View All Brands Tab -->
+    <div class="tab-pane fade show active" id="view-tab-pane" role="tabpanel" tabindex="0">
+        <h4 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-copyright me-2 text-danger"></i>Brands</h4>
+        <div class="bg-white rounded-4 shadow-sm p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" style="width: 80px;">Logo</th>
+                            <th scope="col" style="width: 100px;">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col" class="text-center" style="width: 180px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.Logo))
+                                        {
+                                            <img src="@item.Logo" class="brand-logo-sm" alt="@item.Name" />
+                                        }
+                                        else
+                                        {
+                                            <div class="brand-logo-placeholder">
+                                                <i class="fa-solid fa-image"></i>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td class="text-muted fw-semibold">#@item.Id</td>
+                                    <td class="fw-semibold">@item.Name</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <!-- Details Button -->
+                                            <button type="button"
+                                                    class="btn btn-action-view"
+                                                    title="View Details"
+                                                    onclick="openDetailsBrandModal('@item.Id', '@item.Name', '@item.Logo')">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+
+                                            <!-- Edit Button -->
+                                            <button type="button"
+                                                    class="btn btn-action-edit"
+                                                    title="Edit Brand"
+                                                    onclick="populateEditBrandModal('@item.Id', '@item.Name', '@item.Logo')">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </button>
+
+                                            <!-- Delete Button -->
+                                            <button type="button"
+                                                    class="btn btn-action-delete"
+                                                    title="Delete Brand"
+                                                    onclick="openDeleteBrandModal('@item.Id', '@item.Name')">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">
+                                    <i class="fa-solid fa-folder-open fs-3 d-block mb-2"></i>
+                                    No brands found.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Brand Tab -->
+    <div class="tab-pane fade" id="add-tab-pane" role="tabpanel" tabindex="0">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6">
+                <div class="bg-white rounded-4 shadow-sm p-4">
+                    <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-plus-circle me-2"></i>Add New Brand</h5>
+                    <form asp-controller="Brand" asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Brand Name</label>
+                            <input type="text" name="Name" class="form-control" placeholder="e.g. Nike" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Logo URL</label>
+                            <input type="text" name="Logo" class="form-control" placeholder="https://example.com/logo.png" />
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100 rounded-pill">
+                            <i class="fa-solid fa-plus me-1"></i> Save Brand
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Details Brand Modal -->
+<div class="modal fade" id="detailsBrandModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-circle-info me-2 text-primary"></i>Brand Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-4" id="detailsLogoContainer">
+                    <img id="detailsBrandLogo" src="" class="brand-logo-lg shadow-sm" alt="Brand Logo" />
+                    <div id="detailsLogoPlaceholder" class="p-4 bg-light rounded text-muted d-none">
+                        <i class="fa-solid fa-image fs-1 d-block mb-2"></i> No Logo Available
+                    </div>
+                </div>
+                <div class="list-group list-group-flush border-top border-bottom">
+                    <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                        <span class="text-muted fw-semibold">Brand ID:</span>
+                        <span class="fw-bold" id="detailsBrandId"></span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                        <span class="text-muted fw-semibold">Brand Name:</span>
+                        <span class="fw-bold text-dark fs-5" id="detailsBrandName"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Brand Modal -->
+<div class="modal fade" id="editBrandModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-pen me-2"></i>Edit Brand</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-controller="Brand" asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="editBrandId" name="Id" />
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Brand Name</label>
+                        <input type="text" id="editBrandName" name="Name" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Logo URL</label>
+                        <input type="text" id="editBrandLogo" name="Logo" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning px-4">Update Brand</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Brand Modal -->
+<div class="modal fade" id="deleteBrandModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-triangle-exclamation me-2"></i>Confirm Delete</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-controller="Brand" asp-action="Delete" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="deleteBrandId" name="id" />
+                <div class="modal-body p-4 text-center">
+                    <p class="mb-1 fs-5">Are you sure you want to delete brand?</p>
+                    <p class="fw-bold text-danger fs-5" id="deleteBrandNameDisplay"></p>
+                    <small class="text-muted">This action cannot be undone.</small>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger px-4">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openDetailsBrandModal(id, name, logo) {
+            document.getElementById('detailsBrandId').textContent = '#' + id;
+            document.getElementById('detailsBrandName').textContent = name;
+
+            const logoImg = document.getElementById('detailsBrandLogo');
+            const logoPlaceholder = document.getElementById('detailsLogoPlaceholder');
+
+            if (logo && logo !== 'null' && logo.trim() !== '') {
+                logoImg.src = logo;
+                logoImg.classList.remove('d-none');
+                logoPlaceholder.classList.add('d-none');
+            } else {
+                logoImg.classList.add('d-none');
+                logoPlaceholder.classList.remove('d-none');
+            }
+
+            const detailsModal = new bootstrap.Modal(document.getElementById('detailsBrandModal'));
+            detailsModal.show();
         }
-    </tbody>
-</table>
+
+        function populateEditBrandModal(id, name, logo) {
+            document.getElementById('editBrandId').value = id;
+            document.getElementById('editBrandName').value = name;
+            document.getElementById('editBrandLogo').value = logo !== 'null' ? logo : '';
+
+            const editModal = new bootstrap.Modal(document.getElementById('editBrandModal'));
+            editModal.show();
+        }
+
+        function openDeleteBrandModal(id, name) {
+            document.getElementById('deleteBrandId').value = id;
+            document.getElementById('deleteBrandNameDisplay').textContent = name;
+
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteBrandModal'));
+            deleteModal.show();
+        }
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

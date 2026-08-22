@@ -1,162 +1,114 @@
 ﻿using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
-namespace Mazeed.Web.Controllers
+namespace Mazeed.PL.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ItemsController : Controller
     {
         private readonly IItemService _itemService;
         private readonly ICategoryService _categoryService;
         private readonly IBrandService _brandService;
+        private readonly IUserService _userService;
 
         public ItemsController(
             IItemService itemService,
             ICategoryService categoryService,
-            IBrandService brandService)
+            IBrandService brandService,
+            IUserService userService)
         {
             _itemService = itemService;
             _categoryService = categoryService;
             _brandService = brandService;
+            _userService = userService;
         }
 
-        // GET: ITEMS[cite: 23]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var response = await _itemService.GetAllAsync();
-            return View(response.Data ?? new List<ItemVM>());
-        }
-
-        // GET: ITEMS/Details/5[cite: 23]
-        public async Task<IActionResult> Details(long? id)
-        {
-            if (id == null)
+            var userEmail = User.FindFirstValue(ClaimTypes.Email) ?? "admin@mazeed.com";
+            var userResponse = await _userService.GetUserByEmailAsync(userEmail);
+            if (userResponse.Succeeded)
             {
-                return NotFound();
+                ViewBag.CurrentUser = userResponse.Data;
             }
 
-            var response = await _itemService.GetByIdAsync(id.Value);
-            if (!response.Succeeded)
-            {
-                return NotFound();
-            }
-
-            return View(response.Data);
-        }
-
-        // GET: ITEMS/Create[cite: 23]
-        public async Task<IActionResult> Create()
-        {
             await PopulateDropdownsAsync();
-            return View();
+            var response = await _itemService.GetAllAsync();
+            var items = response.Data ?? new List<ItemVM>();
+            return View(items);
         }
 
-        // POST: ITEMS/Create[cite: 23]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price,CategoryId,BrandId")] ItemVM item)
+        public async Task<IActionResult> Create(ItemVM model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var response = await _itemService.CreateAsync(item);
-                if (response.Succeeded)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-                ModelState.AddModelError(string.Empty, response.Message ?? "Failed to create item.");
+                TempData["Error"] = "Please provide valid item details.";
+                return RedirectToAction(nameof(Index));
             }
 
-            await PopulateDropdownsAsync(item.CategoryIds, item.BrandId);
-            return View(item);
-        }
+            var response = await _itemService.CreateAsync(model);
+            if (response.Succeeded)
+                TempData["Success"] = response.Message ?? "Item created successfully.";
+            else
+                TempData["Error"] = response.Message ?? "Failed to create item.";
 
-        // GET: ITEMS/Edit/5[cite: 23]
-        public async Task<IActionResult> Edit(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var response = await _itemService.GetByIdAsync(id.Value);
-            if (!response.Succeeded || response.Data == null)
-            {
-                return NotFound();
-            }
-
-            await PopulateDropdownsAsync(response.Data.CategoryIds, response.Data.BrandId);
-            return View(response.Data);
-        }
-
-        // POST: ITEMS/Edit/5[cite: 23]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Price,CategoryIds,BrandId")] ItemVM item)
-        {
-            if (id != item.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                var response = await _itemService.UpdateAsync(item);
-                if (response.Succeeded)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-                ModelState.AddModelError(string.Empty, response.Message ?? "Failed to update item.");
-            }
-
-            await PopulateDropdownsAsync(item.CategoryIds, item.BrandId);
-            return View(item);
-        }
-
-        // GET: ITEMS/Delete/5[cite: 23]
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var response = await _itemService.GetByIdAsync(id.Value);
-            if (!response.Succeeded)
-            {
-                return NotFound();
-            }
-
-            return View(response.Data);
-        }
-
-        // POST: ITEMS/Delete/5[cite: 23]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
-        {
-            await _itemService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task PopulateDropdownsAsync(IEnumerable<long>? selectedCategoryIds = null, long? selectedBrandId = null)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(ItemVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Please fill in all required fields correctly.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var response = await _itemService.UpdateAsync(model);
+            if (response.Succeeded)
+                TempData["Success"] = response.Message ?? "Item updated successfully.";
+            else
+                TempData["Error"] = response.Message ?? "Failed to update item.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(long id)
+        {
+            var response = await _itemService.DeleteAsync(id);
+            if (response.Succeeded)
+                TempData["Success"] = response.Message ?? "Item deleted successfully.";
+            else
+                TempData["Error"] = response.Message ?? "Failed to delete item.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task PopulateDropdownsAsync()
         {
             var categoriesResponse = await _categoryService.GetAllAsync();
-
             var brandsResponse = await _brandService.GetAllAsync();
 
             ViewData["Categories"] = new MultiSelectList(
                 categoriesResponse.Data ?? new List<CategoryVM>(),
                 "Id",
-                "Name",
-                selectedCategoryIds
+                "Name"
             );
 
             ViewData["BrandId"] = new SelectList(
                 brandsResponse.Data ?? new List<BrandVM>(),
                 "Id",
-                "Name",
-                selectedBrandId
+                "Name"
             );
         }
     }

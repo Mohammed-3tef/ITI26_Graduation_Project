@@ -2,6 +2,7 @@
 @{
     var loggedInAdmin = ViewBag.CurrentUser as UserVM;
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
 }
 
 <!DOCTYPE html>
@@ -191,10 +192,13 @@
 
                 <nav class="nav flex-column mt-2">
                     <div>
-                        <a class="nav-link @(currentAction == "Index" ? "active" : "")" asp-controller="Admin" asp-action="Index">Dashboard</a>
-                        <a class="nav-link @(currentAction == "Users" ? "active" : "")" asp-controller="Admin" asp-action="Users">Users & Roles</a>
-                        <a class="nav-link @(currentAction == "Catalog" ? "active" : "")" asp-controller="Admin" asp-action="Catalog">Catalog</a>
-                        <a class="nav-link @(currentAction == "Sales" ? "active" : "")" asp-controller="Admin" asp-action="Sales">Sales & Orders</a>
+                        <a class="nav-link @(currentController == "Admin" && currentAction == "Index" ? "active" : "")" asp-controller="Admin" asp-action="Index">Dashboard</a>
+                        <a class="nav-link @(currentController == "Brand" && currentAction == "Index" ? "active" : "")" asp-controller="Brand" asp-action="Index">Brands</a>
+                        <a class="nav-link @(currentController == "Categories" && currentAction == "Index" ? "active" : "")" asp-controller="Categories" asp-action="Index">Categories</a>
+                        <a class="nav-link @(currentController == "Items" && currentAction == "Index" ? "active" : "")" asp-controller="Items" asp-action="Index">Items</a>
+                        <a class="nav-link @(currentController == "ItemVariants" && currentAction == "Index" ? "active" : "")" asp-controller="ItemVariants" asp-action="Index">Items Variants</a>
+                        <a class="nav-link @(currentController == "Admin" && currentAction == "Users" ? "active" : "")" asp-controller="Admin" asp-action="Users">Users & Roles</a>
+                        <a class="nav-link @(currentController == "Admin" && currentAction == "Sales" ? "active" : "")" asp-controller="Admin" asp-action="Sales">Sales & Orders</a>
                     </div>
                     <div>
                         <a class="nav-link" asp-controller="Home" asp-action="Index">Back to Home</a>

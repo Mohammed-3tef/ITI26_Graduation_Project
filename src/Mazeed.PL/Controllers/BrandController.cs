@@ -1,127 +1,86 @@
 ﻿using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Mazeed.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BrandController : Controller
     {
         private readonly IBrandService _brandService;
+        private readonly IUserService _userService;
 
-        public BrandController(IBrandService brandService)
+        public BrandController(IBrandService brandService, IUserService userService)
         {
             _brandService = brandService;
+            _userService = userService;
         }
 
-        // GET: Brand
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var response = await _brandService.GetAllAsync();
-            return View(response.Data ?? new List<BrandVM>());
-        }
-
-        // GET: Brand/Details/5
-        public async Task<IActionResult> Details(long id)
-        {
-            var response = await _brandService.GetByIdAsync(id);
-            if (!response.Succeeded)
+            var userEmail = User.FindFirstValue(ClaimTypes.Email) ?? "admin@mazeed.com";
+            var userResponse = await _userService.GetUserByEmailAsync(userEmail);
+            if (userResponse.Succeeded)
             {
-                return NotFound();
+                ViewBag.CurrentUser = userResponse.Data;
             }
 
-            return View(response.Data);
+            var response = await _brandService.GetAllAsync();
+            var brands = response.Data ?? new List<BrandVM>();
+            return View(brands);
         }
 
-        // GET: Brand/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Brand/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BrandVM model)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                TempData["Error"] = "Please provide valid brand details.";
+                return RedirectToAction(nameof(Index));
             }
 
             var response = await _brandService.CreateAsync(model);
             if (response.Succeeded)
-            {
-                TempData["SuccessMessage"] = response.Message;
-                return RedirectToAction(nameof(Index));
-            }
+                TempData["Success"] = response.Message ?? "Brand created successfully.";
+            else
+                TempData["Error"] = response.Message ?? "Failed to create brand.";
 
-            ModelState.AddModelError(string.Empty, response.Message ?? "Error occurred.");
-            return View(model);
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Brand/Edit/5
-        public async Task<IActionResult> Edit(long id)
-        {
-            var response = await _brandService.GetByIdAsync(id);
-            if (!response.Succeeded)
-            {
-                return NotFound();
-            }
-
-            return View(response.Data);
-        }
-
-        // POST: Brand/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, BrandVM model)
+        public async Task<IActionResult> Edit(BrandVM model)
         {
-            if (id != model.Id)
-            {
-                return BadRequest();
-            }
-
             if (!ModelState.IsValid)
             {
-                return View(model);
+                TempData["Error"] = "Please fill in all required fields correctly.";
+                return RedirectToAction(nameof(Index));
             }
 
             var response = await _brandService.UpdateAsync(model);
             if (response.Succeeded)
-            {
-                TempData["SuccessMessage"] = response.Message;
-                return RedirectToAction(nameof(Index));
-            }
+                TempData["Success"] = response.Message ?? "Brand updated successfully.";
+            else
+                TempData["Error"] = response.Message ?? "Failed to update brand.";
 
-            ModelState.AddModelError(string.Empty, response.Message ?? "Error occurred.");
-            return View(model);
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Brand/Delete/5
-        public async Task<IActionResult> Delete(long id)
-        {
-            var response = await _brandService.GetByIdAsync(id);
-            if (!response.Succeeded)
-            {
-                return NotFound();
-            }
-
-            return View(response.Data);
-        }
-
-        // POST: Brand/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> Delete(long id)
         {
             var response = await _brandService.DeleteAsync(id);
             if (response.Succeeded)
-            {
-                TempData["SuccessMessage"] = response.Message;
-                return RedirectToAction(nameof(Index));
-            }
+                TempData["Success"] = response.Message ?? "Brand deleted successfully.";
+            else
+                TempData["Error"] = response.Message ?? "Failed to delete brand.";
 
-            TempData["ErrorMessage"] = response.Message;
             return RedirectToAction(nameof(Index));
         }
     }
