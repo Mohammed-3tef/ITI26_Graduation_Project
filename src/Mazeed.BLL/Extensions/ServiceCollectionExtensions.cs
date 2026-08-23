@@ -23,6 +23,7 @@ namespace Mazeed.BLL.Extensions
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IItemVariantRepository, ItemVariantRepository>();
+            services.AddScoped<IItemReviewRepository, ItemReviewRepository>();
 
 
             services.AddScoped<IGovernorateService, GovernorateService>();
@@ -36,6 +37,8 @@ namespace Mazeed.BLL.Extensions
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IItemVariantService, ItemVariantService>();
+            services.AddScoped<IReviewService, ReviewService>();
+
             // Auto Mapper Configuration
             services.AddAutoMapper(map => map.AddProfile(new DomainProfile()));
 
