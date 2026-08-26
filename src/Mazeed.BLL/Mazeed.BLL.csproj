@@ -11,6 +11,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.29" />
   </ItemGroup>
 
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
   <ItemGroup>
     <None Update="Templates\EmailTemplates\ConfirmEmailTemplate.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

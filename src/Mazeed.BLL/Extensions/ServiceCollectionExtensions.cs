@@ -1,4 +1,5 @@
-﻿using Mazeed.BLL.Mappers;
+﻿using Mazeed.BLL.Hubs;
+using Mazeed.BLL.Mappers;
 using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.Services.Implementation;
 using Mazeed.DAL.Entities;
@@ -24,6 +25,7 @@ namespace Mazeed.BLL.Extensions
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IItemVariantRepository, ItemVariantRepository>();
             services.AddScoped<IItemReviewRepository, ItemReviewRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
 
             services.AddScoped<IGovernorateService, GovernorateService>();
@@ -38,6 +40,9 @@ namespace Mazeed.BLL.Extensions
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IItemVariantService, ItemVariantService>();
             services.AddScoped<IReviewService, ReviewService>();
+            services.AddSignalR();
+            services.AddScoped<INotificationPusher, SignalRNotificationPusher>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             // Auto Mapper Configuration
             services.AddAutoMapper(map => map.AddProfile(new DomainProfile()));

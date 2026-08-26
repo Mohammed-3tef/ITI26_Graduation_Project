@@ -1,4 +1,5 @@
 ﻿using Mazeed.BLL.Extensions;
+using Mazeed.BLL.Hubs;
 
 namespace Mazeed.PL;
 
@@ -28,6 +29,8 @@ public class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.MapHub<NotificationHub>("/hubs/notifications");
 
         app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
