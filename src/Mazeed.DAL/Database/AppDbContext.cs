@@ -126,7 +126,7 @@ namespace Mazeed.DAL.Database
             #endregion
 
             // Seed initial data
-            DbInitializer.SeedAsync(modelBuilder);
+            DbInitializer.Seed(modelBuilder);
         }
     }
 }
