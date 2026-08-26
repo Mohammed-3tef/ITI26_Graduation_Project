@@ -1,4 +1,6 @@
-﻿using Mazeed.DAL.Seeders;
+﻿using Mazeed.DAL.Data;
+using Mazeed.DAL.Entities;
+using Mazeed.DAL.Seeders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -6,7 +8,7 @@ namespace Mazeed.DAL.Database
 {
     public static class DbInitializer
     {
-        public static void Seed(ModelBuilder modelBuilder)
+        public static async Task SeedAsync(ModelBuilder modelBuilder)
         {
             RoleSeeder.Seed(modelBuilder);
             AdminSeeder.Seed(modelBuilder);
@@ -15,6 +17,10 @@ namespace Mazeed.DAL.Database
             ProvinceSeeder.Seed(modelBuilder);
             GovernorateSeeder.Seed(modelBuilder);
             CitySeeder.Seed(modelBuilder);
+            CategorySeeder.Seed(modelBuilder);
+            BrandSeeder.Seed(modelBuilder);
+            ItemSeeder.Seed(modelBuilder);
+            ItemVariantsAndPhotoSeeder.Seed(modelBuilder);
         }
     }
 }

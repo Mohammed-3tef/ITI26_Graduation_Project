@@ -26,5 +26,6 @@ namespace Mazeed.BLL.ViewModels
 
         // Selected Category Names for Index/Details/Delete
         public List<string> CategoryNames { get; set; } = new List<string>();
+        public List<string> Photos { get; set; } = new List<string>();
     }
 }

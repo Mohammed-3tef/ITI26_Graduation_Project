@@ -140,7 +140,7 @@
                         {
                             foreach (var item in Model)
                             {
-                                var catIdsJson = JsonSerializer.Serialize(item.CategoryIds);
+                                var catIdsJson = JsonSerializer.Serialize(item.CategoryIds ?? new List<long>());
                                 var catNamesStr = string.Join(", ", item.CategoryNames ?? new List<string>());
 
                                 <tr>
@@ -151,7 +151,7 @@
                                     </td>
                                     <td class="text-muted fw-semibold">#@item.Id</td>
                                     <td class="fw-semibold">@item.Name</td>
-                                    <td class="text-success fw-bold">$@item.Price.ToString("F2")</td>
+                                    <td class="text-success fw-bold">@item.Price.ToString("F2") EGP</td>
                                     <td>
                                         <span class="badge bg-light text-dark border">
                                             <i class="fa-solid fa-tag me-1 text-secondary"></i>@(item.BrandName ?? "N/A")
@@ -160,7 +160,7 @@
                                     <td>
                                         @if (item.CategoryNames != null && item.CategoryNames.Any())
                                         {
-                                            @foreach (var cat in item.CategoryNames)
+                                            foreach (var cat in item.CategoryNames)
                                             {
                                                 <span class="badge bg-secondary mb-1">@cat</span>
                                             }
@@ -174,25 +174,34 @@
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Details -->
                                             <button type="button"
-                                                    class="btn btn-action-view"
+                                                    class="btn btn-action-view btn-details"
                                                     title="View Details"
-                                                    onclick="openDetailsItemModal('@item.Id', @Html.Raw(JsonSerializer.Serialize(item.Name)), '@item.Price', @Html.Raw(JsonSerializer.Serialize(item.BrandName ?? "N/A")), @Html.Raw(JsonSerializer.Serialize(catNamesStr)))">
+                                                    data-id="@item.Id"
+                                                    data-name="@item.Name"
+                                                    data-price="@item.Price"
+                                                    data-brand="@(item.BrandName ?? "N/A")"
+                                                    data-categories="@catNamesStr">
                                                 <i class="fa-solid fa-eye"></i>
                                             </button>
 
                                             <!-- Edit -->
                                             <button type="button"
-                                                    class="btn btn-action-edit"
+                                                    class="btn btn-action-edit btn-edit"
                                                     title="Edit Item"
-                                                    onclick="populateEditItemModal('@item.Id', @Html.Raw(JsonSerializer.Serialize(item.Name)), '@item.Price', '@item.BrandId', @Html.Raw(catIdsJson))">
+                                                    data-id="@item.Id"
+                                                    data-name="@item.Name"
+                                                    data-price="@item.Price"
+                                                    data-brandid="@item.BrandId"
+                                                    data-catids='@catIdsJson'>
                                                 <i class="fa-solid fa-pen"></i>
                                             </button>
 
                                             <!-- Delete -->
                                             <button type="button"
-                                                    class="btn btn-action-delete"
+                                                    class="btn btn-action-delete btn-delete"
                                                     title="Delete Item"
-                                                    onclick="openDeleteItemModal('@item.Id', @Html.Raw(JsonSerializer.Serialize(item.Name)))">
+                                                    data-id="@item.Id"
+                                                    data-name="@item.Name">
                                                 <i class="fa-solid fa-trash-can"></i>
                                             </button>
                                         </div>
@@ -365,40 +374,69 @@
 
 @section Scripts {
     <script>
-        function openDetailsItemModal(id, name, price, brandName, categories) {
-            document.getElementById('detailsItemId').textContent = '#' + id;
-            document.getElementById('detailsItemName').textContent = name;
-            document.getElementById('detailsItemPrice').textContent = '$' + parseFloat(price).toFixed(2);
-            document.getElementById('detailsItemBrand').textContent = brandName;
-            document.getElementById('detailsItemCategories').textContent = categories ? categories : '—';
+        document.addEventListener('DOMContentLoaded', function () {
 
-            const detailsModal = new bootstrap.Modal(document.getElementById('detailsItemModal'));
-            detailsModal.show();
-        }
+            // Details Modal Handler
+            document.querySelectorAll('.btn-details').forEach(button => {
+                button.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+                    const price = parseFloat(this.getAttribute('data-price')).toFixed(2);
+                    const brand = this.getAttribute('data-brand');
+                    const categories = this.getAttribute('data-categories');
 
-        function populateEditItemModal(id, name, price, brandId, categoryIds) {
-            document.getElementById('editItemId').value = id;
-            document.getElementById('editItemName').value = name;
-            document.getElementById('editItemPrice').value = price;
-            document.getElementById('editItemBrandId').value = brandId;
+                    document.getElementById('detailsItemId').textContent = '#' + id;
+                    document.getElementById('detailsItemName').textContent = name;
+                    document.getElementById('detailsItemPrice').textContent = price + ' EGP';
+                    document.getElementById('detailsItemBrand').textContent = brand;
+                    document.getElementById('detailsItemCategories').textContent = categories ? categories : '—';
 
-            const categorySelect = document.getElementById('editItemCategoryIds');
-            Array.from(categorySelect.options).forEach(option => {
-                option.selected = categoryIds.map(String).includes(option.value);
+                    const detailsModal = new bootstrap.Modal(document.getElementById('detailsItemModal'));
+                    detailsModal.show();
+                });
             });
 
-            const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
-            editModal.show();
-        }
+            // Edit Modal Handler
+            document.querySelectorAll('.btn-edit').forEach(button => {
+                button.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+                    const price = this.getAttribute('data-price');
+                    const brandId = this.getAttribute('data-brandid');
+                    const catIds = JSON.parse(this.getAttribute('data-catids') || '[]');
 
-        function openDeleteItemModal(id, name) {
-            document.getElementById('deleteItemId').value = id;
-            document.getElementById('deleteItemNameDisplay').textContent = name;
+                    document.getElementById('editItemId').value = id;
+                    document.getElementById('editItemName').value = name;
+                    document.getElementById('editItemPrice').value = price;
+                    document.getElementById('editItemBrandId').value = brandId;
 
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteItemModal'));
-            deleteModal.show();
-        }
+                    const categorySelect = document.getElementById('editItemCategoryIds');
+                    Array.from(categorySelect.options).forEach(option => {
+                        option.selected = catIds.map(String).includes(option.value);
+                    });
+
+                    const editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
+                    editModal.show();
+                });
+            });
+
+            // Delete Modal Handler
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+
+                    document.getElementById('deleteItemId').value = id;
+                    document.getElementById('deleteItemNameDisplay').textContent = name;
+
+                    const deleteModal = new bootstrap.Modal(document.getElementById('deleteItemModal'));
+                    deleteModal.show();
+                });
+            });
+
+        });
     </script>
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

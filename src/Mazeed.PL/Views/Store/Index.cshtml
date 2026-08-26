@@ -36,8 +36,17 @@
                         <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm" aria-label="Wishlist">
                             <i class="fa-regular fa-heart"></i>
                         </button>
-                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 260px;">
-                            <i class="fa-solid fa-box-open fa-3x text-secondary"></i>
+                        <div class="bg-light d-flex align-items-center justify-content-center overflow-hidden" style="height: 260px;">
+                            @if (item.Photos != null && item.Photos.Any())
+                            {
+                                <!-- بيجيب أول صورة مسجلة للمنتج -->
+                                <img src="@item.Photos.First()" class="card-img-top w-100 h-100" alt="@item.Name" style="object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <!-- أيقونة افتراضية في حالة عدم وجود صور -->
+                                <i class="fa-solid fa-box-open fa-3x text-secondary"></i>
+                            }
                         </div>
                         <div class="card-body d-flex flex-column justify-content-between p-3">
                             <div>
@@ -45,7 +54,7 @@
                                 <p class="text-muted small mb-2">@item.BrandName</p>
                             </div>
                             <div>
-                                <p class="fw-bold fs-6 mb-0">EGP @item.Price.ToString("N2")</p>
+                                <p class="fw-bold fs-6 mb-0"> @item.Price.ToString("N2") EGP</p>
                             </div>
                         </div>
                     </div>

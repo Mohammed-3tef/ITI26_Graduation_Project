@@ -155,7 +155,7 @@
                                     <td>
                                         <span class="badge bg-secondary">@item.Size</span>
                                     </td>
-                                    <td class="text-success fw-bold">+$@item.PriceAdjustment.ToString("F2")</td>
+                                    <td class="text-success fw-bold">+@item.PriceAdjustment.ToString("F2") EGP</td>
                                     <td>
                                         @if (item.StockQuantity <= item.LowStockThreshold)
                                         {

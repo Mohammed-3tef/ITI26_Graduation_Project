@@ -1,4 +1,5 @@
 ﻿using Mazeed.BLL.Services.Abstraction;
+using Mazeed.BLL.Services.Implementation;
 using Mazeed.BLL.ViewModels;
 using Mazeed.BLL.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
@@ -15,17 +16,23 @@ namespace Mazeed.PL.Controllers
         private readonly IUserService _userService;
         private readonly IRoleService _roleService;
         private readonly IGovernorateService _governorateService;
+        private readonly ICategoryService _categoryService; // 🟢 إضافة
+        private readonly IBrandService _brandService;       // 🟢 إضافة
         private readonly ILogger<AdminController> _logger;
 
         public AdminController(
             IUserService userService,
             IRoleService roleService,
             IGovernorateService governorateService,
+            ICategoryService categoryService,               // 🟢 حقن
+            IBrandService brandService,                  // 🟢 حقن
             ILogger<AdminController> logger)
         {
             _userService = userService;
             _roleService = roleService;
             _governorateService = governorateService;
+            _categoryService = categoryService;          // 🟢 تعيين
+            _brandService = brandService;                // 🟢 تعيين
             _logger = logger;
         }
 
@@ -40,9 +47,15 @@ namespace Mazeed.PL.Controllers
                 : new UserVM { Email = userEmail };
 
             ViewBag.CurrentUser = model;
-            await PopulateGovernoratesDropdownAsync(model.Governorate);
 
-            return View(model);
+            // 🟢 سحب البيانات للـ Slicers في الـ Dashboard
+            var categoriesResponse = await _categoryService.GetAllAsync();
+            ViewBag.Categories = categoriesResponse.Succeeded ? categoriesResponse.Data : Enumerable.Empty<CategoryVM>();
+
+            var brandsResponse = await _brandService.GetAllAsync();
+            ViewBag.Brands = brandsResponse.Succeeded ? brandsResponse.Data : Enumerable.Empty<BrandVM>();
+
+            return View("~/Views/Dashboard/Index.cshtml", model);
         }
 
         // Pass Roles and User-Role assignments via ViewBag to Users action

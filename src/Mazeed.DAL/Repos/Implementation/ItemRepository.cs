@@ -16,6 +16,7 @@ namespace Mazeed.DAL.Repos.Implementation
             return await _dbSet
                 .Include(i => i.ItemCategories).ThenInclude(x=>x.Category)
                 .Include(i => i.Brand)
+                .Include(i => i.Photos)
                 .ToListAsync();
         }
 

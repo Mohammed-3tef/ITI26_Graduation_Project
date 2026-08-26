@@ -4,6 +4,7 @@ using Mazeed.DAL.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mazeed.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260825204200_ItemSeeders")]
+    partial class ItemSeeders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3545,7 +3548,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Titanium design, A17 Pro chip, 48MP camera",
                             IsDeleted = false,
                             Name = "iPhone 15 Pro Max",
-                            Price = 65000.00m
+                            Price = 1199.00m
                         },
                         new
                         {
@@ -3557,7 +3560,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "M3 Max chip, 36GB Unified Memory, 1TB SSD",
                             IsDeleted = false,
                             Name = "MacBook Pro 16\"",
-                            Price = 175000.00m
+                            Price = 3499.00m
                         },
                         new
                         {
@@ -3569,7 +3572,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Liquid Retina XDR display, M2 chip",
                             IsDeleted = false,
                             Name = "iPad Pro 12.9\"",
-                            Price = 58000.00m
+                            Price = 1099.00m
                         },
                         new
                         {
@@ -3581,7 +3584,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Active Noise Cancellation, USB-C Charging",
                             IsDeleted = false,
                             Name = "AirPods Pro (2nd Gen)",
-                            Price = 12500.00m
+                            Price = 249.00m
                         },
                         new
                         {
@@ -3593,7 +3596,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Rugged titanium case, Dual-frequency GPS",
                             IsDeleted = false,
                             Name = "Apple Watch Ultra 2",
-                            Price = 42000.00m
+                            Price = 799.00m
                         },
                         new
                         {
@@ -3605,7 +3608,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Galaxy AI, 200MP Camera, S Pen included",
                             IsDeleted = false,
                             Name = "Galaxy S24 Ultra",
-                            Price = 62000.00m
+                            Price = 1299.00m
                         },
                         new
                         {
@@ -3617,7 +3620,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Unfold a massive 7.6\" main screen",
                             IsDeleted = false,
                             Name = "Galaxy Z Fold 5",
-                            Price = 78000.00m
+                            Price = 1799.00m
                         },
                         new
                         {
@@ -3629,7 +3632,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Intel Core Ultra 9, RTX 4070, AMOLED Display",
                             IsDeleted = false,
                             Name = "Galaxy Book 4 Ultra",
-                            Price = 120000.00m
+                            Price = 2399.00m
                         },
                         new
                         {
@@ -3641,7 +3644,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Rotating bezel, Advanced sleep tracking",
                             IsDeleted = false,
                             Name = "Galaxy Watch 6 Classic",
-                            Price = 16500.00m
+                            Price = 399.00m
                         },
                         new
                         {
@@ -3653,7 +3656,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "1TB SSD Storage, DualSense Wireless Controller",
                             IsDeleted = false,
                             Name = "PlayStation 5 Slim",
-                            Price = 27500.00m
+                            Price = 499.00m
                         },
                         new
                         {
@@ -3665,7 +3668,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Industry-leading noise canceling wireless headphones",
                             IsDeleted = false,
                             Name = "WH-1000XM5 Headphones",
-                            Price = 18500.00m
+                            Price = 399.00m
                         },
                         new
                         {
@@ -3677,7 +3680,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Cognitive Processor XR, Perfect for PS5",
                             IsDeleted = false,
                             Name = "Bravia XR 65\" OLED 4K TV",
-                            Price = 95000.00m
+                            Price = 1999.00m
                         },
                         new
                         {
@@ -3689,7 +3692,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "33MP Full-frame sensor, 4K 60p video",
                             IsDeleted = false,
                             Name = "Alpha 7 IV Mirrorless Camera",
-                            Price = 125000.00m
+                            Price = 2499.00m
                         },
                         new
                         {
@@ -3701,7 +3704,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "OLED Touch Display, Intel Core i9, 32GB RAM",
                             IsDeleted = false,
                             Name = "XPS 15 Laptop",
-                            Price = 110000.00m
+                            Price = 2199.00m
                         },
                         new
                         {
@@ -3713,7 +3716,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "RTX 4090, 18\" QHD+ 480Hz Display",
                             IsDeleted = false,
                             Name = "Alienware m18 Gaming Laptop",
-                            Price = 165000.00m
+                            Price = 3299.00m
                         },
                         new
                         {
@@ -3725,7 +3728,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "IPS Black technology, USB-C Hub capability",
                             IsDeleted = false,
                             Name = "UltraSharp 27\" 4K Monitor",
-                            Price = 29000.00m
+                            Price = 579.00m
                         },
                         new
                         {
@@ -3737,7 +3740,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Intel Core i7, 16GB RAM, 512GB SSD",
                             IsDeleted = false,
                             Name = "Inspiron 16 Laptop",
-                            Price = 42500.00m
+                            Price = 849.00m
                         },
                         new
                         {
@@ -3749,7 +3752,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Ultra-lightweight business laptop, Intel Evo certified",
                             IsDeleted = false,
                             Name = "ThinkPad X1 Carbon Gen 11",
-                            Price = 82000.00m
+                            Price = 1649.00m
                         },
                         new
                         {
@@ -3761,7 +3764,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Intel i9 13900HX, RTX 4080, 240Hz Display",
                             IsDeleted = false,
                             Name = "Legion Pro 7i Gaming Laptop",
-                            Price = 125000.00m
+                            Price = 2499.00m
                         },
                         new
                         {
@@ -3773,7 +3776,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "4K OLED Touchscreen, Bowers & Wilkins Soundbar",
                             IsDeleted = false,
                             Name = "Yoga 9i 2-in-1",
-                            Price = 70000.00m
+                            Price = 1399.00m
                         },
                         new
                         {
@@ -3785,7 +3788,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "12.6\" AMOLED 120Hz display, Precision Pen 3",
                             IsDeleted = false,
                             Name = "Tab P12 Pro",
-                            Price = 35000.00m
+                            Price = 699.00m
                         },
                         new
                         {
@@ -3797,7 +3800,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Door-in-Door with Craft Ice Maker",
                             IsDeleted = false,
                             Name = "InstaView Refrigerator 26 cu.ft",
-                            Price = 125000.00m
+                            Price = 2899.00m
                         },
                         new
                         {
@@ -3809,7 +3812,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "α9 AI Processor Gen6, Dolby Vision & Atmos",
                             IsDeleted = false,
                             Name = "C3 65\" OLED evo 4K TV",
-                            Price = 85000.00m
+                            Price = 1799.00m
                         },
                         new
                         {
@@ -3821,7 +3824,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Front Load Washer and Electric Dryer with AI DD",
                             IsDeleted = false,
                             Name = "WashTower Laundry Hub",
-                            Price = 145000.00m
+                            Price = 1999.00m
                         },
                         new
                         {
@@ -3833,7 +3836,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "OLED 240Hz 0.03ms, G-Sync Compatible",
                             IsDeleted = false,
                             Name = "UltraGear 34\" Curved Gaming Monitor",
-                            Price = 65000.00m
+                            Price = 999.00m
                         },
                         new
                         {
@@ -3845,7 +3848,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Plasmacluster Ion Technology, J-Tech Inverter",
                             IsDeleted = false,
                             Name = "4-Door French Door Refrigerator",
-                            Price = 75000.00m
+                            Price = 1899.00m
                         },
                         new
                         {
@@ -3857,7 +3860,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Stainless Steel, Touch Control, Auto Cook Menus",
                             IsDeleted = false,
                             Name = "Microwave Oven with Grill 34L",
-                            Price = 8500.00m
+                            Price = 220.00m
                         },
                         new
                         {
@@ -3869,7 +3872,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "HEPA Filter, Coverage up to 40 sqm",
                             IsDeleted = false,
                             Name = "Plasmacluster Air Purifier",
-                            Price = 16000.00m
+                            Price = 350.00m
                         },
                         new
                         {
@@ -3881,7 +3884,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Android TV with Google Assistant built-in",
                             IsDeleted = false,
                             Name = "AQUOS 55\" 4K UHD Smart TV",
-                            Price = 28000.00m
+                            Price = 599.00m
                         },
                         new
                         {
@@ -3893,7 +3896,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Lapel collar jacket with long sleeves and zip pockets",
                             IsDeleted = false,
                             Name = "Oversized Faux Leather Jacket",
-                            Price = 4500.00m
+                            Price = 89.90m
                         },
                         new
                         {
@@ -3905,7 +3908,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "High-waist trousers with front pleats and side pockets",
                             IsDeleted = false,
                             Name = "Pleated Wide Leg Trousers",
-                            Price = 2800.00m
+                            Price = 49.90m
                         },
                         new
                         {
@@ -3917,7 +3920,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Relaxed fit linen shirt with button-up front",
                             IsDeleted = false,
                             Name = "100% Linen Shirt",
-                            Price = 3200.00m
+                            Price = 59.90m
                         },
                         new
                         {
@@ -3929,7 +3932,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "V-neck dress with adjustable thin straps",
                             IsDeleted = false,
                             Name = "Satin Effect Midi Dress",
-                            Price = 3800.00m
+                            Price = 69.90m
                         },
                         new
                         {
@@ -3941,7 +3944,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Soft sweatshirt fabric hoodie with kangaroo pocket",
                             IsDeleted = false,
                             Name = "Relaxed Fit Hoodie",
-                            Price = 1600.00m
+                            Price = 29.99m
                         },
                         new
                         {
@@ -3953,7 +3956,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "5-pocket jeans in washed denim with flexible stretch",
                             IsDeleted = false,
                             Name = "Slim Fit Stretch Jeans",
-                            Price = 1900.00m
+                            Price = 39.99m
                         },
                         new
                         {
@@ -3965,7 +3968,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Heavyweight cotton jersey T-shirt with ribbed neck",
                             IsDeleted = false,
                             Name = "Oversized Cotton T-Shirt",
-                            Price = 900.00m
+                            Price = 17.99m
                         },
                         new
                         {
@@ -3977,7 +3980,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Soft fine-knit cardigan with buttons down the front",
                             IsDeleted = false,
                             Name = "Fine-knit Cardigan",
-                            Price = 1300.00m
+                            Price = 24.99m
                         },
                         new
                         {
@@ -3989,7 +3992,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Classic basketball shoe with durable leather overlays",
                             IsDeleted = false,
                             Name = "Air Force 1 '07",
-                            Price = 7500.00m
+                            Price = 115.00m
                         },
                         new
                         {
@@ -4001,7 +4004,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Premium lightweight fleece jacket with full zip",
                             IsDeleted = false,
                             Name = "Tech Fleece Windrunner",
-                            Price = 8500.00m
+                            Price = 145.00m
                         },
                         new
                         {
@@ -4013,7 +4016,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Brushed-back fleece pants with elastic waistband",
                             IsDeleted = false,
                             Name = "Sportswear Club Fleece Joggers",
-                            Price = 4000.00m
+                            Price = 65.00m
                         },
                         new
                         {
@@ -4025,7 +4028,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "80s b-ball icon created for the court and adapted for the streets",
                             IsDeleted = false,
                             Name = "Dunk Low Retro",
-                            Price = 7500.00m
+                            Price = 115.00m
                         },
                         new
                         {
@@ -4037,7 +4040,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Epic energy response with Light BOOST cushioning",
                             IsDeleted = false,
                             Name = "Ultraboost Light Shoes",
-                            Price = 9000.00m
+                            Price = 190.00m
                         },
                         new
                         {
@@ -4049,7 +4052,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Leather upper with suede overlays and gum rubber sole",
                             IsDeleted = false,
                             Name = "Samba OG Shoes",
-                            Price = 6500.00m
+                            Price = 100.00m
                         },
                         new
                         {
@@ -4061,7 +4064,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Iconic 3-Stripes track jacket with stand-up collar",
                             IsDeleted = false,
                             Name = "Adicolor Classics Track Jacket",
-                            Price = 4000.00m
+                            Price = 80.00m
                         },
                         new
                         {
@@ -4073,7 +4076,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Slim-fit training pants with AEROREADY moisture absorbing",
                             IsDeleted = false,
                             Name = "Tiro 23 League Pants",
-                            Price = 2800.00m
+                            Price = 55.00m
                         },
                         new
                         {
@@ -4085,7 +4088,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Iconic low-top suede sneakers with rubber outsole",
                             IsDeleted = false,
                             Name = "Suede Classic XXI Sneakers",
-                            Price = 4500.00m
+                            Price = 75.00m
                         },
                         new
                         {
@@ -4097,7 +4100,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Heritage sports style with signature side stripes",
                             IsDeleted = false,
                             Name = "T7 Track Jacket",
-                            Price = 3800.00m
+                            Price = 70.00m
                         },
                         new
                         {
@@ -4109,7 +4112,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "LaMelo Ball signature shoes with NITRO foam cushioning",
                             IsDeleted = false,
                             Name = "MB.03 Basketball Shoes",
-                            Price = 6500.00m
+                            Price = 125.00m
                         },
                         new
                         {
@@ -4121,7 +4124,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Fleece lined pullover hoodie with kangaroo pocket",
                             IsDeleted = false,
                             Name = "Essentials Logo Hoodie",
-                            Price = 2800.00m
+                            Price = 50.00m
                         },
                         new
                         {
@@ -4133,7 +4136,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Pure cotton pique polo with signature embroidered flag",
                             IsDeleted = false,
                             Name = "Classic Polo Shirt",
-                            Price = 4500.00m
+                            Price = 89.50m
                         },
                         new
                         {
@@ -4145,7 +4148,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Low top leather sneaker with subtle flag logo details",
                             IsDeleted = false,
                             Name = "Essential Leather Sneaker",
-                            Price = 5500.00m
+                            Price = 110.00m
                         },
                         new
                         {
@@ -4157,7 +4160,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Packable puffer jacket with recycled down filling",
                             IsDeleted = false,
                             Name = "Lightweight Down Jacket",
-                            Price = 10000.00m
+                            Price = 199.00m
                         },
                         new
                         {
@@ -4169,7 +4172,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Classic straight fit denim jeans with dark wash",
                             IsDeleted = false,
                             Name = "Denton Straight Fit Jeans",
-                            Price = 6000.00m
+                            Price = 120.00m
                         },
                         new
                         {
@@ -4181,7 +4184,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Unlined cotton stretch bralette with iconic logo band",
                             IsDeleted = false,
                             Name = "Modern Cotton Bralette",
-                            Price = 1800.00m
+                            Price = 30.00m
                         },
                         new
                         {
@@ -4193,7 +4196,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "100% Organic cotton t-shirt with front chest logo",
                             IsDeleted = false,
                             Name = "Monogram Logo T-Shirt",
-                            Price = 2500.00m
+                            Price = 45.00m
                         },
                         new
                         {
@@ -4205,7 +4208,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "High rise vintage inspired straight leg jeans",
                             IsDeleted = false,
                             Name = "90s Straight Denim Jeans",
-                            Price = 5000.00m
+                            Price = 98.00m
                         },
                         new
                         {
@@ -4217,7 +4220,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Classic boxer briefs with supportive fit and elastic waist",
                             IsDeleted = false,
                             Name = "3-Pack Cotton Stretch Boxer Briefs",
-                            Price = 2800.00m
+                            Price = 49.50m
                         },
                         new
                         {
@@ -4229,7 +4232,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Quick-drying ultra-soft fabric with natural feel",
                             IsDeleted = false,
                             Name = "UA Tech 2.0 Short Sleeve",
-                            Price = 1500.00m
+                            Price = 25.00m
                         },
                         new
                         {
@@ -4241,7 +4244,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "UA Flow dual-density cushioning for high speed traction",
                             IsDeleted = false,
                             Name = "Curry 11 Basketball Shoes",
-                            Price = 8000.00m
+                            Price = 160.00m
                         },
                         new
                         {
@@ -4253,7 +4256,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Water-resistant UA Storm technology with laptop sleeve",
                             IsDeleted = false,
                             Name = "Hustle 5.0 Backpack",
-                            Price = 3000.00m
+                            Price = 55.00m
                         },
                         new
                         {
@@ -4265,7 +4268,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Super-light HeatGear fabric delivers superior coverage",
                             IsDeleted = false,
                             Name = "HeatGear Armour Compression Leggings",
-                            Price = 2000.00m
+                            Price = 35.00m
                         },
                         new
                         {
@@ -4277,7 +4280,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Soft garment leather upper with classic tennis look",
                             IsDeleted = false,
                             Name = "Club C 85 Vintage Shoes",
-                            Price = 4500.00m
+                            Price = 90.00m
                         },
                         new
                         {
@@ -4289,7 +4292,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Lightweight breathability with Lift and Run Chassis",
                             IsDeleted = false,
                             Name = "Nano X4 Training Shoes",
-                            Price = 7000.00m
+                            Price = 140.00m
                         },
                         new
                         {
@@ -4301,7 +4304,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Retro style track pants made with recycled materials",
                             IsDeleted = false,
                             Name = "Vector Track Pants",
-                            Price = 3000.00m
+                            Price = 60.00m
                         },
                         new
                         {
@@ -4313,7 +4316,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Everyday fleece hoodie with soft cotton blend",
                             IsDeleted = false,
                             Name = "Identity Logo Fleece Hoodie",
-                            Price = 2800.00m
+                            Price = 55.00m
                         },
                         new
                         {
@@ -4325,7 +4328,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Pop-up free-standing tent easy assembly",
                             IsDeleted = false,
                             Name = "Quechua 2-Second Camping Tent 3-Person",
-                            Price = 6500.00m
+                            Price = 120.00m
                         },
                         new
                         {
@@ -4337,7 +4340,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Cast iron plates with threaded spinlock bars",
                             IsDeleted = false,
                             Name = "Domyos Adjustable Dumbbell Set 20kg",
-                            Price = 4500.00m
+                            Price = 75.00m
                         },
                         new
                         {
@@ -4349,7 +4352,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Lightweight running shoes for beginners",
                             IsDeleted = false,
                             Name = "Kalenji Run Cushion Shoes",
-                            Price = 2200.00m
+                            Price = 35.00m
                         },
                         new
                         {
@@ -4361,7 +4364,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Heart rate monitoring, pace and distance tracking",
                             IsDeleted = false,
                             Name = "Kiprun Running GPS Watch",
-                            Price = 5500.00m
+                            Price = 110.00m
                         },
                         new
                         {
@@ -4373,7 +4376,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "EVA foam cushioning with durable suede and mesh upper",
                             IsDeleted = false,
                             Name = "574 Core Sneakers",
-                            Price = 5500.00m
+                            Price = 90.00m
                         },
                         new
                         {
@@ -4385,7 +4388,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "FuelCell foam delivers a propulsive feel with ENCAP midsole",
                             IsDeleted = false,
                             Name = "990v6 Made in USA",
-                            Price = 11000.00m
+                            Price = 200.00m
                         },
                         new
                         {
@@ -4397,7 +4400,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Max cushioning running shoe with breathable engineered mesh",
                             IsDeleted = false,
                             Name = "Fresh Foam X 1080v13",
-                            Price = 8500.00m
+                            Price = 165.00m
                         },
                         new
                         {
@@ -4409,7 +4412,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Relaxed fit soft French terry pullover hoodie",
                             IsDeleted = false,
                             Name = "Athletics French Terry Hoodie",
-                            Price = 3800.00m
+                            Price = 75.00m
                         },
                         new
                         {
@@ -4421,7 +4424,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Omni-Tech waterproof breathable fully seam sealed jacket",
                             IsDeleted = false,
                             Name = "Watertight II Rain Jacket",
-                            Price = 5000.00m
+                            Price = 90.00m
                         },
                         new
                         {
@@ -4433,7 +4436,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Warm 250g MTR filament fleece sweater jacket",
                             IsDeleted = false,
                             Name = "Steens Mountain Full Zip Fleece",
-                            Price = 2800.00m
+                            Price = 45.00m
                         },
                         new
                         {
@@ -4445,7 +4448,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Waterproof leather and suede hiking boots with Techlite midsole",
                             IsDeleted = false,
                             Name = "Newton Ridge Plus Hiking Boots",
-                            Price = 6500.00m
+                            Price = 100.00m
                         },
                         new
                         {
@@ -4457,7 +4460,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Omni-Shade UPF 50 sun protection hiking pants",
                             IsDeleted = false,
                             Name = "Silver Ridge Utility Pants",
-                            Price = 3500.00m
+                            Price = 65.00m
                         },
                         new
                         {
@@ -4469,7 +4472,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Hands Free Slip-ins with Air-Cooled Goga Mat insole",
                             IsDeleted = false,
                             Name = "Go Walk 6 - Slip-Ins",
-                            Price = 5000.00m
+                            Price = 85.00m
                         },
                         new
                         {
@@ -4481,7 +4484,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Podiatrist-certified arch support walking shoes",
                             IsDeleted = false,
                             Name = "Arch Fit 2.0 Sneakers",
-                            Price = 5500.00m
+                            Price = 95.00m
                         },
                         new
                         {
@@ -4493,7 +4496,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Classic air-cushioned style with Memory Foam insole",
                             IsDeleted = false,
                             Name = "UNO - Stand on Air",
-                            Price = 4800.00m
+                            Price = 80.00m
                         },
                         new
                         {
@@ -4505,7 +4508,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Chunky retro style sneakers with flexible traction outsole",
                             IsDeleted = false,
                             Name = "D'Lites 4.0 Pro",
-                            Price = 4500.00m
+                            Price = 75.00m
                         },
                         new
                         {
@@ -4517,7 +4520,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Advanced stability running shoes with PureGEL technology",
                             IsDeleted = false,
                             Name = "GEL-KAYANO 30",
-                            Price = 8500.00m
+                            Price = 160.00m
                         },
                         new
                         {
@@ -4529,7 +4532,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Maximum cushioning running shoes with FF BLAST PLUS ECO",
                             IsDeleted = false,
                             Name = "GEL-NIMBUS 26",
-                            Price = 8500.00m
+                            Price = 160.00m
                         },
                         new
                         {
@@ -4541,7 +4544,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Versatile stability trainer for various distances",
                             IsDeleted = false,
                             Name = "GT-2000 12",
-                            Price = 7500.00m
+                            Price = 140.00m
                         },
                         new
                         {
@@ -4553,7 +4556,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Rearfoot GEL technology for trail running and outdoor walking",
                             IsDeleted = false,
                             Name = "GEL-VENTURE 9 Hiking Shoes",
-                            Price = 4500.00m
+                            Price = 75.00m
                         },
                         new
                         {
@@ -4565,7 +4568,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Plumps skin and reduces wrinkles in 1 week",
                             IsDeleted = false,
                             Name = "Revitalift 1.5% Pure Hyaluronic Acid Serum",
-                            Price = 1400.00m
+                            Price = 32.99m
                         },
                         new
                         {
@@ -4577,7 +4580,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Lightweight breathable liquid foundation transfer-resistant",
                             IsDeleted = false,
                             Name = "Infallible 24H Fresh Wear Foundation",
-                            Price = 950.00m
+                            Price = 16.99m
                         },
                         new
                         {
@@ -4589,7 +4592,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Repairs 5 signs of damaged hair with Protein + Ceramides",
                             IsDeleted = false,
                             Name = "Elvive Total Repair 5 Shampoo 400ml",
-                            Price = 450.00m
+                            Price = 8.50m
                         },
                         new
                         {
@@ -4601,7 +4604,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Voluptuous volume and intense length waterproof mascara",
                             IsDeleted = false,
                             Name = "Lash Paradise Mascara Black",
-                            Price = 750.00m
+                            Price = 12.99m
                         },
                         new
                         {
@@ -4613,7 +4616,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Limitless length and full volume washable mascara",
                             IsDeleted = false,
                             Name = "Lash Sensational Sky High Mascara",
-                            Price = 700.00m
+                            Price = 12.99m
                         },
                         new
                         {
@@ -4625,7 +4628,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Oil-free foundation matches skin tone and texture",
                             IsDeleted = false,
                             Name = "Fit Me Matte + Poreless Foundation",
-                            Price = 600.00m
+                            Price = 9.99m
                         },
                         new
                         {
@@ -4637,7 +4640,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Up to 16 hours saturated matte color liquid lipstick",
                             IsDeleted = false,
                             Name = "SuperStay Matte Ink Liquid Lipstick",
-                            Price = 550.00m
+                            Price = 10.99m
                         },
                         new
                         {
@@ -4649,7 +4652,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Multi-use concealer erases dark circles and redness",
                             IsDeleted = false,
                             Name = "Instant Age Rewind Eraser Concealer",
-                            Price = 600.00m
+                            Price = 10.99m
                         },
                         new
                         {
@@ -4661,7 +4664,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "With hyaluronic acid, ceramides, and glycerin for normal to dry skin",
                             IsDeleted = false,
                             Name = "Hydrating Facial Cleanser 473ml",
-                            Price = 1100.00m
+                            Price = 18.00m
                         },
                         new
                         {
@@ -4673,7 +4676,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Rich non-greasy moisturizing cream with 3 essential ceramides",
                             IsDeleted = false,
                             Name = "Moisturizing Cream 454g",
-                            Price = 1200.00m
+                            Price = 19.50m
                         },
                         new
                         {
@@ -4685,7 +4688,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Daily oil-free face moisturizer with broad spectrum sunscreen",
                             IsDeleted = false,
                             Name = "AM Facial Moisturizing Lotion SPF 30",
-                            Price = 1150.00m
+                            Price = 19.00m
                         },
                         new
                         {
@@ -4697,7 +4700,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Reduces appearance of post-acne marks and pores",
                             IsDeleted = false,
                             Name = "Resurfacing Retinol Serum 30ml",
-                            Price = 1300.00m
+                            Price = 21.99m
                         },
                         new
                         {
@@ -4709,7 +4712,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Iconic vivid blue-red matte finish lipstick",
                             IsDeleted = false,
                             Name = "Matte Lipstick - Ruby Woo",
-                            Price = 1400.00m
+                            Price = 23.00m
                         },
                         new
                         {
@@ -4721,7 +4724,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "24-hour wear buildable coverage matte finish foundation",
                             IsDeleted = false,
                             Name = "Studio Fix Fluid SPF 15 Foundation",
-                            Price = 2500.00m
+                            Price = 42.00m
                         },
                         new
                         {
@@ -4733,7 +4736,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Hydrating face mist that sets and refreshes makeup",
                             IsDeleted = false,
                             Name = "Prep + Prime Fix+ Setting Spray 100ml",
-                            Price = 1800.00m
+                            Price = 31.00m
                         },
                         new
                         {
@@ -4745,7 +4748,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Slow-baked domed face powder with dimensional finish",
                             IsDeleted = false,
                             Name = "Mineralize Skinfinish Powder",
-                            Price = 2200.00m
+                            Price = 42.00m
                         },
                         new
                         {
@@ -4757,7 +4760,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Original all-purpose moisturizer for face, body, and hands",
                             IsDeleted = false,
                             Name = "Nivea Creme Tin 150ml",
-                            Price = 250.00m
+                            Price = 6.50m
                         },
                         new
                         {
@@ -4769,7 +4772,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Organic avocado oil body lotion for 48h moisture",
                             IsDeleted = false,
                             Name = "Naturally Good Body Lotion 350ml",
-                            Price = 350.00m
+                            Price = 9.00m
                         },
                         new
                         {
@@ -4781,7 +4784,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "48h anti-perspirant protection without yellow stains",
                             IsDeleted = false,
                             Name = "Black & White Invisible Roll-On 50ml",
-                            Price = 180.00m
+                            Price = 4.50m
                         },
                         new
                         {
@@ -4793,7 +4796,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Firming face moisturizer with pure Q10 and Creatine",
                             IsDeleted = false,
                             Name = "Q10 Power Anti-Wrinkle Day Cream SPF 15",
-                            Price = 550.00m
+                            Price = 14.50m
                         },
                         new
                         {
@@ -4805,7 +4808,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "High-strength vitamin and mineral blemish formula",
                             IsDeleted = false,
                             Name = "Niacinamide 10% + Zinc 1%",
-                            Price = 550.00m
+                            Price = 6.00m
                         },
                         new
                         {
@@ -4817,7 +4820,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Hydration support formula with ultra-pure vegan hyaluronic acid",
                             IsDeleted = false,
                             Name = "Hyaluronic Acid 2% + B5",
-                            Price = 650.00m
+                            Price = 8.90m
                         },
                         new
                         {
@@ -4829,7 +4832,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "10-minute exfoliating facial peeling treatment",
                             IsDeleted = false,
                             Name = "AHA 30% + BHA 2% Peeling Solution",
-                            Price = 700.00m
+                            Price = 9.50m
                         },
                         new
                         {
@@ -4841,7 +4844,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Reduces appearance of eye contour pigmentation and puffiness",
                             IsDeleted = false,
                             Name = "Caffeine Solution 5% + EGCG",
-                            Price = 600.00m
+                            Price = 8.00m
                         },
                         new
                         {
@@ -4853,7 +4856,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Daily skin fortifying serum for plump and hydrated skin",
                             IsDeleted = false,
                             Name = "Minéral 89 Hyaluronic Acid Booster 50ml",
-                            Price = 1800.00m
+                            Price = 29.99m
                         },
                         new
                         {
@@ -4865,7 +4868,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "15% Pure Vitamin C antioxidant serum for bright skin",
                             IsDeleted = false,
                             Name = "LiftActiv Vitamin C Serum 20ml",
-                            Price = 2200.00m
+                            Price = 35.00m
                         },
                         new
                         {
@@ -4877,7 +4880,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Purifying gel cleanser enriched with Salicylic Acid for acne-prone skin",
                             IsDeleted = false,
                             Name = "Normaderm PhytoSolution Cleansing Gel",
-                            Price = 1300.00m
+                            Price = 20.00m
                         },
                         new
                         {
@@ -4889,7 +4892,7 @@ namespace Mazeed.DAL.Migrations
                             Description = "Anti-imperfections daily sun protection fluid with Niacinamide",
                             IsDeleted = false,
                             Name = "Capital Soleil UV-Clear Fluid SPF 50+",
-                            Price = 1600.00m
+                            Price = 24.50m
                         });
                 });
 
@@ -4951,1025 +4954,6 @@ namespace Mazeed.DAL.Migrations
                     b.HasIndex("ItemId");
 
                     b.ToTable("ItemPhotos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 1L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 2L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 3L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 4L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 5L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 6L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 7L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 7L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 8L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 8L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 9L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 9L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 10L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 10L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 11L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 11L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 12L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 12L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 13L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 13L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 14L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 14L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 15L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 15L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 16L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 16L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 17L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 17L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 18L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 18L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 19L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 19L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 20L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 20L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 21L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 21L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 22L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 22L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 23L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 23L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1461151304267-38535e780c79?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 24L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 24L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 25L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 25L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1547082299-de196ea013d6?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 26L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 26L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 27L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 27L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 28L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 28L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 29L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 29L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 30L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 30L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 31L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 31L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 32L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 32L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 33L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 33L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 34L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 34L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 35L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 35L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 36L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 36L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 37L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 37L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 38L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 38L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 39L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 39L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1544441893-675973e31985?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 40L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 40L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 41L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 41L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 42L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 42L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 43L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 43L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 44L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 44L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 45L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 45L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 46L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 46L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 47L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 47L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 48L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 48L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1579338559194-a162d19bf842?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 49L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 49L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 50L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 50L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1625910513413-5fc40e34c264?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 51L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 51L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 52L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 52L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1548883354-7622d03aca27?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 53L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 53L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1542272604-780c36856d61?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 54L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 54L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 55L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 55L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 56L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 56L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1565084888279-aca607ecce0c?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 57L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 57L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 58L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 58L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 59L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 59L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 60L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 60L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 61L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 61L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1506629082925-23688b0729fe?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 62L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 62L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1539185441755-769473a23570?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 63L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 63L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 64L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 64L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 65L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 65L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 66L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 66L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 67L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 67L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 68L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 68L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 69L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 69L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1510017803434-a899398421b3?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 70L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 70L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1539185441755-769473a23570?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 71L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 71L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 72L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 72L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 73L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 73L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 74L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 74L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1544441893-675973e31985?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 75L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 75L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 76L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 76L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 77L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 77L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 78L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 78L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 79L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 79L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 80L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 80L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 81L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 81L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 82L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 82L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 83L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 83L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 84L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 84L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 85L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 85L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 86L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 86L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 87L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 87L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 88L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 88L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 89L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 89L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1631214524020-7e18db9a8f9d?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 90L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 90L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1560700146-7c0137a8b3f2?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 91L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 91L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1608248597349-f06b6b55dbdf?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 92L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 92L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 93L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 93L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 94L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 94L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 95L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 95L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1608248597259-be160f25e982?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 96L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 96L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 97L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 97L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 98L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 98L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 99L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 99L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 100L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 100L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 101L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 101L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1590156206657-19d08e5a73e1?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 102L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 102L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1608248597259-be160f25e982?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 103L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 103L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 104L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 104L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1619451334792-150fd785ee74?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 105L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 105L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 106L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 106L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 107L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 107L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1608248597349-f06b6b55dbdf?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 108L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 108L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 109L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 109L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 110L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 110L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 111L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 111L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1608248597349-f06b6b55dbdf?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 112L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 112L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500&auto=format&fit=crop"
-                        },
-                        new
-                        {
-                            Id = 113L,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 113L,
-                            PhotoUrl = "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=500&auto=format&fit=crop"
-                        });
                 });
 
             modelBuilder.Entity("Mazeed.DAL.Entities.ItemReview", b =>
@@ -6085,848 +5069,6 @@ namespace Mazeed.DAL.Migrations
                     b.HasIndex("ItemId");
 
                     b.ToTable("ItemVariants");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Color = "Black Titanium",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 1L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "APL-IP15P-128-BLK",
-                            Size = "128GB",
-                            StockQuantity = 35
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Color = "Natural Titanium",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 1L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 6000.00m,
-                            SKU = "APL-IP15P-256-NAT",
-                            Size = "256GB",
-                            StockQuantity = 3
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            Color = "Blue Titanium",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 1L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 14000.00m,
-                            SKU = "APL-IP15P-512-BLU",
-                            Size = "512GB",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            Color = "Titanium Gray",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 2L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "SAM-S24U-256-GRY",
-                            Size = "256GB",
-                            StockQuantity = 25
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            Color = "Titanium Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 2L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 5500.00m,
-                            SKU = "SAM-S24U-512-BLK",
-                            Size = "512GB",
-                            StockQuantity = 2
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            Color = "Titanium Violet",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 2L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 12000.00m,
-                            SKU = "SAM-S24U-1TB-VIO",
-                            Size = "1TB",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 7L,
-                            Color = "Space Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 3L,
-                            LowStockThreshold = 3,
-                            PriceAdjustment = 0.00m,
-                            SKU = "APL-MBP-14-512",
-                            Size = "14-inch / 512GB",
-                            StockQuantity = 30
-                        },
-                        new
-                        {
-                            Id = 8L,
-                            Color = "Space Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 3L,
-                            LowStockThreshold = 3,
-                            PriceAdjustment = 9000.00m,
-                            SKU = "APL-MBP-14-1TB",
-                            Size = "14-inch / 1TB",
-                            StockQuantity = 1
-                        },
-                        new
-                        {
-                            Id = 9L,
-                            Color = "Silver",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 3L,
-                            LowStockThreshold = 3,
-                            PriceAdjustment = 18000.00m,
-                            SKU = "APL-MBP-16-1TB",
-                            Size = "16-inch / 1TB",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 10L,
-                            Color = "Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 4L,
-                            LowStockThreshold = 4,
-                            PriceAdjustment = 0.00m,
-                            SKU = "LG-OLED-55-BLK",
-                            Size = "55 Inch",
-                            StockQuantity = 40
-                        },
-                        new
-                        {
-                            Id = 11L,
-                            Color = "Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 4L,
-                            LowStockThreshold = 4,
-                            PriceAdjustment = 11000.00m,
-                            SKU = "LG-OLED-65-BLK",
-                            Size = "65 Inch",
-                            StockQuantity = 2
-                        },
-                        new
-                        {
-                            Id = 12L,
-                            Color = "Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 4L,
-                            LowStockThreshold = 4,
-                            PriceAdjustment = 25000.00m,
-                            SKU = "LG-OLED-77-BLK",
-                            Size = "77 Inch",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 13L,
-                            Color = "Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 5L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "SNY-XM5-BLK",
-                            Size = "Standard",
-                            StockQuantity = 50
-                        },
-                        new
-                        {
-                            Id = 14L,
-                            Color = "Silver",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 5L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "SNY-XM5-SLV",
-                            Size = "Standard",
-                            StockQuantity = 4
-                        },
-                        new
-                        {
-                            Id = 15L,
-                            Color = "Midnight Blue",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 5L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 500.00m,
-                            SKU = "SNY-XM5-BLU",
-                            Size = "Standard",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 16L,
-                            Color = "White",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 6L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "ZRA-TSH-WHT-M",
-                            Size = "M",
-                            StockQuantity = 60
-                        },
-                        new
-                        {
-                            Id = 17L,
-                            Color = "Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 6L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "ZRA-TSH-BLK-L",
-                            Size = "L",
-                            StockQuantity = 3
-                        },
-                        new
-                        {
-                            Id = 18L,
-                            Color = "Beige",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 6L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "ZRA-TSH-BEI-XL",
-                            Size = "XL",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 19L,
-                            Color = "Dark Blue",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 7L,
-                            LowStockThreshold = 8,
-                            PriceAdjustment = 0.00m,
-                            SKU = "LVS-501-BLU-32",
-                            Size = "32/32",
-                            StockQuantity = 45
-                        },
-                        new
-                        {
-                            Id = 20L,
-                            Color = "Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 7L,
-                            LowStockThreshold = 8,
-                            PriceAdjustment = 0.00m,
-                            SKU = "LVS-501-BLK-34",
-                            Size = "34/32",
-                            StockQuantity = 2
-                        },
-                        new
-                        {
-                            Id = 21L,
-                            Color = "Light Blue",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 7L,
-                            LowStockThreshold = 8,
-                            PriceAdjustment = 0.00m,
-                            SKU = "LVS-501-LBL-30",
-                            Size = "30/32",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 22L,
-                            Color = "Heather Grey",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 8L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "ADI-HDD-GRY-M",
-                            Size = "M",
-                            StockQuantity = 30
-                        },
-                        new
-                        {
-                            Id = 23L,
-                            Color = "Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 8L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "ADI-HDD-BLK-S",
-                            Size = "S",
-                            StockQuantity = 4
-                        },
-                        new
-                        {
-                            Id = 24L,
-                            Color = "Red",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 8L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 100.00m,
-                            SKU = "ADI-HDD-RED-XL",
-                            Size = "XL",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 25L,
-                            Color = "Black / White",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 9L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "NKE-JKT-BLK-L",
-                            Size = "L",
-                            StockQuantity = 25
-                        },
-                        new
-                        {
-                            Id = 26L,
-                            Color = "Olive Green",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 9L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "NKE-JKT-GRN-M",
-                            Size = "M",
-                            StockQuantity = 1
-                        },
-                        new
-                        {
-                            Id = 27L,
-                            Color = "Navy",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 9L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "NKE-JKT-NVY-XL",
-                            Size = "XL",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 28L,
-                            Color = "Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 10L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "PMA-SRT-BLK-M",
-                            Size = "M",
-                            StockQuantity = 55
-                        },
-                        new
-                        {
-                            Id = 29L,
-                            Color = "Grey",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 10L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "PMA-SRT-GRY-L",
-                            Size = "L",
-                            StockQuantity = 5
-                        },
-                        new
-                        {
-                            Id = 30L,
-                            Color = "Blue",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 10L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "PMA-SRT-BLU-S",
-                            Size = "S",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 31L,
-                            Color = "Black / White",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 11L,
-                            LowStockThreshold = 6,
-                            PriceAdjustment = 0.00m,
-                            SKU = "NKE-PEG-BLK-42",
-                            Size = "42",
-                            StockQuantity = 40
-                        },
-                        new
-                        {
-                            Id = 32L,
-                            Color = "Racer Blue",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 11L,
-                            LowStockThreshold = 6,
-                            PriceAdjustment = 200.00m,
-                            SKU = "NKE-PEG-BLU-43",
-                            Size = "43",
-                            StockQuantity = 2
-                        },
-                        new
-                        {
-                            Id = 33L,
-                            Color = "Total Orange",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 11L,
-                            LowStockThreshold = 6,
-                            PriceAdjustment = 200.00m,
-                            SKU = "NKE-PEG-ORG-44",
-                            Size = "44",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 34L,
-                            Color = "Core White",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 12L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "ADI-UB-WHT-41",
-                            Size = "41",
-                            StockQuantity = 35
-                        },
-                        new
-                        {
-                            Id = 35L,
-                            Color = "Core Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 12L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "ADI-UB-BLK-42",
-                            Size = "42",
-                            StockQuantity = 3
-                        },
-                        new
-                        {
-                            Id = 36L,
-                            Color = "Solar Red",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 12L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 300.00m,
-                            SKU = "ADI-UB-RED-45",
-                            Size = "45",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 37L,
-                            Color = "Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 13L,
-                            LowStockThreshold = 8,
-                            PriceAdjustment = 0.00m,
-                            SKU = "UA-HG-BLK-M",
-                            Size = "M",
-                            StockQuantity = 50
-                        },
-                        new
-                        {
-                            Id = 38L,
-                            Color = "White",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 13L,
-                            LowStockThreshold = 8,
-                            PriceAdjustment = 0.00m,
-                            SKU = "UA-HG-WHT-L",
-                            Size = "L",
-                            StockQuantity = 4
-                        },
-                        new
-                        {
-                            Id = 39L,
-                            Color = "Royal Blue",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 13L,
-                            LowStockThreshold = 8,
-                            PriceAdjustment = 0.00m,
-                            SKU = "UA-HG-RYL-S",
-                            Size = "S",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 40L,
-                            Color = "Black / Red",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 14L,
-                            LowStockThreshold = 3,
-                            PriceAdjustment = 0.00m,
-                            SKU = "WLN-PS-97-G2",
-                            Size = "Grip 2 (4 1/4)",
-                            StockQuantity = 20
-                        },
-                        new
-                        {
-                            Id = 41L,
-                            Color = "Black / Red",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 14L,
-                            LowStockThreshold = 3,
-                            PriceAdjustment = 0.00m,
-                            SKU = "WLN-PS-97-G3",
-                            Size = "Grip 3 (4 3/8)",
-                            StockQuantity = 1
-                        },
-                        new
-                        {
-                            Id = 42L,
-                            Color = "Black / Red",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 14L,
-                            LowStockThreshold = 3,
-                            PriceAdjustment = 0.00m,
-                            SKU = "WLN-PS-97-G4",
-                            Size = "Grip 4 (4 1/2)",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 43L,
-                            Color = "Pastel Pink",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 15L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "DEC-YM-PNK-8M",
-                            Size = "8mm Thick",
-                            StockQuantity = 70
-                        },
-                        new
-                        {
-                            Id = 44L,
-                            Color = "Purple",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 15L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "DEC-YM-PPL-8M",
-                            Size = "8mm Thick",
-                            StockQuantity = 5
-                        },
-                        new
-                        {
-                            Id = 45L,
-                            Color = "Mint Green",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 15L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "DEC-YM-GRN-8M",
-                            Size = "8mm Thick",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 46L,
-                            Color = "Clear",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 16L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "LOR-REV-SER-30",
-                            Size = "30ml",
-                            StockQuantity = 80
-                        },
-                        new
-                        {
-                            Id = 47L,
-                            Color = "Clear",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 16L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 300.00m,
-                            SKU = "LOR-REV-SER-50",
-                            Size = "50ml",
-                            StockQuantity = 4
-                        },
-                        new
-                        {
-                            Id = 48L,
-                            Color = "Clear",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 16L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 750.00m,
-                            SKU = "LOR-REV-SER-100",
-                            Size = "100ml",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 49L,
-                            Color = "Translucent",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 17L,
-                            LowStockThreshold = 15,
-                            PriceAdjustment = 0.00m,
-                            SKU = "ORD-NIA-30ML",
-                            Size = "30ml",
-                            StockQuantity = 100
-                        },
-                        new
-                        {
-                            Id = 50L,
-                            Color = "Translucent",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 17L,
-                            LowStockThreshold = 15,
-                            PriceAdjustment = 250.00m,
-                            SKU = "ORD-NIA-60ML",
-                            Size = "60ml",
-                            StockQuantity = 5
-                        },
-                        new
-                        {
-                            Id = 51L,
-                            Color = "Translucent",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 17L,
-                            LowStockThreshold = 15,
-                            PriceAdjustment = 500.00m,
-                            SKU = "ORD-NIA-100ML",
-                            Size = "100ml",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 52L,
-                            Color = "White",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 18L,
-                            LowStockThreshold = 8,
-                            PriceAdjustment = 0.00m,
-                            SKU = "CRV-CLN-236ML",
-                            Size = "236ml",
-                            StockQuantity = 65
-                        },
-                        new
-                        {
-                            Id = 53L,
-                            Color = "White",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 18L,
-                            LowStockThreshold = 8,
-                            PriceAdjustment = 200.00m,
-                            SKU = "CRV-CLN-473ML",
-                            Size = "473ml",
-                            StockQuantity = 2
-                        },
-                        new
-                        {
-                            Id = 54L,
-                            Color = "White",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 18L,
-                            LowStockThreshold = 8,
-                            PriceAdjustment = 550.00m,
-                            SKU = "CRV-CLN-1000ML",
-                            Size = "1 Litre",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 55L,
-                            Color = "Very Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 19L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "MAY-MSK-VBLK",
-                            Size = "9.5ml",
-                            StockQuantity = 90
-                        },
-                        new
-                        {
-                            Id = 56L,
-                            Color = "Waterproof Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 19L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 50.00m,
-                            SKU = "MAY-MSK-WPR",
-                            Size = "9.5ml",
-                            StockQuantity = 3
-                        },
-                        new
-                        {
-                            Id = 57L,
-                            Color = "Brownish Black",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 19L,
-                            LowStockThreshold = 10,
-                            PriceAdjustment = 0.00m,
-                            SKU = "MAY-MSK-BRN",
-                            Size = "9.5ml",
-                            StockQuantity = 0
-                        },
-                        new
-                        {
-                            Id = 58L,
-                            Color = "Ruby Woo",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 20L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "MAC-LST-RUBY",
-                            Size = "3g",
-                            StockQuantity = 45
-                        },
-                        new
-                        {
-                            Id = 59L,
-                            Color = "Velvet Teddy",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 20L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "MAC-LST-VELV",
-                            Size = "3g",
-                            StockQuantity = 2
-                        },
-                        new
-                        {
-                            Id = 60L,
-                            Color = "Chili",
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = "SystemSeeder",
-                            IsDeleted = false,
-                            ItemId = 20L,
-                            LowStockThreshold = 5,
-                            PriceAdjustment = 0.00m,
-                            SKU = "MAC-LST-CHLI",
-                            Size = "3g",
-                            StockQuantity = 0
-                        });
                 });
 
             modelBuilder.Entity("Mazeed.DAL.Entities.Notification", b =>
@@ -7441,7 +5583,7 @@ namespace Mazeed.DAL.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "e9e4f2b1-6c23-5322-a3bc-987654321def",
-                            CreatedAt = new DateTime(2026, 8, 26, 10, 54, 59, 332, DateTimeKind.Utc).AddTicks(2946),
+                            CreatedAt = new DateTime(2026, 8, 25, 20, 41, 56, 520, DateTimeKind.Utc).AddTicks(1988),
                             CreatedBy = "SystemSeeder",
                             Email = "admin@mazeed.com",
                             EmailConfirmed = true,
@@ -7451,7 +5593,7 @@ namespace Mazeed.DAL.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAZEED.COM",
                             NormalizedUserName = "SYSTEM_ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMOSok/lYzfRUEfuqQJYEB8fA6e3NMGtRUJCrmMikgpXgSGWNuJR2JFoerAN2WGyaQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJzEWhRALkhZq9FMuRJzpJaK8ntRmjpjCyOzud3lsgxt20AL555NbFIyJXHFjwOIZg==",
                             PhoneNumber = "01234567890",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "d8d3f1a0-5b12-4211-92ab-123456789abc",
