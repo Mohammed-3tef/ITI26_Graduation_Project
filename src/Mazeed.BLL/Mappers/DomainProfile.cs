@@ -56,19 +56,37 @@ namespace Mazeed.BLL.Mappers
             CreateMap<Brand, BrandVM>().ReverseMap();
             CreateMap<Category, CategoryVM>().ReverseMap();
             CreateMap<Item, ItemVM>()
-    .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand != null ? src.Brand.Name : string.Empty))
-    .ForMember(dest => dest.CategoryIds, opt => opt.MapFrom(src => src.ItemCategories.Select(ic => ic.CategoryId)))
-    .ForMember(dest => dest.CategoryNames, opt => opt.MapFrom(src => src.ItemCategories.Select(ic => ic.Category.Name)))
-    .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos.Select(p => p.PhotoUrl)));
+             .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src =>
+                 src.Brand != null ? src.Brand.Name : string.Empty))
+
+             // أضيفي الحماية مع Safe Navigation Operator (?.) و Handling للـ Null
+             .ForMember(dest => dest.CategoryIds, opt => opt.MapFrom(src =>
+                 src.ItemCategories != null
+                     ? src.ItemCategories.Select(ic => ic.CategoryId).ToList()
+                     : new List<long>()))
+
+             .ForMember(dest => dest.CategoryNames, opt => opt.MapFrom(src =>
+                 src.ItemCategories != null
+                     ? src.ItemCategories
+                         .Where(ic => ic.Category != null) // التأكد من أن الكاتيجوري غير نل
+                         .Select(ic => ic.Category.Name)
+                         .ToList()
+                     : new List<string>()))
+
+             .ForMember(dest => dest.Photos, opt => opt.MapFrom(src =>
+                 src.Photos != null
+                     ? src.Photos.Select(p => p.PhotoUrl).ToList()
+                     : new List<string>()));
+
 
             CreateMap<ItemVM, Item>()
-      .ForMember(dest => dest.Brand, opt => opt.Ignore())
-      .ForMember(dest => dest.Photos, opt => opt.Ignore()) // تجاهل الصور في الإضافة المباشرة إذا كنتِ بترفعيها في جدول منفصل
-      .ForMember(dest => dest.ItemCategories, opt => opt.MapFrom(src =>
-          src.CategoryIds.Select(cId => new ItemCategory { CategoryId = cId })));
+              .ForMember(dest => dest.Brand, opt => opt.Ignore())
+              .ForMember(dest => dest.Photos, opt => opt.Ignore()) // تجاهل الصور في الإضافة المباشرة إذا كنتِ بترفعيها في جدول منفصل
+              .ForMember(dest => dest.ItemCategories, opt => opt.MapFrom(src =>
+                  src.CategoryIds.Select(cId => new ItemCategory { CategoryId = cId })));
 
             CreateMap<ItemVariant, ItemVariantVM>()
-    .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item != null ? src.Item.Name : string.Empty));
+            .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item != null ? src.Item.Name : string.Empty));
 
             CreateMap<ItemVariantVM, ItemVariant>()
                 .ForMember(dest => dest.Item, opt => opt.Ignore())

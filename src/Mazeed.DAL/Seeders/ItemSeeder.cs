@@ -15,92 +15,92 @@ namespace Mazeed.DAL.Seeders
              // 1. Apple (BrandId = 1)
             items.AddRange(new[]
                         {
-                new Item { Id = itemId++, Name = "iPhone 15 Pro Max", Code = "APL-IP15PM", Description = "Titanium design, A17 Pro chip, 48MP camera", Price = 65000.00m, BrandId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "MacBook Pro 16\"", Code = "APL-MBP16", Description = "M3 Max chip, 36GB Unified Memory, 1TB SSD", Price = 175000.00m, BrandId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "iPad Pro 12.9\"", Code = "APL-IPD129", Description = "Liquid Retina XDR display, M2 chip", Price = 58000.00m, BrandId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "AirPods Pro (2nd Gen)", Code = "APL-APP2", Description = "Active Noise Cancellation, USB-C Charging", Price = 12500.00m, BrandId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "Apple Watch Ultra 2", Code = "APL-AWU2", Description = "Rugged titanium case, Dual-frequency GPS", Price = 42000.00m, BrandId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
+                new Item { Id = itemId++, Name = "iPhone 15 Pro Max", Code = "APL-IP15PM", Description = "Titanium design, A17 Pro chip, 48MP camera", Price = 65000, BrandId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "MacBook Pro 16\"", Code = "APL-MBP16", Description = "M3 Max chip, 36GB Unified Memory, 1TB SSD", Price = 175000, BrandId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "iPad Pro 12.9\"", Code = "APL-IPD129", Description = "Liquid Retina XDR display, M2 chip", Price = 58000, BrandId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "AirPods Pro (2nd Gen)", Code = "APL-APP2", Description = "Active Noise Cancellation, USB-C Charging", Price = 12500, BrandId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "Apple Watch Ultra 2", Code = "APL-AWU2", Description = "Rugged titanium case, Dual-frequency GPS", Price = 42000, BrandId = 1, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
             });
 
             // 2. Samsung (BrandId = 2)
              items.AddRange(new[]
                         {
-                new Item { Id = itemId++, Name = "Galaxy S24 Ultra", Code = "SAM-S24U", Description = "Galaxy AI, 200MP Camera, S Pen included", Price = 62000.00m, BrandId = 2, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "Galaxy Z Fold 5", Code = "SAM-ZFOLD5", Description = "Unfold a massive 7.6\" main screen", Price = 78000.00m, BrandId = 2, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "Galaxy Book 4 Ultra", Code = "SAM-GB4U", Description = "Intel Core Ultra 9, RTX 4070, AMOLED Display", Price = 120000.00m, BrandId = 2, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "Galaxy Watch 6 Classic", Code = "SAM-GW6C", Description = "Rotating bezel, Advanced sleep tracking", Price = 16500.00m, BrandId = 2, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
+                new Item { Id = itemId++, Name = "Galaxy S24 Ultra", Code = "SAM-S24U", Description = "Galaxy AI, 200MP Camera, S Pen included", Price = 62000, BrandId = 2, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "Galaxy Z Fold 5", Code = "SAM-ZFOLD5", Description = "Unfold a massive 7.6\" main screen", Price = 78000, BrandId = 2, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "Galaxy Book 4 Ultra", Code = "SAM-GB4U", Description = "Intel Core Ultra 9, RTX 4070, AMOLED Display", Price = 120000, BrandId = 2, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "Galaxy Watch 6 Classic", Code = "SAM-GW6C", Description = "Rotating bezel, Advanced sleep tracking", Price = 16500, BrandId = 2, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
             });
 
             // 3. Sony (BrandId = 3)
             items.AddRange(new[]
                         {
-                new Item { Id = itemId++, Name = "PlayStation 5 Slim", Code = "SNY-PS5S", Description = "1TB SSD Storage, DualSense Wireless Controller", Price = 27500.00m, BrandId = 3, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "WH-1000XM5 Headphones", Code = "SNY-XM5", Description = "Industry-leading noise canceling wireless headphones", Price = 18500.00m, BrandId = 3, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "Bravia XR 65\" OLED 4K TV", Code = "SNY-XR65", Description = "Cognitive Processor XR, Perfect for PS5", Price = 95000.00m, BrandId = 3, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "Alpha 7 IV Mirrorless Camera", Code = "SNY-A7IV", Description = "33MP Full-frame sensor, 4K 60p video", Price = 125000.00m, BrandId = 3, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
+                new Item { Id = itemId++, Name = "PlayStation 5 Slim", Code = "SNY-PS5S", Description = "1TB SSD Storage, DualSense Wireless Controller", Price = 27500, BrandId = 3, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "WH-1000XM5 Headphones", Code = "SNY-XM5", Description = "Industry-leading noise canceling wireless headphones", Price = 18500, BrandId = 3, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "Bravia XR 65\" OLED 4K TV", Code = "SNY-XR65", Description = "Cognitive Processor XR, Perfect for PS5", Price = 95000, BrandId = 3, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "Alpha 7 IV Mirrorless Camera", Code = "SNY-A7IV", Description = "33MP Full-frame sensor, 4K 60p video", Price = 125000, BrandId = 3, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
             });
 
             // 4. Dell (BrandId = 4)
              items.AddRange(new[]
                         {
-                new Item { Id = itemId++, Name = "XPS 15 Laptop", Code = "DEL-XPS15", Description = "OLED Touch Display, Intel Core i9, 32GB RAM", Price = 110000.00m, BrandId = 4, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "Alienware m18 Gaming Laptop", Code = "DEL-AWM18", Description = "RTX 4090, 18\" QHD+ 480Hz Display", Price = 165000.00m, BrandId = 4, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "UltraSharp 27\" 4K Monitor", Code = "DEL-U2723QE", Description = "IPS Black technology, USB-C Hub capability", Price = 29000.00m, BrandId = 4, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "Inspiron 16 Laptop", Code = "DEL-INSP16", Description = "Intel Core i7, 16GB RAM, 512GB SSD", Price = 42500.00m, BrandId = 4, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
+                new Item { Id = itemId++, Name = "XPS 15 Laptop", Code = "DEL-XPS15", Description = "OLED Touch Display, Intel Core i9, 32GB RAM", Price = 110000, BrandId = 4, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "Alienware m18 Gaming Laptop", Code = "DEL-AWM18", Description = "RTX 4090, 18\" QHD+ 480Hz Display", Price = 165000, BrandId = 4, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "UltraSharp 27\" 4K Monitor", Code = "DEL-U2723QE", Description = "IPS Black technology, USB-C Hub capability", Price = 29000, BrandId = 4, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "Inspiron 16 Laptop", Code = "DEL-INSP16", Description = "Intel Core i7, 16GB RAM, 512GB SSD", Price = 42500, BrandId = 4, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
             });
 
             // 5. Lenovo (BrandId = 5)
             items.AddRange(new[]
                         {
-                new Item { Id = itemId++, Name = "ThinkPad X1 Carbon Gen 11", Code = "LNV-X1C11", Description = "Ultra-lightweight business laptop, Intel Evo certified", Price = 82000.00m, BrandId = 5, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "Legion Pro 7i Gaming Laptop", Code = "LNV-LGP7I", Description = "Intel i9 13900HX, RTX 4080, 240Hz Display", Price = 125000.00m, BrandId = 5, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "Yoga 9i 2-in-1", Code = "LNV-YG9I", Description = "4K OLED Touchscreen, Bowers & Wilkins Soundbar", Price = 70000.00m, BrandId = 5, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-                new Item { Id = itemId++, Name = "Tab P12 Pro", Code = "LNV-TP12P", Description = "12.6\" AMOLED 120Hz display, Precision Pen 3", Price = 35000.00m, BrandId = 5, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
+                new Item { Id = itemId++, Name = "ThinkPad X1 Carbon Gen 11", Code = "LNV-X1C11", Description = "Ultra-lightweight business laptop, Intel Evo certified", Price = 82000, BrandId = 5, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "Legion Pro 7i Gaming Laptop", Code = "LNV-LGP7I", Description = "Intel i9 13900HX, RTX 4080, 240Hz Display", Price = 125000, BrandId = 5, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "Yoga 9i 2-in-1", Code = "LNV-YG9I", Description = "4K OLED Touchscreen, Bowers & Wilkins Soundbar", Price = 70000, BrandId = 5, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+                new Item { Id = itemId++, Name = "Tab P12 Pro", Code = "LNV-TP12P", Description = "12.6\" AMOLED 120Hz display, Precision Pen 3", Price = 35000, BrandId = 5, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
             });
            
             // 6. LG (BrandId = 6)
             items.AddRange(new[]
             {
-    new Item { Id = itemId++, Name = "InstaView Refrigerator 26 cu.ft", Code = "LG-REF26", Description = "Door-in-Door with Craft Ice Maker", Price = 125000.00m, BrandId = 6, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "C3 65\" OLED evo 4K TV", Code = "LG-C365", Description = "α9 AI Processor Gen6, Dolby Vision & Atmos", Price = 85000.00m, BrandId = 6, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "WashTower Laundry Hub", Code = "LG-WASH1", Description = "Front Load Washer and Electric Dryer with AI DD", Price = 145000.00m, BrandId = 6, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "UltraGear 34\" Curved Gaming Monitor", Code = "LG-34UG", Description = "OLED 240Hz 0.03ms, G-Sync Compatible", Price = 65000.00m, BrandId = 6, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
+    new Item { Id = itemId++, Name = "InstaView Refrigerator 26 cu.ft", Code = "LG-REF26", Description = "Door-in-Door with Craft Ice Maker", Price = 125000, BrandId = 6, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "C3 65\" OLED evo 4K TV", Code = "LG-C365", Description = "α9 AI Processor Gen6, Dolby Vision & Atmos", Price = 85000, BrandId = 6, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "WashTower Laundry Hub", Code = "LG-WASH1", Description = "Front Load Washer and Electric Dryer with AI DD", Price = 145000, BrandId = 6, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "UltraGear 34\" Curved Gaming Monitor", Code = "LG-34UG", Description = "OLED 240Hz 0.03ms, G-Sync Compatible", Price = 65000, BrandId = 6, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
 });
 
             // 7. Sharp (BrandId = 7)
             items.AddRange(new[]
             {
-    new Item { Id = itemId++, Name = "4-Door French Door Refrigerator", Code = "SHP-REF4D", Description = "Plasmacluster Ion Technology, J-Tech Inverter", Price = 75000.00m, BrandId = 7, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "Microwave Oven with Grill 34L", Code = "SHP-MW34L", Description = "Stainless Steel, Touch Control, Auto Cook Menus", Price = 8500.00m, BrandId = 7, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "Plasmacluster Air Purifier", Code = "SHP-AP50", Description = "HEPA Filter, Coverage up to 40 sqm", Price = 16000.00m, BrandId = 7, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "AQUOS 55\" 4K UHD Smart TV", Code = "SHP-AQ55", Description = "Android TV with Google Assistant built-in", Price = 28000.00m, BrandId = 7, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
+    new Item { Id = itemId++, Name = "4-Door French Door Refrigerator", Code = "SHP-REF4D", Description = "Plasmacluster Ion Technology, J-Tech Inverter", Price = 75000, BrandId = 7, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "Microwave Oven with Grill 34L", Code = "SHP-MW34L", Description = "Stainless Steel, Touch Control, Auto Cook Menus", Price = 8500, BrandId = 7, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "Plasmacluster Air Purifier", Code = "SHP-AP50", Description = "HEPA Filter, Coverage up to 40 sqm", Price = 16000, BrandId = 7, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "AQUOS 55\" 4K UHD Smart TV", Code = "SHP-AQ55", Description = "Android TV with Google Assistant built-in", Price = 28000, BrandId = 7, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
 });
 
             // 8. Zara (BrandId = 8)
             items.AddRange(new[]
             {
-    new Item { Id = itemId++, Name = "Oversized Faux Leather Jacket", Code = "ZRA-JKT01", Description = "Lapel collar jacket with long sleeves and zip pockets", Price = 4500.00m, BrandId = 8, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "Pleated Wide Leg Trousers", Code = "ZRA-TR01", Description = "High-waist trousers with front pleats and side pockets", Price = 2800.00m, BrandId = 8, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "100% Linen Shirt", Code = "ZRA-SHT01", Description = "Relaxed fit linen shirt with button-up front", Price = 3200.00m, BrandId = 8, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "Satin Effect Midi Dress", Code = "ZRA-DRS01", Description = "V-neck dress with adjustable thin straps", Price = 3800.00m, BrandId = 8, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
+    new Item { Id = itemId++, Name = "Oversized Faux Leather Jacket", Code = "ZRA-JKT01", Description = "Lapel collar jacket with long sleeves and zip pockets", Price = 4500, BrandId = 8, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "Pleated Wide Leg Trousers", Code = "ZRA-TR01", Description = "High-waist trousers with front pleats and side pockets", Price = 2800, BrandId = 8, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "100% Linen Shirt", Code = "ZRA-SHT01", Description = "Relaxed fit linen shirt with button-up front", Price = 3200, BrandId = 8, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "Satin Effect Midi Dress", Code = "ZRA-DRS01", Description = "V-neck dress with adjustable thin straps", Price = 3800, BrandId = 8, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
 });
 
             // 9. H&M (BrandId = 9)
             items.AddRange(new[]
             {
-    new Item { Id = itemId++, Name = "Relaxed Fit Hoodie", Code = "HM-HD01", Description = "Soft sweatshirt fabric hoodie with kangaroo pocket", Price = 1600.00m, BrandId = 9, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "Slim Fit Stretch Jeans", Code = "HM-JN01", Description = "5-pocket jeans in washed denim with flexible stretch", Price = 1900.00m, BrandId = 9, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "Oversized Cotton T-Shirt", Code = "HM-TS01", Description = "Heavyweight cotton jersey T-shirt with ribbed neck", Price = 900.00m, BrandId = 9, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "Fine-knit Cardigan", Code = "HM-CD01", Description = "Soft fine-knit cardigan with buttons down the front", Price = 1300.00m, BrandId = 9, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
+    new Item { Id = itemId++, Name = "Relaxed Fit Hoodie", Code = "HM-HD01", Description = "Soft sweatshirt fabric hoodie with kangaroo pocket", Price = 1600, BrandId = 9, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "Slim Fit Stretch Jeans", Code = "HM-JN01", Description = "5-pocket jeans in washed denim with flexible stretch", Price = 1900, BrandId = 9, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "Oversized Cotton T-Shirt", Code = "HM-TS01", Description = "Heavyweight cotton jersey T-shirt with ribbed neck", Price = 900, BrandId = 9, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "Fine-knit Cardigan", Code = "HM-CD01", Description = "Soft fine-knit cardigan with buttons down the front", Price = 1300, BrandId = 9, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
 });
 
             // 10. Nike (BrandId = 10)
             items.AddRange(new[]
             {
-    new Item { Id = itemId++, Name = "Air Force 1 '07", Code = "NKE-AF1", Description = "Classic basketball shoe with durable leather overlays", Price = 7500.00m, BrandId = 10, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "Tech Fleece Windrunner", Code = "NKE-TFWR", Description = "Premium lightweight fleece jacket with full zip", Price = 8500.00m, BrandId = 10, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "Sportswear Club Fleece Joggers", Code = "NKE-JOG01", Description = "Brushed-back fleece pants with elastic waistband", Price = 4000.00m, BrandId = 10, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
-    new Item { Id = itemId++, Name = "Dunk Low Retro", Code = "NKE-DNK", Description = "80s b-ball icon created for the court and adapted for the streets", Price = 7500.00m, BrandId = 10, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
+    new Item { Id = itemId++, Name = "Air Force 1 '07", Code = "NKE-AF1", Description = "Classic basketball shoe with durable leather overlays", Price = 7500, BrandId = 10, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "Tech Fleece Windrunner", Code = "NKE-TFWR", Description = "Premium lightweight fleece jacket with full zip", Price = 8500, BrandId = 10, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "Sportswear Club Fleece Joggers", Code = "NKE-JOG01", Description = "Brushed-back fleece pants with elastic waistband", Price = 4000, BrandId = 10, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false },
+    new Item { Id = itemId++, Name = "Dunk Low Retro", Code = "NKE-DNK", Description = "80s b-ball icon created for the court and adapted for the streets", Price = 7500, BrandId = 10, CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), CreatedBy = "System Seeder", IsDeleted = false }
 });
 
             // 11. Adidas (BrandId = 11)

@@ -1,0 +1,455 @@
+﻿@model Mazeed.BLL.ViewModels.ShopCatalogVM
+
+@{
+    ViewData["Title"] = "Electronics Catalog";
+}
+
+<style>
+    /* الفئات والمنتجات */
+    .product-card {
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+    .product-img-wrapper {
+        position: relative;
+        background-color: #f4f4f5;
+        height: 210px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+        .product-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .badge-sale {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background-color: #ff4d4f;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 4px;
+        z-index: 2;
+    }
+
+    .product-card-body {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: space-between;
+    }
+
+    .category-tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #9ca3af;
+        text-transform: uppercase;
+    }
+
+    .rating {
+        font-size: 11px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .product-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+        margin-top: 4px;
+        margin-bottom: 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .current-price {
+        font-size: 15px;
+        font-weight: 700;
+        color: #ff4d4f;
+    }
+
+        .current-price.dark {
+            color: #111827;
+        }
+
+    .original-price {
+        font-size: 11px;
+        color: #9ca3af;
+        text-decoration: line-through;
+        margin-left: 4px;
+    }
+
+    .wishlist-btn {
+        background: none;
+        border: none;
+        color: #9ca3af;
+        font-size: 22px;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+        .wishlist-btn:hover {
+            transform: scale(1.15);
+        }
+
+        .wishlist-btn.active {
+            color: #ff4d4f;
+        }
+
+    .btn-action-dark {
+        background-color: #111827;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+        .btn-action-dark:hover {
+            background-color: #1f2937;
+            color: #ffffff;
+        }
+
+    .btn-action-light {
+        background-color: #ffffff;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+        .btn-action-light:hover {
+            background-color: #f9fafb;
+            color: #374151;
+        }
+
+    /* أزرار الترقيم Pagination */
+    .pagination-dots-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+
+    .page-dot-btn {
+        background: none;
+        border: none;
+        color: #d1d5db;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0 4px;
+        transition: color 0.2s ease;
+    }
+
+        .page-dot-btn:hover {
+            color: #9ca3af;
+        }
+
+        .page-dot-btn.active {
+            color: #111827;
+        }
+
+    .page-nav-btn {
+        background-color: #111827;
+        border: none;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+        .page-nav-btn:hover:not(:disabled) {
+            background-color: #1f2937;
+            transform: translateY(-1px);
+        }
+
+        .page-nav-btn:disabled {
+            background-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+    .btn-filter-pill {
+        border-radius: 50px;
+        padding: 6px 18px;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid #e5e7eb;
+        background-color: #ffffff;
+        color: #4b5563;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+        .btn-filter-pill:hover {
+            background-color: #111827;
+            color: #ffffff;
+            border-color: #111827;
+        }
+</style>
+
+<div class="container-fluid px-0 my-4">
+
+    <!-- Header & Filter Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <div>
+            <span class="text-uppercase fw-bold text-muted small tracking-wide">Category Catalog</span>
+            <h1 class="fw-bold fs-2 text-dark mb-0">Electronics <span class="fs-5 text-muted fw-normal">(@(Model?.Items?.Count() ?? 0))</span></h1>
+        </div>
+
+        <button class="btn-filter-pill" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
+            Filter & Sort <i class="fa-solid fa-sliders ms-1"></i>
+        </button>
+    </div>
+
+    <!-- 4-Column Product Grid -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4" id="productGrid">
+        @if (Model?.Items != null && Model.Items.Any())
+        {
+            @foreach (var item in Model.Items)
+            {
+                <div class="col product-item">
+                    <div class="product-card">
+                        <div class="product-img-wrapper">
+                            @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                            {
+                                <span class="badge-sale">SALE</span>
+                            }
+
+                            @if (item.Photos != null && item.Photos.Any())
+                            {
+                                <img src="@item.Photos.First()" alt="@item.Name" />
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-microchip fa-3x text-muted"></i>
+                            }
+                        </div>
+                        <div class="product-card-body">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="category-tag">@string.Join(", ", item.CategoryNames ?? new List<string>())</span>
+                                    <span class="rating">&#9734; 4.8</span>
+                                </div>
+                                <div class="product-title" title="@item.Name">@item.Name</div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <span class="current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
+                                            $@item.Price.ToString("N2")
+                                        </span>
+                                        @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                                        {
+                                            <span class="original-price">$@item.OldPrice.Value.ToString("N2")</span>
+                                        }
+                                        <span class="category-tag">@string.Join(", ", item.CategoryNames ?? new List<string>())</span>
+                                    </div>
+                                    
+                                    <button class="wishlist-btn" type="button" title="Add to Wishlist" onclick="toggleWishlist(this)">&#9825;</button>
+                                </div>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <a asp-controller="Store" asp-action="Details" asp-route-id="@item.Id" class="btn-action-dark">Details</a>
+                                </div>
+                                <div class="col-6">
+                                    <a asp-controller="Home" asp-action="Index" class="btn-action-light">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <i class="fa-solid fa-laptop-code fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted fw-bold">No Electronics Available</h5>
+                <p class="text-muted small">Check back later for new arrivals in this section.</p>
+            </div>
+        }
+    </div>
+
+    <!-- Dynamic Pagination Controls (Hidden if items <= 16) -->
+    <div class="pagination-dots-container" id="paginationContainer" style="display: none;">
+        <button class="page-nav-btn" id="prevBtn" onclick="changePage(-1)" title="Previous">&#10094;</button>
+        <div id="dotsWrapper" class="d-flex align-items-center gap-2"></div>
+        <button class="page-nav-btn" id="nextBtn" onclick="changePage(1)" title="Next">&#10095;</button>
+    </div>
+</div>
+
+<!-- Offcanvas Sidebar Filter & Sort -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel" style="width: 380px;">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold" id="filterOffcanvasLabel">Filter & Sort Electronics</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <form asp-controller="Store" asp-action="Index" method="get" class="d-flex flex-column h-100">
+        <input type="hidden" name="categoryId" value="@Model.CategoryId" />
+
+        <div class="offcanvas-body">
+            <div class="accordion accordion-flush" id="filterAccordion">
+
+                <!-- Sort By -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingSort">
+                        <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort">
+                            Sort By
+                        </button>
+                    </h2>
+                    <div id="collapseSort" class="accordion-collapse collapse show">
+                        <div class="accordion-body">
+                            <select name="sortBy" class="form-select">
+                                <option value="">Default Order</option>
+                                <option value="price_low_high" selected="@(Model.SortBy == "price_low_high")">Price: Low to High</option>
+                                <option value="price_high_low" selected="@(Model.SortBy == "price_high_low")">Price: High to Low</option>
+                                <option value="name_asc" selected="@(Model.SortBy == "name_asc")">Name: A to Z</option>
+                                <option value="name_desc" selected="@(Model.SortBy == "name_desc")">Name: Z to A</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Range -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingPrice">
+                        <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
+                            Price Range
+                        </button>
+                    </h2>
+                    <div id="collapsePrice" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number" name="minPrice" class="form-control" placeholder="Min" value="@Model.MinPrice" />
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" name="maxPrice" class="form-control" placeholder="Max" value="@Model.MaxPrice" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="p-3 border-top bg-white">
+            <button type="submit" class="btn btn-dark w-100 py-2 fw-bold text-uppercase">
+                Apply Filters <i class="fa-solid fa-arrow-right ms-2"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // تغيير عدد العناصر في الصفحة الواحدة إلى 16
+    const itemsPerPage = 16;
+    let currentPage = 0;
+
+    function renderPagination() {
+        const items = document.querySelectorAll('.product-item');
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+        const container = document.getElementById('paginationContainer');
+        const dotsWrapper = document.getElementById('dotsWrapper');
+
+        // إخفاء الـ Pagination إذا كان عدد المنتجات 16 أو أقل
+        if (items.length <= itemsPerPage) {
+            container.style.display = 'none';
+            items.forEach(item => item.style.display = 'block');
+            return;
+        }
+
+        container.style.display = 'flex';
+        dotsWrapper.innerHTML = '';
+
+        items.forEach((item, index) => {
+            if (index >= currentPage * itemsPerPage && index < (currentPage + 1) * itemsPerPage) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        for (let i = 0; i < totalPages; i++) {
+            const dot = document.createElement('button');
+            dot.className = `page-dot-btn ${i === currentPage ? 'active' : ''}`;
+            dot.innerHTML = '&bull;';
+            dot.onclick = () => goToPage(i);
+            dotsWrapper.appendChild(dot);
+        }
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) prevBtn.disabled = currentPage === 0;
+        if (nextBtn) nextBtn.disabled = currentPage >= totalPages - 1;
+    }
+
+    function goToPage(pageIndex) {
+        currentPage = pageIndex;
+        renderPagination();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function changePage(direction) {
+        currentPage += direction;
+        renderPagination();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleWishlist(btn) {
+        btn.classList.toggle('active');
+        btn.innerHTML = btn.classList.contains('active') ? '&#9829;' : '&#9825;';
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        renderPagination();
+    });
+</script>

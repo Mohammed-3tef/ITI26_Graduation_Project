@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Mazeed.BLL.ViewModels.ShopCatalogVM
+
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -45,7 +47,6 @@
         z-index: 2;
     }
 
-    /* Horizontal Filter Scroll on Small Viewports */
     .filter-scroll-container {
         display: flex;
         gap: 8px;
@@ -73,11 +74,11 @@
         flex-shrink: 0;
     }
 
-    .btn-filter.active {
-        background-color: #111827;
-        color: #ffffff;
-        border-color: #111827;
-    }
+        .btn-filter.active, .btn-filter:hover {
+            background-color: #111827;
+            color: #ffffff;
+            border-color: #111827;
+        }
 
     .product-card {
         border: 1px solid #f0f0f0;
@@ -156,9 +157,9 @@
         color: #ff4d4f;
     }
 
-    .current-price.dark {
-        color: #111827;
-    }
+        .current-price.dark {
+            color: #111827;
+        }
 
     .original-price {
         font-size: 12px;
@@ -167,15 +168,25 @@
         margin-left: 4px;
     }
 
+    /* تكبير وتصميم زر الـ Wishlist */
     .wishlist-btn {
         background: none;
         border: none;
-        color: #ff4d4f;
-        font-size: 18px;
+        color: #9ca3af;
+        font-size: 24px;
         cursor: pointer;
         padding: 0;
         line-height: 1;
+        transition: color 0.2s ease, transform 0.2s ease;
     }
+
+        .wishlist-btn:hover {
+            transform: scale(1.15);
+        }
+
+        .wishlist-btn.active {
+            color: #ff4d4f;
+        }
 
     .btn-action-dark {
         background-color: #111827;
@@ -214,6 +225,63 @@
             background-color: #f9fafb;
             color: #374151;
         }
+
+    /* تنسيق أزرار التنقل Pagination */
+    .pagination-dots-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+
+    .page-dot-btn {
+        background: none;
+        border: none;
+        color: #d1d5db;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0 4px;
+        transition: color 0.2s ease;
+    }
+
+        .page-dot-btn:hover {
+            color: #9ca3af;
+        }
+
+        .page-dot-btn.active {
+            color: #111827;
+        }
+
+    /* أزرار الأسهم: مربع داكن #111827 وسهم أبيض */
+    .page-nav-btn {
+        background-color: #111827;
+        border: none;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+        .page-nav-btn:hover:not(:disabled) {
+            background-color: #1f2937;
+            transform: translateY(-1px);
+        }
+
+        .page-nav-btn:disabled {
+            background-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
 </style>
 
 <div class="container-fluid px-0">
@@ -227,198 +295,285 @@
             </p>
             <div class="d-flex flex-wrap align-items-center gap-3">
                 <a asp-controller="Store" asp-action="Index" class="btn btn-light rounded-2 px-4 py-2 fw-semibold fs-7">Shop The Sale</a>
-                <a href="#" class="text-white text-decoration-none fw-semibold fs-7">Learn More &rarr;</a>
+                <a asp-controller="Home" asp-action="About" class="text-white text-decoration-none fw-semibold fs-7">Learn More &rarr;</a>
             </div>
         </div>
     </div>
 
-    <!-- Section Header & Filters -->
+    <!-- Section Header & Dynamic Category Filters -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end gap-3 mb-4">
         <div>
             <span class="badge-pill-red mb-1" style="background: none; color: #ff4d4f; padding: 0; font-size: 10px;">CURATED FINDS</span>
             <h2 class="fw-bold fs-3 text-dark mb-0">Featured Marketplace</h2>
         </div>
-        <div class="filter-scroll-container w-100 w-md-auto justify-content-md-end">
-            <a href="#" class="btn-filter active">Trendings</a>
-            <a href="#" class="btn-filter">Filter</a>
-            
+        <div class="d-flex align-items-center gap-2 w-100 w-md-auto justify-content-md-end">
+            <div class="filter-scroll-container">
+                <a asp-controller="Home" asp-action="Index" class="btn-filter @(Model?.CategoryId == null ? "active" : "")">All</a>
+                @if (Model?.Categories != null && Model.Categories.Any())
+                {
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@cat.Id"
+                           class="btn-filter @(Model.CategoryId == cat.Id ? "active" : "")">
+                            @cat.Name
+                        </a>
+                    }
+                }
+            </div>
+
+            <!-- زر الفلتر بنفس ستايل باقي الزراير البيضاوية -->
+            <button class="btn-filter border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas" style="cursor: pointer;">
+                Filter <i class="fa-solid fa-sliders ms-1"></i>
+            </button>
         </div>
     </div>
 
-    <!-- Product Grid -->
-    <div class="row g-3 g-md-4">
-        <!-- Item 1 -->
-        <div class="col-12 col-sm-6 col-lg-4">
-            <div class="product-card">
-                <div class="product-img-wrapper">
-                    <span class="badge-sale">SALE</span>
-                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop" alt="Mazeed SoundPro Air Headphones" />
-                </div>
-                <div class="product-card-body">
-                    <div>
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="category-tag">ELECTRONICS</span>
-                            <span class="rating">&#9734; 4.9</span>
-                        </div>
-                        <div class="product-title">Mazeed SoundPro Air Headphones</div>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <span class="current-price">$189.00</span>
-                                <span class="original-price">$240.00</span>
-                            </div>
-                            <button class="wishlist-btn" type="button">&#9825;</button>
-                        </div>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
-                        <div class="col-6"><a href="#" class="btn-action-light">Cancel</a></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Dynamic Product Grid -->
+    <div class="row g-3 g-md-4" id="productGrid">
+        @if (Model?.Items != null && Model.Items.Any())
+        {
+            @foreach (var item in Model.Items)
+            {
+                <div class="col-12 col-sm-6 col-lg-4 product-item">
+                    <div class="product-card">
+                        <div class="product-img-wrapper">
+                            @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                            {
+                                <span class="badge-sale">SALE</span>
+                            }
 
-        <!-- Item 2 -->
-        <div class="col-12 col-sm-6 col-lg-4">
-            <div class="product-card">
-                <div class="product-img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1608248597261-833258657640?q=80&w=800&auto=format&fit=crop" alt="Bio-Restore Facial Elixir Oil" />
-                </div>
-                <div class="product-card-body">
-                    <div>
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="category-tag">BEAUTY</span>
-                            <span class="rating">&#9734; 4.9</span>
+                            @if (item.Photos != null && item.Photos.Any())
+                            {
+                                <img src="@item.Photos.First()" alt="@item.Name" />
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-box-open fa-3x text-muted"></i>
+                            }
                         </div>
-                        <div class="product-title">Bio-Restore Facial Elixir Oil</div>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="product-card-body">
                             <div>
-                                <span class="current-price dark">$34.00</span>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="category-tag">
+                                        @(item.CategoryNames != null && item.CategoryNames.Any()
+                                            ? item.CategoryNames.First()
+                                            : (item.BrandName ?? "GENERAL"))
+                                    </span>
+                                    <span class="rating">&#9734; 4.9</span>
+                                </div>
+                                <div class="product-title" title="@item.Name">@item.Name</div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <span class="current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
+                                            $@item.Price.ToString("N2")
+                                        </span>
+                                        @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                                        {
+                                            <span class="original-price">$@item.OldPrice.Value.ToString("N2")</span>
+                                        }
+                                    </div>
+                                    <button class="wishlist-btn" type="button" title="Add to Wishlist" onclick="toggleWishlist(this)">&#9825;</button>
+                                </div>
                             </div>
-                            <button class="wishlist-btn" type="button">&#9825;</button>
-                        </div>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
-                        <div class="col-6"><a href="#" class="btn-action-light">Cancel</a></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Item 3 -->
-        <div class="col-12 col-sm-6 col-lg-4">
-            <div class="product-card">
-                <div class="product-img-wrapper">
-                    <span class="badge-sale">SALE</span>
-                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop" alt="AeroFit Active Smartwatch" />
-                </div>
-                <div class="product-card-body">
-                    <div>
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="category-tag">ELECTRONICS</span>
-                            <span class="rating">&#9734; 4.9</span>
-                        </div>
-                        <div class="product-title">AeroFit Active Smartwatch</div>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <span class="current-price">$119.00</span>
-                                <span class="original-price">$159.00</span>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <a asp-controller="Store" asp-action="Details" asp-route-id="@item.Id" class="btn-action-dark">Details</a>
+                                </div>
+                                <div class="col-6">
+                                    <a asp-controller="Home" asp-action="Index" class="btn-action-light">Cancel</a>
+                                </div>
                             </div>
-                            <button class="wishlist-btn" type="button">&#9825;</button>
                         </div>
                     </div>
-                    <div class="row g-2">
-                        <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
-                        <div class="col-6"><a href="#" class="btn-action-light">Cancel</a></div>
-                    </div>
                 </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted fw-bold">No products found</h5>
+                <p class="text-muted small">Try selecting another category or check back later.</p>
             </div>
-        </div>
-
-        <!-- Item 4 -->
-        <div class="col-12 col-sm-6 col-lg-4">
-            <div class="product-card">
-                <div class="product-img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1612196808214-b7e239e5f6b7?q=80&w=800&auto=format&fit=crop" alt="Artisan Ceramic Dune Vases" />
-                </div>
-                <div class="product-card-body">
-                    <div>
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="category-tag">HOME</span>
-                            <span class="rating">&#9734; 4.9</span>
-                        </div>
-                        <div class="product-title">Artisan Ceramic Dune Vases</div>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <span class="current-price dark">$58.00</span>
-                            </div>
-                            <button class="wishlist-btn" type="button">&#9825;</button>
-                        </div>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
-                        <div class="col-6"><a href="#" class="btn-action-light">Cancel</a></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Item 5 -->
-        <div class="col-12 col-sm-6 col-lg-4">
-            <div class="product-card">
-                <div class="product-img-wrapper">
-                    <span class="badge-sale">SALE</span>
-                    <img src="https://images.unsplash.com/photo-1602143407151-7111542de6e8?q=80&w=800&auto=format&fit=crop" alt="Termo-Flask Hydra Bottle" />
-                </div>
-                <div class="product-card-body">
-                    <div>
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="category-tag">SPORTS</span>
-                            <span class="rating">&#9734; 4.9</span>
-                        </div>
-                        <div class="product-title">Termo-Flask Hydra Bottle</div>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <span class="current-price">$28.00</span>
-                                <span class="original-price">$39.00</span>
-                            </div>
-                            <button class="wishlist-btn" type="button">&#9825;</button>
-                        </div>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
-                        <div class="col-6"><a href="#" class="btn-action-light">Cancel</a></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Item 6 -->
-        <div class="col-12 col-sm-6 col-lg-4">
-            <div class="product-card">
-                <div class="product-img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=800&auto=format&fit=crop" alt="Heritage Double-Breasted Coat" />
-                </div>
-                <div class="product-card-body">
-                    <div>
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="category-tag">FASHION</span>
-                            <span class="rating">&#9734; 4.9</span>
-                        </div>
-                        <div class="product-title">Heritage Double-Breasted Coat</div>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <span class="current-price dark">$240.00</span>
-                            </div>
-                            <button class="wishlist-btn" type="button">&#9825;</button>
-                        </div>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col-6"><a href="#" class="btn-action-dark">Details</a></div>
-                        <div class="col-6"><a href="#" class="btn-action-light">Cancel</a></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        }
     </div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel" style="width: 380px;">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold" id="filterOffcanvasLabel">Filter & Sort</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <form asp-controller="Home" asp-action="Index" method="get" class="d-flex flex-column h-100">
+            <!-- Preserve existing search term -->
+            <input type="hidden" name="searchQuery" value="@Model.SearchQuery" />
+
+            <div class="offcanvas-body">
+                <div class="accordion accordion-flush" id="filterAccordion">
+
+                    <!-- Sort By Accordion -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingSort">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort">
+                                Sort By
+                            </button>
+                        </h2>
+                        <div id="collapseSort" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <select name="sortBy" class="form-select">
+                                    <option value="">Default Order</option>
+                                    <option value="price_low_high" selected="@(Model.SortBy == "price_low_high")">Price: Low to High</option>
+                                    <option value="price_high_low" selected="@(Model.SortBy == "price_high_low")">Price: High to Low</option>
+                                    <option value="name_asc" selected="@(Model.SortBy == "name_asc")">Name: A to Z</option>
+                                    <option value="name_desc" selected="@(Model.SortBy == "name_desc")">Name: Z to A</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingCategory">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory">
+                                Product Category
+                            </button>
+                        </h2>
+                        <div id="collapseCategory" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                @if (Model.Categories != null)
+                                {
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="radio" name="categoryId" id="cat_@category.Id" value="@category.Id" @(Model.CategoryId == category.Id ? "checked" : "") />
+                                            <label class="form-check-label ms-1" for="cat_@category.Id">@category.Name</label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Brand Filter -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingBrand">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrand">
+                                Brand
+                            </button>
+                        </h2>
+                        <div id="collapseBrand" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                @if (Model.Brands != null)
+                                {
+                                    @foreach (var brand in Model.Brands)
+                                    {
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="radio" name="brandId" id="brand_@brand.Id" value="@brand.Id" @(Model.BrandId == brand.Id ? "checked" : "") />
+                                            <label class="form-check-label ms-1" for="brand_@brand.Id">@brand.Name</label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price Range Filter -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPrice">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
+                                Price
+                            </button>
+                        </h2>
+                        <div id="collapsePrice" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <input type="number" name="minPrice" class="form-control" placeholder="Min" value="@Model.MinPrice" />
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" name="maxPrice" class="form-control" placeholder="Max" value="@Model.MaxPrice" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Offcanvas Apply Button -->
+            <div class="p-3 border-top bg-white">
+                <button type="submit" class="btn btn-dark w-100 py-2 fw-bold text-uppercase">
+                    Apply (@Model.TotalCount) <i class="fa-solid fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Pagination Controls (Dark Square Buttons with White Arrows) -->
+    @if (Model?.Items != null && Model.Items.Count() > 9)
+    {
+        <div class="pagination-dots-container" id="paginationContainer">
+            <button class="page-nav-btn" id="prevBtn" onclick="changePage(-1)" title="Previous">&#10094;</button>
+            <button class="page-dot-btn active" onclick="goToPage(0)">&bull;</button>
+            <button class="page-dot-btn" onclick="goToPage(1)">&bull;</button>
+            <button class="page-dot-btn" onclick="goToPage(2)">&bull;</button>
+            <button class="page-nav-btn" id="nextBtn" onclick="changePage(1)" title="Next">&#10095;</button>
+        </div>
+    }
 </div>
+
+<script>
+    const itemsPerPage = 9;
+    let currentPage = 0;
+
+    function renderPagination() {
+        const items = document.querySelectorAll('.product-item');
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+
+        items.forEach((item, index) => {
+            if (index >= currentPage * itemsPerPage && index < (currentPage + 1) * itemsPerPage) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        const dots = document.querySelectorAll('.page-dot-btn');
+        dots.forEach((dot, index) => {
+            if (index < totalPages) {
+                dot.style.display = 'inline-block';
+                dot.classList.toggle('active', index === currentPage);
+            } else {
+                dot.style.display = 'none';
+            }
+        });
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) prevBtn.disabled = currentPage === 0;
+        if (nextBtn) nextBtn.disabled = currentPage >= totalPages - 1;
+    }
+
+    function goToPage(pageIndex) {
+        currentPage = pageIndex;
+        renderPagination();
+    }
+
+    function changePage(direction) {
+        currentPage += direction;
+        renderPagination();
+    }
+
+    function toggleWishlist(btn) {
+        btn.classList.toggle('active');
+        if (btn.classList.contains('active')) {
+            btn.innerHTML = '&#9829;'; // قلب مصمت
+        } else {
+            btn.innerHTML = '&#9825;'; // قلب مفرغ
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        renderPagination();
+    });
+</script>

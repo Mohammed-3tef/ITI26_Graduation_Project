@@ -13,6 +13,7 @@ namespace Mazeed.BLL.ViewModels
         [Required(ErrorMessage = "Price is required.")]
         [Range(0.01, 999999.99)]
         public decimal Price { get; set; }
+        public decimal? OldPrice { get; set; }
 
         [Required(ErrorMessage = "Please select a Brand.")]
         [Display(Name = "Brand")]
