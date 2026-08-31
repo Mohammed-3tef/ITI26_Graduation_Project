@@ -5,7 +5,7 @@ using System.Security.Claims;
 namespace Mazeed.PL.Controllers
 {
     [ApiController]
-    public abstract class ApiBaseController : ControllerBase
+    public abstract class ApiBaseController : Controller
     {
         protected long CurrentUserId =>
             long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);

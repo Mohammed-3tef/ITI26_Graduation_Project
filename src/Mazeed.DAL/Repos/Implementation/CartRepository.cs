@@ -40,5 +40,13 @@ namespace Mazeed.DAL.Repos.Implementation
                 .Where(sc => sc.UserId == userId)
                 .ToListAsync();
         }
+
+        // Tracked — used when clearing the entire cart.
+        public async Task<IEnumerable<ShopperCart>> GetCartByUserIdForDeleteAsync(long userId)
+        {
+            return await _context.Set<ShopperCart>()
+                .Where(sc => sc.UserId == userId)
+                .ToListAsync();
+        }
     }
 }

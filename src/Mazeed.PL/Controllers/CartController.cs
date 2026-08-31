@@ -16,6 +16,13 @@ namespace Mazeed.PL.Controllers
             _cartService = cartService;
         }
 
+        [HttpGet("/Cart")]
+        public async Task<IActionResult> Index()
+        {
+            var result = await _cartService.GetCartAsync(CurrentUserId);
+            return View(result.Data);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetCart()
             => HandleResponse(await _cartService.GetCartAsync(CurrentUserId));

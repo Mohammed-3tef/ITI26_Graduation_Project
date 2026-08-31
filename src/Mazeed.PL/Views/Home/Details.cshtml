@@ -574,6 +574,53 @@
         }
     }
 
+    async function addToCart() {
+    const variant = getSelectedVariant();
+
+    if (!variant) {
+        if (typeof toastr !== 'undefined') toastr.error('Please select available options.');
+        return;
+    }
+    if (variant.StockQuantity <= 0) {
+        if (typeof toastr !== 'undefined') toastr.error('This variant is out of stock.');
+        return;
+    }
+
+    const quantity = parseInt(document.getElementById('qtyVal').innerText, 10) || 1;
+    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+    const btn = document.getElementById('addToCartBtn');
+    const originalText = btn.innerText;
+
+    btn.disabled = true;
+    btn.innerText = 'Adding...';
+
+    try {
+        const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+        if (token) headers['RequestVerificationToken'] = token;
+
+        const res = await fetch('/api/cart', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ ItemVariantId: variant.Id, Quantity: quantity })
+        });
+
+        const data = await res.json().catch(() => null);
+
+        if (!res.ok) {
+            throw new Error((data && data.message) || 'Failed to add to cart.');
+        }
+
+        if (typeof toastr !== 'undefined') toastr.success('Added to cart!');
+    } catch (err) {
+        if (typeof toastr !== 'undefined') toastr.error(err.message || 'Something went wrong.');
+    } finally {
+        btn.disabled = false;
+        btn.innerText = originalText;
+    }
+}
+
+document.getElementById('addToCartBtn')?.addEventListener('click', addToCart);
+
     document.addEventListener("DOMContentLoaded", function () {
         updateRelatedVisibility();
         updatePriceDisplay();

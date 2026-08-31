@@ -99,7 +99,7 @@ namespace Mazeed.BLL.Services.Implementation
 
         public async Task<ServiceResponse<bool>> ClearCartAsync(long userId)
         {
-            var cartItems = (await _cartRepository.GetCartByUserIdAsync(userId)).ToList();
+            var cartItems = (await _cartRepository.GetCartByUserIdForDeleteAsync(userId)).ToList(); // was GetCartByUserIdAsync
             if (!cartItems.Any())
                 return ServiceResponse<bool>.SuccessResponse(true, "Cart is already empty.");
 

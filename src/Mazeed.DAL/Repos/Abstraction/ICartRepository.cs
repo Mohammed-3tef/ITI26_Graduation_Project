@@ -6,5 +6,6 @@ namespace Mazeed.DAL.Repos.Abstraction
     {
         Task<ShopperCart?> GetCartItemAsync(long userId, long itemVariantId);
         Task<IEnumerable<ShopperCart>> GetCartByUserIdAsync(long userId);
+        Task<IEnumerable<ShopperCart>> GetCartByUserIdForDeleteAsync(long userId);
     }
 }
