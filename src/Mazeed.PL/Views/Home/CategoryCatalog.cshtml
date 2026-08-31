@@ -2,7 +2,7 @@
 
 @{
     var currentCategoryName = Model?.Categories?.FirstOrDefault(c => c.Id == Model.CategoryId)?.Name
-                              ?? (Model?.CategoryId.HasValue == true ? "Category" : "All Products");
+                             ?? (Model?.CategoryId.HasValue == true ? "Category" : "All Products");
 
     ViewData["Title"] = $"{currentCategoryName} Catalog";
 }
@@ -251,7 +251,7 @@
         </button>
     </div>
 
-    <!-- 4-Column Product Grid -->
+    <!-- Product Grid الأصلي بدون أي تعديل في الـ Classes أو التقسيم -->
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4" id="productGrid">
         @if (Model?.Items != null && Model.Items.Any())
         {
@@ -295,12 +295,13 @@
                                     <button class="wishlist-btn" type="button" title="Add to Wishlist" onclick="toggleWishlist(this)">&#9825;</button>
                                 </div>
                             </div>
+                            <!-- تعديل تشغيل الأزرار Details و Cancel مع الحفاظ على التصميم -->
                             <div class="row g-2">
                                 <div class="col-6">
-                                    <a asp-controller="Store" asp-action="Details" asp-route-id="@item.Id" class="btn-action-dark">Details</a>
+                                    <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="btn-action-dark">Details</a>
                                 </div>
                                 <div class="col-6">
-                                    <a asp-controller="Home" asp-action="Index" class="btn-action-light">Cancel</a>
+                                    <button type="button" class="btn-action-light" onclick="hideProductCard(this)">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -392,6 +393,7 @@
 </div>
 
 <script>
+    // الإبقاء على 16 عنصر في الصفحة كما كان أصلاً
     const itemsPerPage = 16;
     let currentPage = 0;
 
@@ -400,6 +402,11 @@
         const totalPages = Math.ceil(items.length / itemsPerPage);
         const container = document.getElementById('paginationContainer');
         const dotsWrapper = document.getElementById('dotsWrapper');
+
+        if (items.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
 
         if (items.length <= itemsPerPage) {
             container.style.display = 'none';
@@ -447,6 +454,15 @@
     function toggleWishlist(btn) {
         btn.classList.toggle('active');
         btn.innerHTML = btn.classList.contains('active') ? '&#9829;' : '&#9825;';
+    }
+
+    // دالة إخفاء الكارت عند الضغط على Cancel
+    function hideProductCard(button) {
+        const productItem = button.closest('.product-item');
+        if (productItem) {
+            productItem.remove();
+            renderPagination();
+        }
     }
 
     document.addEventListener("DOMContentLoaded", function () {

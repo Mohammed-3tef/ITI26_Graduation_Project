@@ -90,6 +90,47 @@ public class HomeController : Controller
         return View("CategoryCatalog", model);
     }
 
+    [HttpGet]
+    public IActionResult Details(long id)
+    {
+        var allItems = _itemService.GetAllAsync().Result?.Data ?? new List<ItemVM>();
+        var item = allItems.FirstOrDefault(i => i.Id == id);
+
+        if (item == null) return NotFound();
+
+        var variants = item.Variants ?? new List<ItemVariantVM>();
+
+        // استخراج الألوان والمقاسات الفريدة من الـ Variants
+        var colors = variants
+            .Select(v => v.Color)
+            .Where(c => !string.IsNullOrEmpty(c))
+            .Distinct()
+            .ToList();
+
+        var sizes = variants
+            .Select(v => v.Size)
+            .Where(s => !string.IsNullOrEmpty(s))
+            .Distinct()
+            .ToList();
+
+        // Recommendation System (منتجات من نفس القسم)
+        var relatedItems = allItems
+            .Where(i => i.Id != id && i.CategoryIds != null && item.CategoryIds != null && i.CategoryIds.Intersect(item.CategoryIds).Any())
+            .Take(3)
+            .ToList();
+
+        var model = new ItemDetailsVM
+        {
+            Product = item,
+            Variants = variants,
+            AvailableColors = colors,
+            AvailableSizes = sizes,
+            RelatedProducts = relatedItems
+        };
+
+        return View(model);
+    }
+
     public IActionResult Privacy() => View();
 
     #region Static Pages & Contact

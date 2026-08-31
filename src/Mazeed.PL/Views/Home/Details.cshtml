@@ -1,0 +1,431 @@
+﻿@model Mazeed.BLL.ViewModels.ItemDetailsVM
+
+@{
+    ViewData["Title"] = Model.Product?.Name ?? "Product Details";
+    var primaryImage = Model.Product?.Photos?.FirstOrDefault();
+}
+
+<style>
+    .main-img-box {
+        position: relative;
+        background-color: #f8f9fa;
+        border-radius: 16px;
+        height: 420px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border: 1px solid #edf2f7;
+    }
+
+        .main-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .thumb-img {
+        width: 75px;
+        height: 75px;
+        border-radius: 10px;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background-color: #f8f9fa;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .thumb-img.active, .thumb-img:hover {
+            border-color: #ff4d4f;
+            transform: scale(1.03);
+        }
+
+    .badge-sale-drop {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        background-color: #ff4d4f;
+        color: white;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 5px 12px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+    }
+
+    .opt-btn {
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        border-radius: 30px;
+        padding: 6px 18px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .opt-btn:hover {
+            border-color: #111827;
+        }
+
+        .opt-btn.active {
+            border-color: #111827;
+            background: #111827;
+            color: #ffffff;
+        }
+
+    .qty-picker {
+        display: inline-flex;
+        align-items: center;
+        background: #f3f4f6;
+        border-radius: 8px;
+        padding: 8px 18px;
+        gap: 16px;
+        font-weight: bold;
+    }
+
+        .qty-picker button {
+            cursor: pointer;
+            font-size: 16px;
+            color: #4b5563;
+        }
+
+    .btn-add-cart {
+        background-color: #ff4d4f;
+        color: white;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-block;
+        border: none;
+        transition: background-color 0.2s ease;
+    }
+
+        .btn-add-cart:hover {
+            background-color: #e03e41;
+            color: white;
+        }
+
+    .avatar-circle {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background-color: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+    }
+
+    .comment-bubble {
+        background-color: #f3f4f6;
+        border-radius: 12px;
+        height: 45px;
+        width: 100%;
+    }
+
+    /* Product Cards Matching Home Page Style */
+    .product-card {
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+    .product-img-wrapper {
+        position: relative;
+        background-color: #f4f4f5;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+        .product-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .btn-action-dark {
+        background-color: #111827;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+        .btn-action-dark:hover {
+            background-color: #1f2937;
+            color: #ffffff;
+        }
+
+    .btn-action-light {
+        background-color: #ffffff;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+        .btn-action-light:hover {
+            background-color: #f9fafb;
+            color: #374151;
+        }
+</style>
+
+<div class="container my-5">
+    <!-- Main Product Details -->
+    <div class="row g-5 align-items-start">
+
+        <!-- Left: Images Gallery -->
+        <div class="col-lg-6">
+            <div class="main-img-box mb-3">
+                @if (Model.Product.OldPrice.HasValue && Model.Product.OldPrice > Model.Product.Price)
+                {
+                    <span class="badge-sale-drop">SALE DROP</span>
+                }
+
+                @if (primaryImage != null)
+                {
+                    <img id="mainImage" src="@primaryImage" alt="@Model.Product.Name" />
+                }
+                else
+                {
+                    <i class="fa-solid fa-box-open fa-5x text-muted"></i>
+                }
+            </div>
+
+            @if (Model.Product.Photos != null && Model.Product.Photos.Count > 1)
+            {
+                <div class="d-flex gap-2 overflow-auto py-1">
+                    @foreach (var photo in Model.Product.Photos)
+                    {
+                        <img src="@photo" class="thumb-img @(photo == primaryImage ? "active" : "")" onclick="switchImage(this, '@photo')" />
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Right: Info Details -->
+        <div class="col-lg-6">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-uppercase fw-bold text-danger small tracking-wider">
+                    @(Model.Product.CategoryNames?.FirstOrDefault() ?? "General")
+                </span>
+                <span class="small fw-bold text-dark">&#9733; 4.9 <span class="text-muted fw-normal">(142 Reviews)</span></span>
+            </div>
+
+            <h1 class="fw-bold text-dark mb-3">@Model.Product.Name</h1>
+
+            <!-- Price -->
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <span class="fs-2 fw-bold text-danger">$@Model.Product.Price.ToString("F2")</span>
+                @if (Model.Product.OldPrice.HasValue && Model.Product.OldPrice > Model.Product.Price)
+                {
+                    <span class="text-decoration-line-through text-muted fs-5">$@Model.Product.OldPrice.Value.ToString("F2")</span>
+                    <span class="badge bg-danger-subtle text-danger fw-bold fs-7 px-2 py-1">
+                        Save $@((Model.Product.OldPrice.Value - Model.Product.Price).ToString("F2"))
+                    </span>
+                }
+            </div>
+
+            <!-- Dynamic Colors from Variants -->
+            @if (Model.AvailableColors != null && Model.AvailableColors.Any())
+            {
+                <div class="mb-4">
+                    <label class="form-label text-uppercase fw-bold text-muted small d-block mb-2">COLOR WAY</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var color in Model.AvailableColors)
+                        {
+                            <button type="button" class="opt-btn @(color == Model.AvailableColors.First() ? "active" : "")" onclick="selectOption(this)">
+                                @color
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Dynamic Sizes from Variants -->
+            @if (Model.AvailableSizes != null && Model.AvailableSizes.Any())
+            {
+                <div class="mb-4">
+                    <label class="form-label text-uppercase fw-bold text-muted small d-block mb-2">AVAILABLE SIZE</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var size in Model.AvailableSizes)
+                        {
+                            <button type="button" class="opt-btn @(size == Model.AvailableSizes.First() ? "active" : "")" onclick="selectOption(this)">
+                                @size
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Action Controls (Quantity + Add to Cart) -->
+            <div class="d-flex align-items-center gap-3 pt-2">
+                <div class="qty-picker">
+                    <button class="border-0 bg-transparent" type="button" onclick="decreaseQty()">-</button>
+                    <span id="qtyVal">1</span>
+                    <button class="border-0 bg-transparent" type="button" onclick="increaseQty()">+</button>
+                </div>
+
+                <button type="button" class="btn-add-cart flex-grow-1 text-center">
+                    Add to Cart — $@Model.Product.Price.ToString("F2")
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Static Comments Section (Placeholder) -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 my-5">
+        <h5 class="fw-bold mb-3">Comments</h5>
+        <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="avatar-circle">
+                <i class="fa-regular fa-user"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-0 text-dark">User Reviews</h6>
+            </div>
+        </div>
+        <div class="comment-bubble"></div>
+    </div>
+
+    <!-- Recommendation System (Dynamic Same Category Items) -->
+    @if (Model.RelatedProducts != null && Model.RelatedProducts.Any())
+    {
+        <div class="mt-5 pt-3">
+            <span class="text-uppercase fw-bold text-danger small tracking-wide d-block mb-1">RELATED DROPS</span>
+            <h3 class="fw-bold mb-4">You May Also Like</h3>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="relatedContainer">
+                @foreach (var item in Model.RelatedProducts)
+                {
+                    var relImg = item.Photos?.FirstOrDefault();
+                    <div class="col related-item" id="related-card-@item.Id">
+                        <div class="product-card">
+                            <div class="product-img-wrapper">
+                                @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                                {
+                                    <span class="badge-sale-drop">SALE</span>
+                                }
+                                @if (relImg != null)
+                                {
+                                    <img src="@relImg" alt="@item.Name" />
+                                }
+                                else
+                                {
+                                    <i class="fa-solid fa-box-open fa-3x text-muted"></i>
+                                }
+                            </div>
+                            <div class="p-3 d-flex flex-column justify-content-between flex-grow-1">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="text-uppercase fw-bold text-muted small">
+                                            @(item.CategoryNames?.FirstOrDefault() ?? "General")
+                                        </span>
+                                        <span class="small fw-bold text-dark">&#9733; 4.9</span>
+                                    </div>
+                                    <h6 class="fw-bold text-dark text-truncate mb-2">@item.Name</h6>
+                                    <span class="fw-bold text-danger fs-6 d-block mb-3">$@item.Price.ToString("F2")</span>
+                                </div>
+
+                                <!-- Matching Buttons Style from Home -->
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="btn-action-dark text-center d-block text-decoration-none">Details</a>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" class="btn-action-light w-100" onclick="removeRelatedProduct(@item.Id)">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    const visibleLimit = 3;
+
+    function switchImage(thumb, src) {
+        document.getElementById('mainImage').src = src;
+        document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
+        thumb.classList.add('active');
+    }
+
+    function selectOption(btn) {
+        const parent = btn.parentElement;
+        parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function increaseQty() {
+        let qtySpan = document.getElementById('qtyVal');
+        let current = parseInt(qtySpan.innerText);
+        qtySpan.innerText = current + 1;
+    }
+
+    function decreaseQty() {
+        let qtySpan = document.getElementById('qtyVal');
+        let current = parseInt(qtySpan.innerText);
+        if (current > 1) {
+            qtySpan.innerText = current - 1;
+        }
+    }
+
+    function updateRelatedVisibility() {
+        const items = document.querySelectorAll('.related-item');
+        items.forEach((item, index) => {
+            if (index < visibleLimit) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function removeRelatedProduct(id) {
+        var card = document.getElementById('related-card-' + id);
+        if (card) {
+            card.style.transition = 'all 0.3s ease';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.8)';
+            setTimeout(function() {
+                card.remove();
+                updateRelatedVisibility();
+            }, 300);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        updateRelatedVisibility();
+    });
+</script>

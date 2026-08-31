@@ -334,7 +334,7 @@
         {
             @foreach (var item in Model.Items)
             {
-                <div class="col-12 col-sm-6 col-lg-4 product-item">
+                <div class="col-12 col-sm-6 col-lg-4 product-item" id="product-card-@item.Id">
                     <div class="product-card">
                         <div class="product-img-wrapper">
                             @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
@@ -365,7 +365,7 @@
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div>
                                         <span class="current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
-                                            @item.Price.ToString("N0") EGP
+                                            $@item.Price.ToString("N2")
                                         </span>
                                         @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
                                         {
@@ -377,10 +377,19 @@
                             </div>
                             <div class="row g-2">
                                 <div class="col-6">
-                                    <a asp-controller="Store" asp-action="Details" asp-route-id="@item.Id" class="btn-action-dark">Details</a>
+                                    <a asp-controller="Home"
+                                       asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn-action-dark text-center d-block text-decoration-none">Details</a>
                                 </div>
+
+                                <!-- زرار Cancel يخفي الكارت بالكامل مباشرة -->
                                 <div class="col-6">
-                                    <a asp-controller="Home" asp-action="Index" class="btn-action-light">Cancel</a>
+                                    <button type="button"
+                                            class="btn-action-light w-100"
+                                            onclick="hideProductCard(@item.Id)">
+                                        Cancel
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -570,6 +579,24 @@
             btn.innerHTML = '&#9829;'; // قلب مصمت
         } else {
             btn.innerHTML = '&#9825;'; // قلب مفرغ
+        }
+    }
+
+    function hideProductCard(productId) {
+        // تحديد الكارت بناءً على الـ ID
+        const cardElement = document.getElementById('product-card-' + productId);
+
+        if (cardElement) {
+            // تأثير اختفاء سلس (Smooth Transition)
+            cardElement.style.transition = "all 0.4s ease";
+            cardElement.style.opacity = "0";
+            cardElement.style.transform = "scale(0.9)";
+
+            // إزالة العنصر من الصفحة بعد انتهاء الأنيميشن
+            setTimeout(() => {
+                cardElement.remove();
+                renderPagination(); // تحديث الصفحات بعد مسح العنصر
+            }, 400);
         }
     }
 
