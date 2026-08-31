@@ -1,4 +1,4 @@
-﻿using Mazeed.DAL.Database;
+using Mazeed.DAL.Database;
 using Mazeed.DAL.Entities;
 using Mazeed.DAL.Repos.Abstraction;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +15,10 @@ namespace Mazeed.DAL.Repos.Implementation
         {
             return await _dbSet
                 .Include(iv => iv.Item)
+                .ThenInclude(i => i.Brand)
+                .Include(iv => iv.Item)
+                .ThenInclude(i => i.Photos)
+                .Include(iv => iv.Photos)
                 .ToListAsync();
         }
 
@@ -22,6 +26,10 @@ namespace Mazeed.DAL.Repos.Implementation
         {
             return await _dbSet
                 .Include(iv => iv.Item)
+                .ThenInclude(i => i.Brand)
+                .Include(iv => iv.Item)
+                .ThenInclude(i => i.Photos)
+                .Include(iv => iv.Photos)
                 .FirstOrDefaultAsync(iv => iv.Id == id);
         }
     }

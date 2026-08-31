@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Mazeed.BLL.Responses;
 using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.ViewModels;
@@ -45,6 +45,18 @@ namespace Mazeed.BLL.Services.Implementation
         public async Task<ServiceResponse<ItemVariantVM>> CreateAsync(ItemVariantVM model)
         {
             var variantEntity = _mapper.Map<ItemVariant>(model);
+            if (model.Photos != null && model.Photos.Any())
+            {
+                foreach (var url in model.Photos.Where(u => !string.IsNullOrWhiteSpace(u)))
+                {
+                    variantEntity.Photos.Add(new ItemVariantPhoto 
+                    { 
+                        PhotoUrl = url,
+                        CreatedBy = "Admin",
+                        CreatedAt = DateTime.Now
+                    });
+                }
+            }
             variantEntity.CreatedBy = "Admin";
             variantEntity.CreatedAt = DateTime.Now;
             await _unitOfWork.Repository<ItemVariant>().AddAsync(variantEntity);
@@ -61,13 +73,30 @@ namespace Mazeed.BLL.Services.Implementation
 
         public async Task<ServiceResponse<bool>> UpdateAsync(ItemVariantVM model)
         {
-            var existingVariant = await _unitOfWork.Repository<ItemVariant>().GetByIdAsync(model.Id);
+            var existingVariant = await _itemVariantRepository.GetByIdWithDetailsAsync(model.Id);
             if (existingVariant == null)
             {
                 return ServiceResponse<bool>.FailureResponse("Item variant not found.");
             }
 
             _mapper.Map(model, existingVariant);
+            
+            // Update Photos
+            existingVariant.Photos.Clear();
+            if (model.Photos != null && model.Photos.Any())
+            {
+                foreach (var url in model.Photos.Where(u => !string.IsNullOrWhiteSpace(u)))
+                {
+                    existingVariant.Photos.Add(new ItemVariantPhoto 
+                    { 
+                        PhotoUrl = url, 
+                        ItemVariantId = existingVariant.Id,
+                        CreatedBy = "Admin",
+                        CreatedAt = DateTime.Now
+                    });
+                }
+            }
+
             existingVariant.UpdatedBy = "Admin";
             existingVariant.UpdatedAt = DateTime.Now;
             _unitOfWork.Repository<ItemVariant>().Update(existingVariant);

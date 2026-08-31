@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Mazeed.BLL.ViewModels;
 using Mazeed.BLL.ViewModels.User;
 using Mazeed.DAL.Entities;
@@ -86,10 +86,15 @@ namespace Mazeed.BLL.Mappers
                   src.CategoryIds.Select(cId => new ItemCategory { CategoryId = cId })));
 
             CreateMap<ItemVariant, ItemVariantVM>()
-            .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item != null ? src.Item.Name : string.Empty));
+            .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item != null ? src.Item.Name : string.Empty))
+            .ForMember(dest => dest.Photos, opt => opt.MapFrom(src =>
+                 src.Photos != null
+                     ? src.Photos.Select(p => p.PhotoUrl).ToList()
+                     : new List<string>()));
 
             CreateMap<ItemVariantVM, ItemVariant>()
                 .ForMember(dest => dest.Item, opt => opt.Ignore())
+                .ForMember(dest => dest.Photos, opt => opt.Ignore())
                 .ForMember(dest => dest.CartItems, opt => opt.Ignore())
                 .ForMember(dest => dest.OrderDetails, opt => opt.Ignore());
         }

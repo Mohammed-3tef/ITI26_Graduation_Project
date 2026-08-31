@@ -1,4 +1,4 @@
-﻿using Mazeed.DAL.Entities;
+using Mazeed.DAL.Entities;
 using Mazeed.DAL.Seeders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -23,6 +23,7 @@ namespace Mazeed.DAL.Database
         public DbSet<Item> Items { get; set; } = null!;
         public DbSet<ItemPhoto> ItemPhotos { get; set; } = null!;
         public DbSet<ItemVariant> ItemVariants { get; set; } = null!;
+        public DbSet<ItemVariantPhoto> ItemVariantPhotos { get; set; } = null!;
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public DbSet<Payment> Payments { get; set; } = null!;

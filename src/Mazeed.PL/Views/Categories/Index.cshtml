@@ -67,10 +67,10 @@
             transition: all 0.2s;
         }
 
-            .btn-action-edit:hover {
-                background-color: #ffc107;
-                color: #fff;
-            }
+        .btn-action-edit:hover {
+            background-color: #ffc107;
+            color: #fff;
+        }
 
         .btn-action-delete {
             background-color: #ffe6e6;
@@ -85,10 +85,10 @@
             transition: all 0.2s;
         }
 
-            .btn-action-delete:hover {
-                background-color: #dc3545;
-                color: #fff;
-            }
+        .btn-action-delete:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
 
         .category-icon-box {
             width: 45px;
@@ -122,6 +122,13 @@
     <div class="tab-pane fade show active" id="view-tab-pane" role="tabpanel" tabindex="0">
         <h4 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-list me-2 text-danger"></i>Categories</h4>
         <div class="bg-white rounded-4 shadow-sm p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0 text-muted fw-bold">All Categories</h5>
+                <div class="input-group shadow-sm" style="width: 300px; border-radius: 20px; overflow: hidden;">
+                    <span class="input-group-text bg-light border-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" id="categorySearchInput" class="form-control border-0 bg-light" placeholder="Search categories...">
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
@@ -307,6 +314,19 @@
 
 @section Scripts {
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('categorySearchInput');
+            if (!searchInput) return;
+
+            searchInput.addEventListener('keyup', function () {
+                const filter = this.value.toLowerCase();
+                document.querySelectorAll('#view-tab-pane tbody tr').forEach(row => {
+                    if (row.querySelector('td[colspan]')) return;
+                    row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+                });
+            });
+        });
+
         function openDetailsCategoryModal(id, name, description) {
             document.getElementById('detailsCategoryId').textContent = '#' + id;
             document.getElementById('detailsCategoryName').textContent = name;

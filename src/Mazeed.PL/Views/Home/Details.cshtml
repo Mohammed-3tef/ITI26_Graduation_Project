@@ -1,8 +1,12 @@
-﻿@model Mazeed.BLL.ViewModels.ItemDetailsVM
+@model Mazeed.BLL.ViewModels.ItemDetailsVM
+@using System.Text.Json
+@using Mazeed.BLL.Helpers
 
 @{
     ViewData["Title"] = Model.Product?.Name ?? "Product Details";
     var primaryImage = Model.Product?.Photos?.FirstOrDefault();
+    var productCategory = Model.Product?.CategoryNames?.FirstOrDefault() ?? "General";
+    var variantLabels = VariantLabelHelper.GetLabels(Model.Product?.CategoryNames);
 }
 
 <style>
@@ -18,11 +22,11 @@
         border: 1px solid #edf2f7;
     }
 
-        .main-img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    .main-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
     .thumb-img {
         width: 75px;
@@ -35,10 +39,10 @@
         transition: all 0.2s ease-in-out;
     }
 
-        .thumb-img.active, .thumb-img:hover {
-            border-color: #ff4d4f;
-            transform: scale(1.03);
-        }
+    .thumb-img.active, .thumb-img:hover {
+        border-color: #ff4d4f;
+        transform: scale(1.03);
+    }
 
     .badge-sale-drop {
         position: absolute;
@@ -153,11 +157,11 @@
         overflow: hidden;
     }
 
-        .product-img-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    .product-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
     .btn-action-dark {
         background-color: #111827;
@@ -173,10 +177,10 @@
         display: block;
     }
 
-        .btn-action-dark:hover {
-            background-color: #1f2937;
-            color: #ffffff;
-        }
+    .btn-action-dark:hover {
+        background-color: #1f2937;
+        color: #ffffff;
+    }
 
     .btn-action-light {
         background-color: #ffffff;
@@ -192,10 +196,32 @@
         display: block;
     }
 
-        .btn-action-light:hover {
-            background-color: #f9fafb;
-            color: #374151;
-        }
+    .btn-action-light:hover {
+        background-color: #f9fafb;
+        color: #374151;
+    }
+
+    .variant-specifications {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    .specification-label {
+        color: #6c757d;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    .specification-value {
+        color: #212529;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
 </style>
 
 <div class="container my-5">
@@ -220,15 +246,15 @@
                 }
             </div>
 
-            @if (Model.Product.Photos != null && Model.Product.Photos.Count > 1)
-            {
-                <div class="d-flex gap-2 overflow-auto py-1">
+            <div id="thumbnailsContainer" class="d-flex gap-2 overflow-auto py-1">
+                @if (Model.Product.Photos != null && Model.Product.Photos.Any())
+                {
                     @foreach (var photo in Model.Product.Photos)
                     {
                         <img src="@photo" class="thumb-img @(photo == primaryImage ? "active" : "")" onclick="switchImage(this, '@photo')" />
                     }
-                </div>
-            }
+                }
+            </div>
         </div>
 
         <!-- Right: Info Details -->
@@ -244,7 +270,7 @@
 
             <!-- Price -->
             <div class="d-flex align-items-center gap-3 mb-4">
-                <span class="fs-2 fw-bold text-danger">$@Model.Product.Price.ToString("F2")</span>
+                <span id="mainDisplayPrice" class="fs-2 fw-bold text-danger">$@Model.Product.Price.ToString("F2")</span>
                 @if (Model.Product.OldPrice.HasValue && Model.Product.OldPrice > Model.Product.Price)
                 {
                     <span class="text-decoration-line-through text-muted fs-5">$@Model.Product.OldPrice.Value.ToString("F2")</span>
@@ -258,11 +284,11 @@
             @if (Model.AvailableColors != null && Model.AvailableColors.Any())
             {
                 <div class="mb-4">
-                    <label class="form-label text-uppercase fw-bold text-muted small d-block mb-2">COLOR WAY</label>
+                    <label class="form-label text-uppercase fw-bold text-muted small d-block mb-2">@variantLabels.Color</label>
                     <div class="d-flex flex-wrap gap-2">
                         @foreach (var color in Model.AvailableColors)
                         {
-                            <button type="button" class="opt-btn @(color == Model.AvailableColors.First() ? "active" : "")" onclick="selectOption(this)">
+                            <button type="button" class="opt-btn color-opt @(color == Model.AvailableColors.First() ? "active" : "")" data-type="color" data-value="@color" onclick="selectOption(this)">
                                 @color
                             </button>
                         }
@@ -274,14 +300,50 @@
             @if (Model.AvailableSizes != null && Model.AvailableSizes.Any())
             {
                 <div class="mb-4">
-                    <label class="form-label text-uppercase fw-bold text-muted small d-block mb-2">AVAILABLE SIZE</label>
+                    <label class="form-label text-uppercase fw-bold text-muted small d-block mb-2">@variantLabels.Size</label>
                     <div class="d-flex flex-wrap gap-2">
                         @foreach (var size in Model.AvailableSizes)
                         {
-                            <button type="button" class="opt-btn @(size == Model.AvailableSizes.First() ? "active" : "")" onclick="selectOption(this)">
+                            <button type="button" class="opt-btn size-opt @(size == Model.AvailableSizes.First() ? "active" : "")" data-type="size" data-value="@size" onclick="selectOption(this)">
                                 @size
                             </button>
                         }
+                    </div>
+                </div>
+            }
+
+            @if (Model.Variants != null && Model.Variants.Any())
+            {
+                <div class="variant-specifications mb-4" aria-live="polite">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="fa-solid fa-clipboard-list text-danger"></i>
+                        <h6 class="fw-bold mb-0">Selected Variant Specifications</h6>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">SKU</div>
+                            <div class="specification-value" id="specSku">—</div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">@variantLabels.Color</div>
+                            <div class="specification-value" id="specColor">—</div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">@variantLabels.Size</div>
+                            <div class="specification-value" id="specSize">—</div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">Price Adjustment</div>
+                            <div class="specification-value" id="specPriceAdjustment">—</div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">Availability</div>
+                            <div class="specification-value" id="specAvailability">—</div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">Brand</div>
+                            <div class="specification-value">@(Model.Product.BrandName ?? "—")</div>
+                        </div>
                     </div>
                 </div>
             }
@@ -294,7 +356,7 @@
                     <button class="border-0 bg-transparent" type="button" onclick="increaseQty()">+</button>
                 </div>
 
-                <button type="button" class="btn-add-cart flex-grow-1 text-center">
+                <button type="button" id="addToCartBtn" class="btn-add-cart flex-grow-1 text-center">
                     Add to Cart — $@Model.Product.Price.ToString("F2")
                 </button>
             </div>
@@ -374,23 +436,109 @@
 
 <script>
     const visibleLimit = 3;
+    const allVariants = @Html.Raw(JsonSerializer.Serialize(Model.Variants ?? new List<Mazeed.BLL.ViewModels.ItemVariantVM>()));
+    const productPhotos = @Html.Raw(JsonSerializer.Serialize(Model.Product.Photos ?? new List<string>()));
+    const basePrice = parseFloat('@Model.Product.Price');
+
+    function getSelectedVariant() {
+        const activeColorBtn = document.querySelector('.color-opt.active');
+        const activeSizeBtn = document.querySelector('.size-opt.active');
+        const selectedColor = activeColorBtn ? activeColorBtn.getAttribute('data-value') : null;
+        const selectedSize = activeSizeBtn ? activeSizeBtn.getAttribute('data-value') : null;
+
+        return allVariants.find(v =>
+            (!selectedColor || v.Color === selectedColor) &&
+            (!selectedSize || v.Size === selectedSize)
+        );
+    }
+
+    function updateVariantSpecifications() {
+        const variant = getSelectedVariant();
+        const specSku = document.getElementById('specSku');
+        if (!specSku) return;
+
+        if (!variant) {
+            specSku.textContent = 'Select available options';
+            document.getElementById('specColor').textContent = '—';
+            document.getElementById('specSize').textContent = '—';
+            document.getElementById('specPriceAdjustment').textContent = '—';
+            document.getElementById('specAvailability').textContent = 'Unavailable';
+            return;
+        }
+
+        specSku.textContent = variant.SKU || '—';
+        document.getElementById('specColor').textContent = variant.Color || '—';
+        document.getElementById('specSize').textContent = variant.Size || '—';
+        document.getElementById('specPriceAdjustment').textContent =
+            (parseFloat(variant.PriceAdjustment || 0) >= 0 ? '+' : '') + '$' + parseFloat(variant.PriceAdjustment || 0).toFixed(2);
+        document.getElementById('specAvailability').textContent = variant.StockQuantity > 0
+            ? variant.StockQuantity + ' in stock'
+            : 'Out of stock';
+    }
+
+    function updatePriceDisplay() {
+        let matchingVariant = getSelectedVariant();
+
+        let priceAdjustment = 0;
+        if (matchingVariant && matchingVariant.PriceAdjustment) {
+            priceAdjustment = parseFloat(matchingVariant.PriceAdjustment);
+        }
+
+        let unitPrice = basePrice + priceAdjustment;
+
+        let qtySpan = document.getElementById('qtyVal');
+        let quantity = parseInt(qtySpan.innerText) || 1;
+
+        let totalPrice = unitPrice * quantity;
+
+        document.getElementById('mainDisplayPrice').innerText = '$' + unitPrice.toFixed(2);
+        document.getElementById('addToCartBtn').innerText = 'Add to Cart — $' + totalPrice.toFixed(2);
+        updateVariantSpecifications();
+    }
 
     function switchImage(thumb, src) {
         document.getElementById('mainImage').src = src;
         document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
-        thumb.classList.add('active');
+        if (thumb) thumb.classList.add('active');
     }
 
     function selectOption(btn) {
         const parent = btn.parentElement;
         parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        updateVariantGallery();
+    }
+
+    function updateVariantGallery() {
+        let matchingVariant = getSelectedVariant();
+
+        let photosToShow = productPhotos;
+        if (matchingVariant && matchingVariant.Photos && matchingVariant.Photos.length > 0) {
+            photosToShow = matchingVariant.Photos;
+        }
+
+        const container = document.getElementById('thumbnailsContainer');
+        container.innerHTML = '';
+
+        if (photosToShow.length > 0) {
+            document.getElementById('mainImage').src = photosToShow[0];
+            photosToShow.forEach((photo, index) => {
+                const img = document.createElement('img');
+                img.src = photo;
+                img.className = 'thumb-img' + (index === 0 ? ' active' : '');
+                img.onclick = function() { switchImage(this, photo); };
+                container.appendChild(img);
+            });
+        }
+
+        updatePriceDisplay();
     }
 
     function increaseQty() {
         let qtySpan = document.getElementById('qtyVal');
         let current = parseInt(qtySpan.innerText);
         qtySpan.innerText = current + 1;
+        updatePriceDisplay();
     }
 
     function decreaseQty() {
@@ -398,6 +546,7 @@
         let current = parseInt(qtySpan.innerText);
         if (current > 1) {
             qtySpan.innerText = current - 1;
+            updatePriceDisplay();
         }
     }
 
@@ -427,5 +576,6 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         updateRelatedVisibility();
+        updatePriceDisplay();
     });
 </script>

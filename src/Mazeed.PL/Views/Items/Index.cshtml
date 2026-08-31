@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Mazeed.BLL.ViewModels.ItemVM>
+@model IEnumerable<Mazeed.BLL.ViewModels.ItemVM>
 @using System.Text.Json
 @{
     Layout = "_AdminLayout";
@@ -122,6 +122,13 @@
     <div class="tab-pane fade show active" id="view-tab-pane" role="tabpanel" tabindex="0">
         <h4 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-box-open me-2 text-danger"></i>Items Management</h4>
         <div class="bg-white rounded-4 shadow-sm p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0 text-muted fw-bold">All Items</h5>
+                <div class="input-group shadow-sm" style="width: 300px; border-radius: 20px; overflow: hidden;">
+                    <span class="input-group-text bg-light border-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" id="itemSearchInput" class="form-control border-0 bg-light" placeholder="Search items...">
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
@@ -375,6 +382,23 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            
+            // Search Filter
+            const searchInput = document.getElementById('itemSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function () {
+                    const filter = this.value.toLowerCase();
+                    const rows = document.querySelectorAll('tbody tr');
+                    
+                    rows.forEach(row => {
+                        // Skip if it's the "No items found" row
+                        if (row.querySelector('td[colspan]')) return;
+                        
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(filter) ? '' : 'none';
+                    });
+                });
+            }
 
             // Details Modal Handler
             document.querySelectorAll('.btn-details').forEach(button => {

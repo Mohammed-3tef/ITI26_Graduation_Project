@@ -1,4 +1,4 @@
-﻿using Mazeed.BLL.Services.Abstraction;
+using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,8 +42,12 @@ namespace Mazeed.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ItemVariantVM model)
+        public async Task<IActionResult> Create(ItemVariantVM model, string? PhotoUrlsText)
         {
+            if (!string.IsNullOrWhiteSpace(PhotoUrlsText))
+            {
+                model.Photos = PhotoUrlsText.Split(new[] { '\n', '\r', ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
+            }
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Please fill in all required fields correctly.";
@@ -61,8 +65,12 @@ namespace Mazeed.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ItemVariantVM model)
+        public async Task<IActionResult> Edit(ItemVariantVM model, string? PhotoUrlsText)
         {
+            if (!string.IsNullOrWhiteSpace(PhotoUrlsText))
+            {
+                model.Photos = PhotoUrlsText.Split(new[] { '\n', '\r', ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
+            }
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Please fill in all required fields correctly.";

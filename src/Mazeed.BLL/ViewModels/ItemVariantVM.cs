@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Mazeed.BLL.ViewModels
 {
@@ -36,5 +36,7 @@ namespace Mazeed.BLL.ViewModels
 
         [Display(Name = "Item Name")]
         public string? ItemName { get; set; }
+
+        public List<string> Photos { get; set; } = new List<string>();
     }
 }

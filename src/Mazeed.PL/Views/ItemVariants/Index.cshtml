@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Mazeed.BLL.ViewModels.ItemVariantVM>
+@model IEnumerable<Mazeed.BLL.ViewModels.ItemVariantVM>
 @using System.Text.Json
 @{
     Layout = "_AdminLayout";
@@ -122,15 +122,22 @@
     <div class="tab-pane fade show active" id="view-tab-pane" role="tabpanel" tabindex="0">
         <h4 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-layer-group me-2 text-danger"></i>Item Variants Management</h4>
         <div class="bg-white rounded-4 shadow-sm p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0 text-muted fw-bold">All Variants</h5>
+                <div class="input-group shadow-sm" style="width: 300px; border-radius: 20px; overflow: hidden;">
+                    <span class="input-group-text bg-light border-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" id="variantSearchInput" class="form-control border-0 bg-light" placeholder="Search variants...">
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th scope="col" style="width: 70px;">Icon</th>
                             <th scope="col">SKU</th>
                             <th scope="col">Item</th>
                             <th scope="col">Color</th>
                             <th scope="col">Size</th>
+                            <th scope="col">Photos</th>
                             <th scope="col">Price Adj.</th>
                             <th scope="col">Stock</th>
                             <th scope="col" class="text-center" style="width: 180px;">Actions</th>
@@ -142,11 +149,6 @@
                             foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>
-                                        <div class="variant-icon-box">
-                                            <i class="fa-solid fa-cubes"></i>
-                                        </div>
-                                    </td>
                                     <td class="fw-bold text-dark">@item.SKU</td>
                                     <td class="fw-semibold">@(item.ItemName ?? "N/A")</td>
                                     <td>
@@ -154,6 +156,9 @@
                                     </td>
                                     <td>
                                         <span class="badge bg-secondary">@item.Size</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info text-dark">@(item.Photos?.Count ?? 0)</span>
                                     </td>
                                     <td class="text-success fw-bold">+@item.PriceAdjustment.ToString("F2") EGP</td>
                                     <td>
@@ -172,7 +177,7 @@
                                             <button type="button"
                                                     class="btn btn-action-view"
                                                     title="View Details"
-                                                    onclick="openDetailsVariantModal('@item.Id', @Html.Raw(JsonSerializer.Serialize(item.SKU)), @Html.Raw(JsonSerializer.Serialize(item.ItemName ?? "N/A")), @Html.Raw(JsonSerializer.Serialize(item.Color)), @Html.Raw(JsonSerializer.Serialize(item.Size)), '@item.PriceAdjustment', '@item.StockQuantity', '@item.LowStockThreshold')">
+                                                    onclick='openDetailsVariantModal("@item.Id", @Html.Raw(JsonSerializer.Serialize(item.SKU)), @Html.Raw(JsonSerializer.Serialize(item.ItemName ?? "N/A")), @Html.Raw(JsonSerializer.Serialize(item.Color)), @Html.Raw(JsonSerializer.Serialize(item.Size)), "@item.PriceAdjustment", "@item.StockQuantity", "@item.LowStockThreshold", @Html.Raw(JsonSerializer.Serialize(item.Photos)))'>
                                                 <i class="fa-solid fa-eye"></i>
                                             </button>
 
@@ -180,7 +185,7 @@
                                             <button type="button"
                                                     class="btn btn-action-edit"
                                                     title="Edit Variant"
-                                                    onclick="populateEditVariantModal('@item.Id', '@item.ItemId', @Html.Raw(JsonSerializer.Serialize(item.SKU)), @Html.Raw(JsonSerializer.Serialize(item.Color)), @Html.Raw(JsonSerializer.Serialize(item.Size)), '@item.PriceAdjustment', '@item.StockQuantity', '@item.LowStockThreshold')">
+                                                    onclick='populateEditVariantModal("@item.Id", "@item.ItemId", @Html.Raw(JsonSerializer.Serialize(item.SKU)), @Html.Raw(JsonSerializer.Serialize(item.Color)), @Html.Raw(JsonSerializer.Serialize(item.Size)), "@item.PriceAdjustment", "@item.StockQuantity", "@item.LowStockThreshold", @Html.Raw(JsonSerializer.Serialize(item.Photos)))'>
                                                 <i class="fa-solid fa-pen"></i>
                                             </button>
 
@@ -188,7 +193,7 @@
                                             <button type="button"
                                                     class="btn btn-action-delete"
                                                     title="Delete Variant"
-                                                    onclick="openDeleteVariantModal('@item.Id', @Html.Raw(JsonSerializer.Serialize(item.SKU)))">
+                                                    onclick='openDeleteVariantModal("@item.Id", @Html.Raw(JsonSerializer.Serialize(item.SKU)))'>
                                                 <i class="fa-solid fa-trash-can"></i>
                                             </button>
                                         </div>
@@ -253,6 +258,10 @@
                                 <input type="number" name="LowStockThreshold" class="form-control" min="0" value="5" required />
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Photo URLs (comma or newline separated)</label>
+                            <textarea name="PhotoUrlsText" class="form-control" rows="3" placeholder="https://example.com/photo1.jpg&#10;https://example.com/photo2.jpg"></textarea>
+                        </div>
                         <button type="submit" class="btn btn-danger w-100 rounded-pill mt-2">
                             <i class="fa-solid fa-plus me-1"></i> Save Variant
                         </button>
@@ -305,6 +314,11 @@
                     <div class="list-group-item d-flex justify-content-between align-items-center py-3">
                         <span class="text-muted fw-semibold">Low Stock Threshold:</span>
                         <span class="fw-bold text-dark" id="detailsVariantThreshold"></span>
+                    </div>
+                    <div class="list-group-item d-flex flex-column py-3">
+                        <span class="text-muted fw-semibold mb-2">Photos:</span>
+                        <div id="detailsVariantPhotos" class="d-flex flex-wrap gap-2">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -361,6 +375,10 @@
                             <input type="number" id="editVariantThreshold" name="LowStockThreshold" min="0" class="form-control" required />
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Photo URLs (comma or newline separated)</label>
+                        <textarea id="editVariantPhotoUrls" name="PhotoUrlsText" class="form-control" rows="3"></textarea>
+                    </div>
                 </div>
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -398,7 +416,26 @@
 
 @section Scripts {
     <script>
-        function openDetailsVariantModal(id, sku, itemName, color, size, priceAdj, stock, threshold) {
+        document.addEventListener('DOMContentLoaded', function () {
+            // Search Filter
+            const searchInput = document.getElementById('variantSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function () {
+                    const filter = this.value.toLowerCase();
+                    const rows = document.querySelectorAll('tbody tr');
+                    
+                    rows.forEach(row => {
+                        // Skip if it's the "No item variants found" row
+                        if (row.querySelector('td[colspan]')) return;
+                        
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(filter) ? '' : 'none';
+                    });
+                });
+            }
+        });
+
+        function openDetailsVariantModal(id, sku, itemName, color, size, priceAdj, stock, threshold, photosJson) {
             document.getElementById('detailsVariantSKU').textContent = sku;
             document.getElementById('detailsVariantItem').textContent = itemName;
             document.getElementById('detailsVariantColor').textContent = color;
@@ -407,11 +444,27 @@
             document.getElementById('detailsVariantStock').textContent = stock;
             document.getElementById('detailsVariantThreshold').textContent = threshold;
 
+            const photosContainer = document.getElementById('detailsVariantPhotos');
+            photosContainer.innerHTML = '';
+            if (photosJson && photosJson.length > 0) {
+                photosJson.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.className = 'rounded border';
+                    img.style.width = '60px';
+                    img.style.height = '60px';
+                    img.style.objectFit = 'cover';
+                    photosContainer.appendChild(img);
+                });
+            } else {
+                photosContainer.innerHTML = '<span class="text-muted small">No photos</span>';
+            }
+
             const detailsModal = new bootstrap.Modal(document.getElementById('detailsVariantModal'));
             detailsModal.show();
         }
 
-        function populateEditVariantModal(id, itemId, sku, color, size, priceAdj, stock, threshold) {
+        function populateEditVariantModal(id, itemId, sku, color, size, priceAdj, stock, threshold, photosJson) {
             document.getElementById('editVariantId').value = id;
             document.getElementById('editVariantItemId').value = itemId;
             document.getElementById('editVariantSKU').value = sku;
@@ -420,6 +473,7 @@
             document.getElementById('editVariantPriceAdj').value = priceAdj;
             document.getElementById('editVariantStock').value = stock;
             document.getElementById('editVariantThreshold').value = threshold;
+            document.getElementById('editVariantPhotoUrls').value = (photosJson || []).join('\n');
 
             const editModal = new bootstrap.Modal(document.getElementById('editVariantModal'));
             editModal.show();

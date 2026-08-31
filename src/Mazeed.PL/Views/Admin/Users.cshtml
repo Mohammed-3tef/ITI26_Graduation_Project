@@ -141,7 +141,7 @@
                             var assignedRolesJson = System.Text.Json.JsonSerializer.Serialize(userRoleInfo?.AssignedRoles ?? new List<string>());
                             string userImgBase64 = (user.ExistingImage != null && user.ExistingImage.Length > 0) ? Convert.ToBase64String(user.ExistingImage) : "";
 
-                            <tr>
+                            <tr class="user-search-row">
                                 <td>
                                     @if (!string.IsNullOrEmpty(userImgBase64))
                                     {
@@ -242,6 +242,12 @@
 <div class="tab-content" id="userTabsContent">
     <!-- View All Users Tab -->
     <div class="tab-pane fade show active" id="view-tab-pane" role="tabpanel" tabindex="0">
+        <div class="d-flex justify-content-end mb-3">
+            <div class="input-group shadow-sm" style="width: 300px; border-radius: 20px; overflow: hidden;">
+                <span class="input-group-text bg-light border-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                <input type="text" id="userSearchInput" class="form-control border-0 bg-light" placeholder="Search users...">
+            </div>
+        </div>
         @{
             var adminList = Model?.Where(u =>
             {
@@ -297,7 +303,13 @@
             <!-- Role List Table -->
             <div class="col-12 col-md-8">
                 <div class="bg-white rounded-4 shadow-sm p-4">
-                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-list-check me-2"></i>Existing Roles</h5>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0"><i class="fa-solid fa-list-check me-2"></i>Existing Roles</h5>
+                        <div class="input-group shadow-sm" style="width: 260px; border-radius: 20px; overflow: hidden;">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                            <input type="text" id="roleSearchInput" class="form-control border-0 bg-light" placeholder="Search roles...">
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
@@ -312,7 +324,7 @@
                                 {
                                     foreach (var role in roles)
                                     {
-                                        <tr>
+                                        <tr class="role-search-row">
                                             <td class="fw-semibold">@role.Name</td>
                                             <td><span class="badge bg-secondary rounded-pill">@role.UsersCount Users</span></td>
                                             <td class="text-center">
@@ -396,6 +408,23 @@
 
 @section Scripts {
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addLiveFilter = (inputId, rowSelector) => {
+                const input = document.getElementById(inputId);
+                if (!input) return;
+
+                input.addEventListener('keyup', function () {
+                    const filter = this.value.toLowerCase();
+                    document.querySelectorAll(rowSelector).forEach(row => {
+                        row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+                    });
+                });
+            };
+
+            addLiveFilter('userSearchInput', '.user-search-row');
+            addLiveFilter('roleSearchInput', '.role-search-row');
+        });
+
         function previewEditImage(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
