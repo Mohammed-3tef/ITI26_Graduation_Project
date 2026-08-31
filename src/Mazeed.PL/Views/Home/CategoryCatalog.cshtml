@@ -1,7 +1,10 @@
 ﻿@model Mazeed.BLL.ViewModels.ShopCatalogVM
 
 @{
-    ViewData["Title"] = "Electronics Catalog";
+    var currentCategoryName = Model?.Categories?.FirstOrDefault(c => c.Id == Model.CategoryId)?.Name
+                              ?? (Model?.CategoryId.HasValue == true ? "Category" : "All Products");
+
+    ViewData["Title"] = $"{currentCategoryName} Catalog";
 }
 
 <style>
@@ -240,7 +243,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
         <div>
             <span class="text-uppercase fw-bold text-muted small tracking-wide">Category Catalog</span>
-            <h1 class="fw-bold fs-2 text-dark mb-0">Electronics <span class="fs-5 text-muted fw-normal">(@(Model?.Items?.Count() ?? 0))</span></h1>
+            <h1 class="fw-bold fs-2 text-dark mb-0">@currentCategoryName <span class="fs-5 text-muted fw-normal">(@(Model?.Items?.Count() ?? 0))</span></h1>
         </div>
 
         <button class="btn-filter-pill" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
@@ -268,7 +271,7 @@
                             }
                             else
                             {
-                                <i class="fa-solid fa-microchip fa-3x text-muted"></i>
+                                <i class="fa-solid fa-box-open fa-3x text-muted"></i>
                             }
                         </div>
                         <div class="product-card-body">
@@ -281,15 +284,14 @@
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div>
                                         <span class="current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
-                                            $@item.Price.ToString("N2")
+                                            @item.Price.ToString("N0") EGP
                                         </span>
                                         @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
                                         {
-                                            <span class="original-price">$@item.OldPrice.Value.ToString("N2")</span>
+                                            <span class="original-price">$@item.OldPrice.Value.ToString("N0")</span>
                                         }
-                                        <span class="category-tag">@string.Join(", ", item.CategoryNames ?? new List<string>())</span>
                                     </div>
-                                    
+
                                     <button class="wishlist-btn" type="button" title="Add to Wishlist" onclick="toggleWishlist(this)">&#9825;</button>
                                 </div>
                             </div>
@@ -309,14 +311,14 @@
         else
         {
             <div class="col-12 text-center py-5">
-                <i class="fa-solid fa-laptop-code fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted fw-bold">No Electronics Available</h5>
+                <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted fw-bold">No Products Available in @currentCategoryName</h5>
                 <p class="text-muted small">Check back later for new arrivals in this section.</p>
             </div>
         }
     </div>
 
-    <!-- Dynamic Pagination Controls (Hidden if items <= 16) -->
+    <!-- Dynamic Pagination Controls -->
     <div class="pagination-dots-container" id="paginationContainer" style="display: none;">
         <button class="page-nav-btn" id="prevBtn" onclick="changePage(-1)" title="Previous">&#10094;</button>
         <div id="dotsWrapper" class="d-flex align-items-center gap-2"></div>
@@ -327,12 +329,12 @@
 <!-- Offcanvas Sidebar Filter & Sort -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel" style="width: 380px;">
     <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title fw-bold" id="filterOffcanvasLabel">Filter & Sort Electronics</h5>
+        <h5 class="offcanvas-title fw-bold" id="filterOffcanvasLabel">Filter & Sort @currentCategoryName</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
 
-    <form asp-controller="Store" asp-action="Index" method="get" class="d-flex flex-column h-100">
-        <input type="hidden" name="categoryId" value="@Model.CategoryId" />
+    <form asp-controller="Home" asp-action="Category" method="get" class="d-flex flex-column h-100">
+        <input type="hidden" name="id" value="@Model.CategoryId" />
 
         <div class="offcanvas-body">
             <div class="accordion accordion-flush" id="filterAccordion">
@@ -390,7 +392,6 @@
 </div>
 
 <script>
-    // تغيير عدد العناصر في الصفحة الواحدة إلى 16
     const itemsPerPage = 16;
     let currentPage = 0;
 
@@ -400,7 +401,6 @@
         const container = document.getElementById('paginationContainer');
         const dotsWrapper = document.getElementById('dotsWrapper');
 
-        // إخفاء الـ Pagination إذا كان عدد المنتجات 16 أو أقل
         if (items.length <= itemsPerPage) {
             container.style.display = 'none';
             items.forEach(item => item.style.display = 'block');

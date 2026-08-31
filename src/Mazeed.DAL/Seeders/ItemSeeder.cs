@@ -266,6 +266,43 @@ namespace Mazeed.DAL.Seeders
 });
 
             modelBuilder.Entity<Item>().HasData(items);
+
+            // Seed ItemCategories
+            var itemCategories = new List<ItemCategory>();
+
+            foreach (var item in items)
+            {
+                long categoryId;
+
+                if (item.Id >= 1 && item.Id <= 29)
+                {
+                    // Apple → Sharp
+                    categoryId = 1; // Electronics
+                }
+                else if (item.Id >= 30 && item.Id <= 37)
+                {
+                    // Zara → H&M
+                    categoryId = 2; // Fashion
+                }
+                else if (item.Id >= 38 && item.Id <= 85)
+                {
+                    // Nike → Asics
+                    categoryId = 3; // Sports
+                }
+                else
+                {
+                    // L'Oréal → Vichy
+                    categoryId = 4; // Beauty
+                }
+
+                itemCategories.Add(new ItemCategory
+                {
+                    ItemId = item.Id,
+                    CategoryId = categoryId
+                });
+            }
+
+            modelBuilder.Entity<ItemCategory>().HasData(itemCategories);
         }
     }
 }
