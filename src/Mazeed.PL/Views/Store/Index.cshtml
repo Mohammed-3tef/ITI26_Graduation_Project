@@ -33,7 +33,7 @@
             {
                 <div class="col">
                     <div class="card h-100 border-0 shadow-sm position-relative">
-                        <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm" aria-label="Wishlist">
+                        <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm fav-toggle-btn" aria-label="Wishlist" data-item-id="@item.Id">
                             <i class="fa-regular fa-heart"></i>
                         </button>
                         <div class="bg-light d-flex align-items-center justify-content-center overflow-hidden" style="height: 260px;">
@@ -178,3 +178,74 @@
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            async function apiCall(url, method) {
+                const headers = { 'Accept': 'application/json' };
+                if (token) headers['RequestVerificationToken'] = token;
+
+                const res = await fetch(url, { method, headers });
+                let data = null;
+                try { data = await res.json(); } catch (e) { /* no JSON body */ }
+
+                if (!res.ok) {
+                    if (res.status === 401) {
+                        if (typeof toastr !== 'undefined') toastr.info('Please sign in to save favorites.');
+                    } else if (typeof toastr !== 'undefined') {
+                        toastr.error((data && data.message) || 'Something went wrong.');
+                    }
+                    throw new Error('request failed');
+                }
+                return data;
+            }
+
+            function setHeartState(btn, active) {
+                const icon = btn.querySelector('i');
+                if (active) {
+                    icon.classList.remove('fa-regular');
+                    icon.classList.add('fa-solid');
+                    btn.classList.add('text-danger');
+                } else {
+                    icon.classList.remove('fa-solid');
+                    icon.classList.add('fa-regular');
+                    btn.classList.remove('text-danger');
+                }
+            }
+
+            // Pre-fill hearts for items already in the wishlist (silently no-ops if not signed in)
+            fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
+                .then(res => res.ok ? res.json() : null)
+                .then(result => {
+                    const favoritedIds = (result?.data || []).map(i => String(i.itemId));
+                    document.querySelectorAll('.fav-toggle-btn').forEach(btn => {
+                        if (favoritedIds.includes(btn.dataset.itemId)) setHeartState(btn, true);
+                    });
+                })
+                .catch(() => { /* not signed in — hearts stay outlined */ });
+
+            document.querySelectorAll('.fav-toggle-btn').forEach(btn => {
+                btn.addEventListener('click', async function (e) {
+                    e.preventDefault();
+                    const itemId = this.dataset.itemId;
+                    const isActive = this.classList.contains('text-danger');
+
+                    try {
+                        if (isActive) {
+                            await apiCall(`/api/wishlist/${itemId}`, 'DELETE');
+                            setHeartState(this, false);
+                            if (typeof toastr !== 'undefined') toastr.success('Removed from favorites.');
+                        } else {
+                            await apiCall(`/api/wishlist/${itemId}`, 'POST');
+                            setHeartState(this, true);
+                            if (typeof toastr !== 'undefined') toastr.success('Added to favorites.');
+                        }
+                    } catch (e) { /* handled */ }
+                });
+            });
+        });
+    </script>
+}

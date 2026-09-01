@@ -171,7 +171,7 @@
     <ul class="nav nav-tabs nav-tabs-custom mb-4" id="profileTabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active d-flex align-items-center gap-2 px-3" id="favorites-tab" data-bs-toggle="tab" data-bs-target="#favorites" type="button" role="tab">
-                <i class="fa-regular fa-heart"></i> Favorites <span class="badge-count">3</span>
+                <i class="fa-regular fa-heart"></i> Favorites <span id="favoritesBadge" class="badge-count">0</span>
             </button>
         </li>
         <li class="nav-item" role="presentation">
@@ -190,78 +190,12 @@
     <div class="tab-content" id="profileTabsContent">
         <!-- Favorites Tab -->
         <div class="tab-pane fade show active" id="favorites" role="tabpanel">
-            <div class="row g-3 g-md-4">
-                <!-- Product 1 -->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="card product-card h-100">
-                        <div class="product-img-wrapper">
-                            <button class="fav-btn" type="button"><i class="fa-solid fa-heart"></i></button>
-                            <img src="/assets/images/products/headphones.jpg" alt="Headphones" />
-                        </div>
-                        <div class="card-body pt-2 px-3 pb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="category-subtitle">ELECTRONICS</span>
-                                <span class="small fw-bold"><i class="fa-solid fa-star text-warning me-1"></i>4.9</span>
-                            </div>
-                            <h6 class="fw-bold text-dark mb-2">Mazeed SoundPro Air Headphones</h6>
-                            <div class="d-flex align-items-baseline gap-2 mb-3">
-                                <span class="fs-5 fw-bold text-danger">$189.00</span>
-                                <span class="text-muted text-decoration-line-through small">$249.00</span>
-                            </div>
-                            <button class="btn btn-dark-custom w-100">Details</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 2 -->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="card product-card h-100">
-                        <div class="product-img-wrapper">
-                            <button class="fav-btn" type="button"><i class="fa-solid fa-heart"></i></button>
-                            <img src="/assets/images/products/facial-elixir.jpg" alt="Facial Elixir" />
-                        </div>
-                        <div class="card-body pt-2 px-3 pb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="category-subtitle">BEAUTY</span>
-                                <span class="small fw-bold"><i class="fa-solid fa-star text-warning me-1"></i>4.9</span>
-                            </div>
-                            <h6 class="fw-bold text-dark mb-2">Bio-Restore Facial Elixir Oil</h6>
-                            <div class="d-flex align-items-baseline gap-2 mb-3">
-                                <span class="fs-5 fw-bold text-danger">$34.00</span>
-                            </div>
-                            <button class="btn btn-dark-custom w-100">Details</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="card product-card h-100">
-                        <div class="product-img-wrapper">
-                            <button class="fav-btn" type="button"><i class="fa-solid fa-heart"></i></button>
-                            <img src="/assets/images/products/smartwatch.jpg" alt="Smartwatch" />
-                        </div>
-                        <div class="card-body pt-2 px-3 pb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="category-subtitle">ELECTRONICS</span>
-                                <span class="small fw-bold"><i class="fa-solid fa-star text-warning me-1"></i>4.9</span>
-                            </div>
-                            <h6 class="fw-bold text-dark mb-2">AeroFit Active Smartwatch</h6>
-                            <div class="d-flex align-items-baseline gap-2 mb-3">
-                                <span class="fs-5 fw-bold text-danger">$119.00</span>
-                                <span class="text-muted text-decoration-line-through small">$159.00</span>
-                            </div>
-                            <button class="btn btn-dark-custom w-100">Details</button>
-                        </div>
-                    </div>
+            <div id="favoritesContainer" class="row g-3 g-md-4">
+                <div class="col-12 text-center text-muted py-5">
+                    <div class="spinner-border text-danger" role="status"></div>
                 </div>
             </div>
         </div>
-
-        @* <!-- Cart Tab Placeholder -->
-        <div class="tab-pane fade" id="cart" role="tabpanel">
-            <div class="profile-card p-4 p-md-5 text-center text-muted">Your cart items will display here.</div>
-        </div> *@
 
         <!-- Orders Tab Placeholder -->
         <div class="tab-pane fade" id="orders" role="tabpanel">
@@ -544,6 +478,91 @@
             if (governorateSelect.value) {
                 loadCities(governorateSelect.value, initialCity);
             }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const favoritesContainer = document.getElementById('favoritesContainer');
+            const favoritesBadge = document.getElementById('favoritesBadge');
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            async function apiCall(url, method) {
+                const headers = { 'Accept': 'application/json' };
+                if (token) headers['RequestVerificationToken'] = token;
+
+                const res = await fetch(url, { method, headers });
+                let data = null;
+                try { data = await res.json(); } catch (e) { /* no JSON body */ }
+
+                if (!res.ok) {
+                    const message = (data && data.message) || 'Something went wrong. Please try again.';
+                    if (typeof toastr !== 'undefined') toastr.error(message);
+                    throw new Error(message);
+                }
+                return data;
+            }
+
+            function favoriteCardHtml(item) {
+                return `
+                    <div class="col-12 col-sm-6 col-lg-4" data-item-id="${item.itemId}">
+                        <div class="card product-card h-100">
+                            <div class="product-img-wrapper">
+                                <button class="fav-btn remove-fav-btn" type="button" title="Remove from favorites">
+                                    <i class="fa-solid fa-heart"></i>
+                                </button>
+                                <img src="${item.imageUrl || '/assets/images/products/default-product.png'}" alt="${item.itemName}" />
+                            </div>
+                            <div class="card-body pt-2 px-3 pb-3">
+                                <span class="category-subtitle">${(item.brandName || '').toUpperCase()}</span>
+                                <h6 class="fw-bold text-dark mb-2 mt-1">${item.itemName}</h6>
+                                <div class="d-flex align-items-baseline gap-2 mb-3">
+                                    <span class="fs-5 fw-bold text-danger">$${item.price.toFixed(2)}</span>
+                                </div>
+                                ${item.inStock
+                                    ? `<a href="/Home/Details/${item.itemId}" class="btn btn-dark-custom w-100">Details</a>`
+                                    : `<button class="btn btn-dark-custom w-100" disabled>Out of Stock</button>`}
+                            </div>
+                        </div>
+                    </div>`;
+            }
+
+            async function loadFavorites() {
+                try {
+                    const res = await apiCall('/api/wishlist', 'GET');
+                    const items = res.data || [];
+
+                    favoritesBadge.textContent = items.length;
+
+                    if (!items.length) {
+                        favoritesContainer.innerHTML = `
+                            <div class="col-12">
+                                <div class="profile-card p-4 p-md-5 text-center text-muted">
+                                    Your wishlist is empty. Tap the heart on any item to save it here.
+                                </div>
+                            </div>`;
+                        return;
+                    }
+
+                    favoritesContainer.innerHTML = items.map(favoriteCardHtml).join('');
+                } catch (e) {
+                    favoritesContainer.innerHTML = `<div class="col-12 text-center text-muted py-5">Failed to load favorites.</div>`;
+                }
+            }
+
+            favoritesContainer.addEventListener('click', async function (e) {
+                const btn = e.target.closest('.remove-fav-btn');
+                if (!btn) return;
+
+                const itemId = btn.closest('[data-item-id]').dataset.itemId;
+                try {
+                    await apiCall(`/api/wishlist/${itemId}`, 'DELETE');
+                    if (typeof toastr !== 'undefined') toastr.success('Removed from favorites.');
+                    await loadFavorites();
+                } catch (e) { /* handled */ }
+            });
+
+            loadFavorites();
         });
     </script>
 }
