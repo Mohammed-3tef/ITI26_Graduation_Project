@@ -111,31 +111,32 @@
             background-color: #e03e41;
             color: white;
         }
-        .wishlist-detail-btn {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    color: #9ca3af;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-}
 
-.wishlist-detail-btn:hover {
-    border-color: #ff4d4f;
-}
+    .wishlist-detail-btn {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        color: #9ca3af;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
 
-.wishlist-detail-btn.active {
-    color: #ff4d4f;
-    border-color: #ff4d4f;
-    background: #fff5f5;
-}
+    .wishlist-detail-btn:hover {
+        border-color: #ff4d4f;
+    }
+
+    .wishlist-detail-btn.active {
+        color: #ff4d4f;
+        border-color: #ff4d4f;
+        background: #fff5f5;
+    }
 
     .avatar-circle {
         width: 42px;
@@ -146,13 +147,7 @@
         align-items: center;
         justify-content: center;
         color: #9ca3af;
-    }
-
-    .comment-bubble {
-        background-color: #f3f4f6;
-        border-radius: 12px;
-        height: 45px;
-        width: 100%;
+        flex-shrink: 0;
     }
 
     /* Product Cards Matching Home Page Style */
@@ -247,6 +242,52 @@
         font-weight: 600;
     }
 
+    /* Reviews Section */
+    .review-item {
+        padding: 16px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .review-item:last-child {
+        border-bottom: none;
+    }
+
+    .review-stars i {
+        font-size: 13px;
+    }
+
+    .review-stars .filled {
+        color: #f59e0b;
+    }
+
+    .review-stars .empty {
+        color: #e5e7eb;
+    }
+
+    /* Star Rating Input (hover-to-rate) */
+    .star-rating-input {
+        display: inline-flex;
+        gap: 6px;
+        font-size: 28px;
+        cursor: pointer;
+    }
+
+    /* === UPDATED: unhovered/unselected stars now use a darker, more visible gray
+       (was #e5e7eb, nearly invisible against a white background) === */
+    .star-rating-input i {
+        color: #9ca3af;
+        transition: color 0.15s ease, transform 0.1s ease;
+    }
+    /* === END UPDATE === */
+
+    .star-rating-input i.hovered,
+    .star-rating-input i.selected {
+        color: #f59e0b;
+    }
+
+    .star-rating-input i:hover {
+        transform: scale(1.1);
+    }
 </style>
 
 <div class="container my-5">
@@ -288,7 +329,10 @@
                 <span class="text-uppercase fw-bold text-danger small tracking-wider">
                     @(Model.Product.CategoryNames?.FirstOrDefault() ?? "General")
                 </span>
-                <span class="small fw-bold text-dark">&#9733; 4.9 <span class="text-muted fw-normal">(142 Reviews)</span></span>
+                <span class="small fw-bold text-dark" id="ratingSummaryDisplay">
+                    &#9733; <span id="avgRatingVal">0.0</span>
+                    <span class="text-muted fw-normal">(<span id="reviewCountVal">0</span> Reviews)</span>
+                </span>
             </div>
 
             <h1 class="fw-bold text-dark mb-3">@Model.Product.Name</h1>
@@ -373,37 +417,76 @@
                 </div>
             }
 
-            <!-- Action Controls (Quantity + Add to Cart) -->
+            <!-- Action Controls (Quantity + Add to Cart + Wishlist) -->
             <div class="d-flex align-items-center gap-3 pt-2">
-    <div class="qty-picker">
-        <button class="border-0 bg-transparent" type="button" onclick="decreaseQty()">-</button>
-        <span id="qtyVal">1</span>
-        <button class="border-0 bg-transparent" type="button" onclick="increaseQty()">+</button>
-    </div>
+                <div class="qty-picker">
+                    <button class="border-0 bg-transparent" type="button" onclick="decreaseQty()">-</button>
+                    <span id="qtyVal">1</span>
+                    <button class="border-0 bg-transparent" type="button" onclick="increaseQty()">+</button>
+                </div>
 
-    <button type="button" id="addToCartBtn" class="btn-add-cart flex-grow-1 text-center">
-        Add to Cart — $@Model.Product.Price.ToString("F2")
-    </button>
+                <button type="button" id="addToCartBtn" class="btn-add-cart flex-grow-1 text-center">
+                    Add to Cart — $@Model.Product.Price.ToString("F2")
+                </button>
 
-    <button type="button" id="wishlistDetailBtn" class="wishlist-detail-btn" title="Add to Wishlist">
-        <i class="fa-regular fa-heart"></i>
-    </button>
-</div>
+                <button type="button" id="wishlistDetailBtn" class="wishlist-detail-btn" title="Add to Wishlist">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Static Comments Section (Placeholder) -->
+    <!-- Reviews & Ratings Section -->
     <div class="card border-0 shadow-sm rounded-4 p-4 my-5">
-        <h5 class="fw-bold mb-3">Comments</h5>
-        <div class="d-flex align-items-center gap-3 mb-2">
-            <div class="avatar-circle">
-                <i class="fa-regular fa-user"></i>
-            </div>
-            <div>
-                <h6 class="fw-bold mb-0 text-dark">User Reviews</h6>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0">Reviews & Ratings</h5>
+            <div class="text-end">
+                <span class="fs-4 fw-bold text-dark" id="summaryAvgRating">0.0</span>
+                <i class="fa-solid fa-star text-warning"></i>
+                <div class="text-muted small" id="summaryReviewCount">0 reviews</div>
             </div>
         </div>
-        <div class="comment-bubble"></div>
+
+        <div id="reviewsListContainer">
+            <div class="text-center text-muted py-4">
+                <div class="spinner-border text-danger" role="status"></div>
+            </div>
+        </div>
+
+        <hr class="my-4" />
+
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <div id="writeReviewFormWrapper">
+                @* <h6 class="fw-bold mb-2">Write a Review</h6> *@
+                <form id="reviewForm">
+                    <div class="mb-3">
+                        @* <label class="form-label fw-semibold small d-block">Your Rating</label> *@
+                        
+                        <div class="star-rating-input" id="starRatingInput">
+                            <i class="fa-solid fa-star" data-value="1"></i>
+                            <i class="fa-solid fa-star" data-value="2"></i>
+                            <i class="fa-solid fa-star" data-value="3"></i>
+                            <i class="fa-solid fa-star" data-value="4"></i>
+                            <i class="fa-solid fa-star" data-value="5"></i>
+                        </div>
+                        <input type="hidden" id="reviewRateInput" value="" />
+                    </div>
+                    <div class="mb-2">
+                        <textarea name="Comment" class="form-control" rows="3" placeholder="Share your thoughts about this product..." maxlength="1000"></textarea>
+                    </div>
+                    <button type="submit" id="submitReviewBtn" class="btn-add-cart px-4 py-2">Submit Review</button>
+                </form>
+                @* <small class="text-muted d-block mt-2">Only customers who purchased and received this item can leave a review.</small> *@
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-3">
+                <p class="text-muted mb-2">Sign in to write a review.</p>
+                <a href="/Auth/Login?ReturnUrl=@Uri.EscapeDataString(Context.Request.Path + Context.Request.QueryString)" class="btn btn-outline-dark btn-sm">Sign In</a>
+            </div>
+        }
     </div>
 
     <!-- Recommendation System (Dynamic Same Category Items) -->
@@ -439,7 +522,7 @@
                                         <span class="text-uppercase fw-bold text-muted small">
                                             @(item.CategoryNames?.FirstOrDefault() ?? "General")
                                         </span>
-                                        <span class="small fw-bold text-dark">&#9733; 4.9</span>
+                                        <span class="small fw-bold text-dark related-rating-value" data-item-id="@item.Id">&#9734; —</span>
                                     </div>
                                     <h6 class="fw-bold text-dark text-truncate mb-2">@item.Name</h6>
                                     <span class="fw-bold text-danger fs-6 d-block mb-3">$@item.Price.ToString("F2")</span>
@@ -468,6 +551,12 @@
     const allVariants = @Html.Raw(JsonSerializer.Serialize(Model.Variants ?? new List<Mazeed.BLL.ViewModels.ItemVariantVM>()));
     const productPhotos = @Html.Raw(JsonSerializer.Serialize(Model.Product.Photos ?? new List<string>()));
     const basePrice = parseFloat('@Model.Product.Price');
+    const detailsItemId = @Model.Product.Id;
+
+    function redirectToLogin() {
+        const returnUrl = window.location.pathname + window.location.search;
+        window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
+    }
 
     function getSelectedVariant() {
         const activeColorBtn = document.querySelector('.color-opt.active');
@@ -603,98 +692,267 @@
         }
     }
 
-    const detailsItemId = @Model.Product.Id;
+    function loadRelatedRatings() {
+        const ratingEls = document.querySelectorAll('.related-rating-value');
+        const itemIds = Array.from(ratingEls).map(el => parseInt(el.dataset.itemId, 10));
+        if (!itemIds.length) return;
 
-function setWishlistBtnState(active) {
-    const btn = document.getElementById('wishlistDetailBtn');
-    const icon = btn.querySelector('i');
-    if (active) {
-        icon.classList.remove('fa-regular');
-        icon.classList.add('fa-solid');
-        btn.classList.add('active');
-    } else {
-        icon.classList.remove('fa-solid');
-        icon.classList.add('fa-regular');
-        btn.classList.remove('active');
+        fetch('/api/reviews/summaries', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ ItemIds: itemIds })
+        })
+            .then(res => res.ok ? res.json() : null)
+            .then(result => {
+                const summaries = result?.data || {};
+                ratingEls.forEach(el => {
+                    const s = summaries[el.dataset.itemId];
+                    if (s && s.reviewCount > 0) {
+                        el.innerHTML = `&#9733; ${s.averageRating.toFixed(1)}`;
+                    } else {
+                        el.innerHTML = `&#9734; New`;
+                    }
+                });
+            })
+            .catch(() => { /* leave placeholder dashes */ });
     }
-}
-
-async function toggleWishlistDetail() {
-    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-    const headers = { 'Accept': 'application/json' };
-    if (token) headers['RequestVerificationToken'] = token;
-    const isActive = document.getElementById('wishlistDetailBtn').classList.contains('active');
-
-    try {
-        const res = await fetch(`/api/wishlist/${detailsItemId}`, { method: isActive ? 'DELETE' : 'POST', headers });
-        if (!res.ok) {
-            if (res.status === 401 && typeof toastr !== 'undefined') toastr.info('Please sign in to save favorites.');
-            throw new Error('request failed');
-        }
-        setWishlistBtnState(!isActive);
-        if (typeof toastr !== 'undefined') toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
-    } catch (e) { /* handled */ }
-}
-
-document.getElementById('wishlistDetailBtn')?.addEventListener('click', toggleWishlistDetail);
-
-fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
-    .then(res => res.ok ? res.json() : null)
-    .then(result => {
-        const favoritedIds = (result?.data || []).map(i => String(i.itemId));
-        if (favoritedIds.includes(String(detailsItemId))) setWishlistBtnState(true);
-    })
-    .catch(() => { /* not signed in */ });
 
     async function addToCart() {
-    const variant = getSelectedVariant();
+        const variant = getSelectedVariant();
 
-    if (!variant) {
-        if (typeof toastr !== 'undefined') toastr.error('Please select available options.');
-        return;
-    }
-    if (variant.StockQuantity <= 0) {
-        if (typeof toastr !== 'undefined') toastr.error('This variant is out of stock.');
-        return;
-    }
-
-    const quantity = parseInt(document.getElementById('qtyVal').innerText, 10) || 1;
-    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-    const btn = document.getElementById('addToCartBtn');
-    const originalText = btn.innerText;
-
-    btn.disabled = true;
-    btn.innerText = 'Adding...';
-
-    try {
-        const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
-        if (token) headers['RequestVerificationToken'] = token;
-
-        const res = await fetch('/api/cart', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({ ItemVariantId: variant.Id, Quantity: quantity })
-        });
-
-        const data = await res.json().catch(() => null);
-
-        if (!res.ok) {
-            throw new Error((data && data.message) || 'Failed to add to cart.');
+        if (!variant) {
+            if (typeof toastr !== 'undefined') toastr.error('Please select available options.');
+            return;
+        }
+        if (variant.StockQuantity <= 0) {
+            if (typeof toastr !== 'undefined') toastr.error('This variant is out of stock.');
+            return;
         }
 
-        if (typeof toastr !== 'undefined') toastr.success('Added to cart!');
-    } catch (err) {
-        if (typeof toastr !== 'undefined') toastr.error(err.message || 'Something went wrong.');
-    } finally {
-        btn.disabled = false;
-        btn.innerText = originalText;
-    }
-}
+        const quantity = parseInt(document.getElementById('qtyVal').innerText, 10) || 1;
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const btn = document.getElementById('addToCartBtn');
+        const originalText = btn.innerText;
 
-document.getElementById('addToCartBtn')?.addEventListener('click', addToCart);
+        btn.disabled = true;
+        btn.innerText = 'Adding...';
+
+        try {
+            const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+            if (token) headers['RequestVerificationToken'] = token;
+
+            const res = await fetch('/api/cart', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ ItemVariantId: variant.Id, Quantity: quantity })
+            });
+
+            if (res.status === 401) {
+                redirectToLogin();
+                return;
+            }
+
+            const data = await res.json().catch(() => null);
+
+            if (!res.ok) {
+                throw new Error((data && data.message) || 'Failed to add to cart.');
+            }
+
+            if (typeof toastr !== 'undefined') toastr.success('Added to cart!');
+        } catch (err) {
+            if (typeof toastr !== 'undefined') toastr.error(err.message || 'Something went wrong.');
+        } finally {
+            btn.disabled = false;
+            btn.innerText = originalText;
+        }
+    }
+
+    document.getElementById('addToCartBtn')?.addEventListener('click', addToCart);
+
+    // ---- Wishlist ----
+    function setWishlistBtnState(active) {
+        const btn = document.getElementById('wishlistDetailBtn');
+        const icon = btn.querySelector('i');
+        if (active) {
+            icon.classList.remove('fa-regular');
+            icon.classList.add('fa-solid');
+            btn.classList.add('active');
+        } else {
+            icon.classList.remove('fa-solid');
+            icon.classList.add('fa-regular');
+            btn.classList.remove('active');
+        }
+    }
+
+    async function toggleWishlistDetail() {
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const headers = { 'Accept': 'application/json' };
+        if (token) headers['RequestVerificationToken'] = token;
+        const isActive = document.getElementById('wishlistDetailBtn').classList.contains('active');
+
+        try {
+            const res = await fetch(`/api/wishlist/${detailsItemId}`, { method: isActive ? 'DELETE' : 'POST', headers });
+
+            if (res.status === 401) {
+                redirectToLogin();
+                return;
+            }
+            if (!res.ok) throw new Error('request failed');
+
+            setWishlistBtnState(!isActive);
+            if (typeof toastr !== 'undefined') toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
+        } catch (e) { /* handled */ }
+    }
+
+    document.getElementById('wishlistDetailBtn')?.addEventListener('click', toggleWishlistDetail);
+
+    fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
+        .then(res => res.ok ? res.json() : null)
+        .then(result => {
+            const favoritedIds = (result?.data || []).map(i => String(i.itemId));
+            if (favoritedIds.includes(String(detailsItemId))) setWishlistBtnState(true);
+        })
+        .catch(() => { /* not signed in */ });
+
+    // ---- Star Rating Input (hover-to-rate) ----
+    let selectedRate = 0;
+    const starEls = document.querySelectorAll('#starRatingInput i');
+    const rateInput = document.getElementById('reviewRateInput');
+
+    function paintStars(upTo, cls) {
+        starEls.forEach(star => {
+            const val = parseInt(star.dataset.value, 10);
+            star.classList.toggle(cls, val <= upTo);
+        });
+    }
+
+    starEls.forEach(star => {
+        star.addEventListener('mouseenter', function () {
+            paintStars(parseInt(this.dataset.value, 10), 'hovered');
+        });
+        star.addEventListener('click', function () {
+            selectedRate = parseInt(this.dataset.value, 10);
+            if (rateInput) rateInput.value = selectedRate;
+            paintStars(selectedRate, 'selected');
+        });
+    });
+
+    document.getElementById('starRatingInput')?.addEventListener('mouseleave', function () {
+        starEls.forEach(s => s.classList.remove('hovered'));
+        paintStars(selectedRate, 'selected');
+    });
+
+    function resetStarRating() {
+        selectedRate = 0;
+        if (rateInput) rateInput.value = '';
+        starEls.forEach(s => s.classList.remove('selected', 'hovered'));
+    }
+
+    // ---- Reviews & Ratings ----
+    function starsHtml(rate) {
+        let html = '<span class="review-stars">';
+        for (let i = 1; i <= 5; i++) {
+            html += `<i class="fa-solid fa-star ${i <= rate ? 'filled' : 'empty'}"></i>`;
+        }
+        return html + '</span>';
+    }
+
+    function reviewItemHtml(r) {
+        const date = new Date(r.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+        const comment = r.comment ? `<p class="mb-0 mt-1 text-dark">${r.comment}</p>` : '';
+        return `
+            <div class="review-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">${r.reviewerName}</span>
+                    <span class="small text-muted">${date}</span>
+                </div>
+                ${starsHtml(r.rate)}
+                ${comment}
+            </div>`;
+    }
+
+    async function loadRatingSummary() {
+        try {
+            const res = await fetch(`/api/reviews/item/${detailsItemId}/summary`, { headers: { 'Accept': 'application/json' } });
+            const result = await res.json();
+            const summary = result.data;
+
+            document.getElementById('avgRatingVal').textContent = (summary.averageRating || 0).toFixed(1);
+            document.getElementById('reviewCountVal').textContent = summary.reviewCount || 0;
+            document.getElementById('summaryAvgRating').textContent = (summary.averageRating || 0).toFixed(1);
+            document.getElementById('summaryReviewCount').textContent = `${summary.reviewCount || 0} review${summary.reviewCount === 1 ? '' : 's'}`;
+        } catch (e) { /* silent */ }
+    }
+
+    async function loadReviews() {
+        const container = document.getElementById('reviewsListContainer');
+        try {
+            const res = await fetch(`/api/reviews/item/${detailsItemId}`, { headers: { 'Accept': 'application/json' } });
+            const result = await res.json();
+            const reviews = result.data || [];
+
+            container.innerHTML = reviews.length
+                ? reviews.map(reviewItemHtml).join('')
+                : '<p class="text-muted text-center py-3 mb-0">No reviews yet. Be the first to review this product.</p>';
+        } catch (e) {
+            container.innerHTML = '<p class="text-muted text-center py-3 mb-0">Failed to load reviews.</p>';
+        }
+    }
+
+    document.getElementById('reviewForm')?.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const rate = rateInput?.value;
+        const comment = this.querySelector('textarea[name="Comment"]').value;
+        const submitBtn = document.getElementById('submitReviewBtn');
+
+        if (!rate) {
+            if (typeof toastr !== 'undefined') toastr.error('Please select a rating.');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Submitting...';
+
+        try {
+            const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+            if (token) headers['RequestVerificationToken'] = token;
+
+            const res = await fetch('/api/reviews', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ ItemId: detailsItemId, Rate: parseInt(rate, 10), Comment: comment })
+            });
+
+            if (res.status === 401) {
+                redirectToLogin();
+                return;
+            }
+
+            const data = await res.json().catch(() => null);
+
+            if (!res.ok) {
+                throw new Error((data && data.message) || 'Failed to submit review.');
+            }
+
+            if (typeof toastr !== 'undefined') toastr.success('Review submitted!');
+            this.reset();
+            resetStarRating();
+            await loadReviews();
+            await loadRatingSummary();
+        } catch (err) {
+            if (typeof toastr !== 'undefined') toastr.error(err.message || 'Something went wrong.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Submit Review';
+        }
+    });
 
     document.addEventListener("DOMContentLoaded", function () {
         updateRelatedVisibility();
         updatePriceDisplay();
+        loadRatingSummary();
+        loadReviews();
+        loadRelatedRatings();
     });
 </script>

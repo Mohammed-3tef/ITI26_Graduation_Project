@@ -53,5 +53,20 @@ namespace Mazeed.DAL.Repos.Implementation
 
             return (ratings.Count, Math.Round(ratings.Average(), 2));
         }
+
+        public async Task<Dictionary<long, (int Count, double AverageRating)>> GetRatingSummariesAsync(IEnumerable<long> itemIds)
+        {
+            var ids = itemIds.Distinct().ToList();
+            if (!ids.Any()) return new Dictionary<long, (int, double)>();
+
+            var grouped = await _context.Set<ItemReview>()
+                .AsNoTracking()
+                .Where(r => ids.Contains(r.ItemId) && !r.IsDeleted)
+                .GroupBy(r => r.ItemId)
+                .Select(g => new { ItemId = g.Key, Count = g.Count(), Average = g.Average(r => r.Rate) })
+                .ToListAsync();
+
+            return grouped.ToDictionary(g => g.ItemId, g => (g.Count, Math.Round(g.Average, 2)));
+        }
     }
 }

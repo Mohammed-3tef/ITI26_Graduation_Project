@@ -117,5 +117,20 @@ namespace Mazeed.BLL.Services.Implementation
                 CreatedAt = review.CreatedAt
             };
         }
+
+        public async Task<ServiceResponse<Dictionary<long, ItemRatingSummaryVM>>> GetRatingSummariesAsync(IEnumerable<long> itemIds)
+        {
+            var ids = itemIds.Distinct().ToList();
+            var summaries = await _reviewRepository.GetRatingSummariesAsync(ids);
+
+            var result = ids.ToDictionary(id => id, id => new ItemRatingSummaryVM
+            {
+                ItemId = id,
+                ReviewCount = summaries.TryGetValue(id, out var s) ? s.Count : 0,
+                AverageRating = summaries.TryGetValue(id, out var s2) ? s2.AverageRating : 0
+            });
+
+            return ServiceResponse<Dictionary<long, ItemRatingSummaryVM>>.SuccessResponse(result, "Rating summaries retrieved successfully.");
+        }
     }
 }

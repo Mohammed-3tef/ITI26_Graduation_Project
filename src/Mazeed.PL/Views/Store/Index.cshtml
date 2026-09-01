@@ -184,18 +184,27 @@
         document.addEventListener('DOMContentLoaded', function () {
             const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
+            function redirectToLogin() {
+                const returnUrl = window.location.pathname + window.location.search;
+                window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
+            }
+
             async function apiCall(url, method) {
                 const headers = { 'Accept': 'application/json' };
                 if (token) headers['RequestVerificationToken'] = token;
 
                 const res = await fetch(url, { method, headers });
+
+                if (res.status === 401) {
+                    redirectToLogin();
+                    throw new Error('unauthenticated');
+                }
+
                 let data = null;
                 try { data = await res.json(); } catch (e) { /* no JSON body */ }
 
                 if (!res.ok) {
-                    if (res.status === 401) {
-                        if (typeof toastr !== 'undefined') toastr.info('Please sign in to save favorites.');
-                    } else if (typeof toastr !== 'undefined') {
+                    if (typeof toastr !== 'undefined') {
                         toastr.error((data && data.message) || 'Something went wrong.');
                     }
                     throw new Error('request failed');

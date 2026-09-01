@@ -30,6 +30,11 @@ namespace Mazeed.PL.Controllers
         public async Task<IActionResult> Create([FromBody] CreateReviewVM model)
             => HandleResponse(await _reviewService.CreateReviewAsync(CurrentUserId, model, CurrentUserName));
 
+        [AllowAnonymous]
+        [HttpPost("summaries")]
+        public async Task<IActionResult> GetBatchSummaries([FromBody] BatchSummaryRequestVM model)
+            => HandleResponse(await _reviewService.GetRatingSummariesAsync(model.ItemIds));
+
         [Authorize]
         [HttpPut("{itemId:long}")]
         public async Task<IActionResult> Update(long itemId, [FromBody] UpdateReviewVM model)

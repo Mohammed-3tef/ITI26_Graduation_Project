@@ -278,7 +278,7 @@
                             <div>
                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                     <span class="category-tag">@string.Join(", ", item.CategoryNames ?? new List<string>())</span>
-                                    <span class="rating">&#9734; 4.8</span>
+                                    <span class="rating rating-value" data-item-id="@item.Id">&#9734; —</span>
                                 </div>
                                 <div class="product-title" title="@item.Name">@item.Name</div>
                                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -451,42 +451,74 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    function redirectToLogin() {
+        const returnUrl = window.location.pathname + window.location.search;
+        window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
+    }
+
     function toggleWishlist(btn) {
-    const itemId = btn.dataset.itemId;
-    const isActive = btn.classList.contains('active');
-    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-    const headers = { 'Accept': 'application/json' };
-    if (token) headers['RequestVerificationToken'] = token;
+        const itemId = btn.dataset.itemId;
+        const isActive = btn.classList.contains('active');
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const headers = { 'Accept': 'application/json' };
+        if (token) headers['RequestVerificationToken'] = token;
 
-    fetch(`/api/wishlist/${itemId}`, { method: isActive ? 'DELETE' : 'POST', headers })
-        .then(res => {
-            if (!res.ok) {
-                if (res.status === 401 && typeof toastr !== 'undefined') toastr.info('Please sign in to save favorites.');
-                throw new Error('request failed');
-            }
-            btn.classList.toggle('active');
-            btn.innerHTML = btn.classList.contains('active') ? '&#9829;' : '&#9825;';
-            if (typeof toastr !== 'undefined') {
-                toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
-            }
-        })
-        .catch(() => { /* handled or silent */ });
-}
-
-function prefillWishlistState() {
-    fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
-        .then(res => res.ok ? res.json() : null)
-        .then(result => {
-            const favoritedIds = (result?.data || []).map(i => String(i.itemId));
-            document.querySelectorAll('.wishlist-btn').forEach(btn => {
-                if (favoritedIds.includes(btn.dataset.itemId)) {
-                    btn.classList.add('active');
-                    btn.innerHTML = '&#9829;';
+        fetch(`/api/wishlist/${itemId}`, { method: isActive ? 'DELETE' : 'POST', headers })
+            .then(res => {
+                if (res.status === 401) {
+                    redirectToLogin();
+                    throw new Error('unauthenticated');
                 }
-            });
+                if (!res.ok) throw new Error('request failed');
+
+                btn.classList.toggle('active');
+                btn.innerHTML = btn.classList.contains('active') ? '&#9829;' : '&#9825;';
+                if (typeof toastr !== 'undefined') {
+                    toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
+                }
+            })
+            .catch(() => { /* handled or silent */ });
+    }
+
+    function prefillWishlistState() {
+        fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
+            .then(res => res.ok ? res.json() : null)
+            .then(result => {
+                const favoritedIds = (result?.data || []).map(i => String(i.itemId));
+                document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                    if (favoritedIds.includes(btn.dataset.itemId)) {
+                        btn.classList.add('active');
+                        btn.innerHTML = '&#9829;';
+                    }
+                });
+            })
+            .catch(() => { /* not signed in */ });
+    }
+
+    function loadRealRatings() {
+        const ratingEls = document.querySelectorAll('.rating-value');
+        const itemIds = Array.from(ratingEls).map(el => parseInt(el.dataset.itemId, 10));
+        if (!itemIds.length) return;
+
+        fetch('/api/reviews/summaries', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ ItemIds: itemIds })
         })
-        .catch(() => { /* not signed in */ });
-}
+            .then(res => res.ok ? res.json() : null)
+            .then(result => {
+                const summaries = result?.data || {};
+                ratingEls.forEach(el => {
+                    const s = summaries[el.dataset.itemId];
+                    if (s && s.reviewCount > 0) {
+                        el.innerHTML = `&#9733; ${s.averageRating.toFixed(1)} <span class="text-muted fw-normal">(${s.reviewCount})</span>`;
+                    } else {
+                        el.innerHTML = `&#9734; No reviews`;
+                    }
+                });
+            })
+            .catch(() => { /* leave placeholder dashes */ });
+    }
 
     // دالة إخفاء الكارت عند الضغط على Cancel
     function hideProductCard(button) {
@@ -498,7 +530,8 @@ function prefillWishlistState() {
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-    renderPagination();
-    prefillWishlistState();
-});
+        renderPagination();
+        prefillWishlistState();
+        loadRealRatings();
+    });
 </script>
