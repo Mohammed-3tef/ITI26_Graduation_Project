@@ -292,7 +292,7 @@
                                         }
                                     </div>
 
-                                    <button class="wishlist-btn" type="button" title="Add to Wishlist" onclick="toggleWishlist(this)">&#9825;</button>
+                                    <button class="wishlist-btn" type="button" title="Add to Wishlist" data-item-id="@item.Id" onclick="toggleWishlist(this)">&#9825;</button>
                                 </div>
                             </div>
                             <!-- تعديل تشغيل الأزرار Details و Cancel مع الحفاظ على التصميم -->
@@ -452,9 +452,41 @@
     }
 
     function toggleWishlist(btn) {
-        btn.classList.toggle('active');
-        btn.innerHTML = btn.classList.contains('active') ? '&#9829;' : '&#9825;';
-    }
+    const itemId = btn.dataset.itemId;
+    const isActive = btn.classList.contains('active');
+    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+    const headers = { 'Accept': 'application/json' };
+    if (token) headers['RequestVerificationToken'] = token;
+
+    fetch(`/api/wishlist/${itemId}`, { method: isActive ? 'DELETE' : 'POST', headers })
+        .then(res => {
+            if (!res.ok) {
+                if (res.status === 401 && typeof toastr !== 'undefined') toastr.info('Please sign in to save favorites.');
+                throw new Error('request failed');
+            }
+            btn.classList.toggle('active');
+            btn.innerHTML = btn.classList.contains('active') ? '&#9829;' : '&#9825;';
+            if (typeof toastr !== 'undefined') {
+                toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
+            }
+        })
+        .catch(() => { /* handled or silent */ });
+}
+
+function prefillWishlistState() {
+    fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
+        .then(res => res.ok ? res.json() : null)
+        .then(result => {
+            const favoritedIds = (result?.data || []).map(i => String(i.itemId));
+            document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                if (favoritedIds.includes(btn.dataset.itemId)) {
+                    btn.classList.add('active');
+                    btn.innerHTML = '&#9829;';
+                }
+            });
+        })
+        .catch(() => { /* not signed in */ });
+}
 
     // دالة إخفاء الكارت عند الضغط على Cancel
     function hideProductCard(button) {
@@ -466,6 +498,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        renderPagination();
-    });
+    renderPagination();
+    prefillWishlistState();
+});
 </script>

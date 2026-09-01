@@ -111,6 +111,31 @@
             background-color: #e03e41;
             color: white;
         }
+        .wishlist-detail-btn {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    color: #9ca3af;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.wishlist-detail-btn:hover {
+    border-color: #ff4d4f;
+}
+
+.wishlist-detail-btn.active {
+    color: #ff4d4f;
+    border-color: #ff4d4f;
+    background: #fff5f5;
+}
 
     .avatar-circle {
         width: 42px;
@@ -350,16 +375,20 @@
 
             <!-- Action Controls (Quantity + Add to Cart) -->
             <div class="d-flex align-items-center gap-3 pt-2">
-                <div class="qty-picker">
-                    <button class="border-0 bg-transparent" type="button" onclick="decreaseQty()">-</button>
-                    <span id="qtyVal">1</span>
-                    <button class="border-0 bg-transparent" type="button" onclick="increaseQty()">+</button>
-                </div>
+    <div class="qty-picker">
+        <button class="border-0 bg-transparent" type="button" onclick="decreaseQty()">-</button>
+        <span id="qtyVal">1</span>
+        <button class="border-0 bg-transparent" type="button" onclick="increaseQty()">+</button>
+    </div>
 
-                <button type="button" id="addToCartBtn" class="btn-add-cart flex-grow-1 text-center">
-                    Add to Cart — $@Model.Product.Price.ToString("F2")
-                </button>
-            </div>
+    <button type="button" id="addToCartBtn" class="btn-add-cart flex-grow-1 text-center">
+        Add to Cart — $@Model.Product.Price.ToString("F2")
+    </button>
+
+    <button type="button" id="wishlistDetailBtn" class="wishlist-detail-btn" title="Add to Wishlist">
+        <i class="fa-regular fa-heart"></i>
+    </button>
+</div>
         </div>
     </div>
 
@@ -573,6 +602,49 @@
             }, 300);
         }
     }
+
+    const detailsItemId = @Model.Product.Id;
+
+function setWishlistBtnState(active) {
+    const btn = document.getElementById('wishlistDetailBtn');
+    const icon = btn.querySelector('i');
+    if (active) {
+        icon.classList.remove('fa-regular');
+        icon.classList.add('fa-solid');
+        btn.classList.add('active');
+    } else {
+        icon.classList.remove('fa-solid');
+        icon.classList.add('fa-regular');
+        btn.classList.remove('active');
+    }
+}
+
+async function toggleWishlistDetail() {
+    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+    const headers = { 'Accept': 'application/json' };
+    if (token) headers['RequestVerificationToken'] = token;
+    const isActive = document.getElementById('wishlistDetailBtn').classList.contains('active');
+
+    try {
+        const res = await fetch(`/api/wishlist/${detailsItemId}`, { method: isActive ? 'DELETE' : 'POST', headers });
+        if (!res.ok) {
+            if (res.status === 401 && typeof toastr !== 'undefined') toastr.info('Please sign in to save favorites.');
+            throw new Error('request failed');
+        }
+        setWishlistBtnState(!isActive);
+        if (typeof toastr !== 'undefined') toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
+    } catch (e) { /* handled */ }
+}
+
+document.getElementById('wishlistDetailBtn')?.addEventListener('click', toggleWishlistDetail);
+
+fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
+    .then(res => res.ok ? res.json() : null)
+    .then(result => {
+        const favoritedIds = (result?.data || []).map(i => String(i.itemId));
+        if (favoritedIds.includes(String(detailsItemId))) setWishlistBtnState(true);
+    })
+    .catch(() => { /* not signed in */ });
 
     async function addToCart() {
     const variant = getSelectedVariant();
