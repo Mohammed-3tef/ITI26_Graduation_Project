@@ -2,11 +2,15 @@
 using Mazeed.BLL.Services.Implementation;
 using Mazeed.BLL.ViewModels;
 using Mazeed.BLL.ViewModels.User;
+using Mazeed.BLL.ViewModels.Admin;
+using Mazeed.DAL.Database;
+using Mazeed.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mazeed.PL.Controllers
 {
@@ -19,6 +23,7 @@ namespace Mazeed.PL.Controllers
         private readonly ICategoryService _categoryService; // 🟢 إضافة
         private readonly IBrandService _brandService;       // 🟢 إضافة
         private readonly ILogger<AdminController> _logger;
+        private readonly AppDbContext _context;
 
         public AdminController(
             IUserService userService,
@@ -26,7 +31,8 @@ namespace Mazeed.PL.Controllers
             IGovernorateService governorateService,
             ICategoryService categoryService,               // 🟢 حقن
             IBrandService brandService,                  // 🟢 حقن
-            ILogger<AdminController> logger)
+            ILogger<AdminController> logger,
+            AppDbContext context)
         {
             _userService = userService;
             _roleService = roleService;
@@ -34,6 +40,7 @@ namespace Mazeed.PL.Controllers
             _categoryService = categoryService;          // 🟢 تعيين
             _brandService = brandService;                // 🟢 تعيين
             _logger = logger;
+            _context = context;
         }
 
         [HttpGet]
@@ -83,6 +90,90 @@ namespace Mazeed.PL.Controllers
             await PopulateGovernoratesDropdownAsync(null);
 
             return View(users);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Sales(string? search, string? status, DateTime? startDate, DateTime? endDate)
+        {
+            await PopulateCurrentAdminAsync();
+
+            var query = _context.Orders
+                .AsNoTracking()
+                .Include(order => order.Payment)
+                .Include(order => order.OrderDetails)
+                    .ThenInclude(detail => detail.ItemVariant)
+                        .ThenInclude(variant => variant.Item)
+                .Where(order => !order.IsDeleted);
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim();
+                query = query.Where(order => order.Id.ToString().Contains(search) ||
+                    (order.FirstName + " " + order.LastName).Contains(search) ||
+                    order.PhoneNumber.Contains(search));
+            }
+
+            if (!string.IsNullOrWhiteSpace(status))
+                query = query.Where(order => order.Status == status);
+            if (startDate.HasValue)
+                query = query.Where(order => order.OrderingDate >= startDate.Value.Date);
+            if (endDate.HasValue)
+                query = query.Where(order => order.OrderingDate < endDate.Value.Date.AddDays(1));
+
+            var orders = await query.OrderByDescending(order => order.OrderingDate).ToListAsync();
+            var model = orders.Select(order => new SalesOrderVM
+            {
+                Id = order.Id,
+                OrderingDate = order.OrderingDate,
+                CustomerName = $"{order.FirstName} {order.LastName}",
+                PhoneNumber = order.PhoneNumber,
+                ShippingAddress = order.ShippingAddress,
+                TotalPrice = order.TotalPrice,
+                Status = order.Status,
+                PaymentStatus = order.Payment?.Status ?? "Not recorded",
+                ItemsCount = order.OrderDetails.Sum(detail => detail.Quantity),
+                Items = order.OrderDetails.Select(detail => new SalesOrderItemVM
+                {
+                    ItemName = detail.ItemVariant.Item.Name,
+                    SKU = detail.ItemVariant.SKU,
+                    Variant = $"{detail.ItemVariant.Color} / {detail.ItemVariant.Size}",
+                    Quantity = detail.Quantity,
+                    PricePerItem = detail.PricePerItem
+                }).ToList()
+            }).ToList();
+
+            ViewBag.Search = search;
+            ViewBag.Status = status;
+            ViewBag.StartDate = startDate?.ToString("yyyy-MM-dd");
+            ViewBag.EndDate = endDate?.ToString("yyyy-MM-dd");
+            ViewBag.Statuses = new[] { "Pending", "Paid", "Processing", "Shipped", "Delivered", "Cancelled", "Payment failed" };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateOrderStatus(long id, string status)
+        {
+            var validStatuses = new[] { "Pending", "Paid", "Processing", "Shipped", "Delivered", "Cancelled", "Payment failed" };
+            if (!validStatuses.Contains(status))
+            {
+                TempData["Error"] = "Invalid order status.";
+                return RedirectToAction(nameof(Sales));
+            }
+
+            var order = await _context.Orders.FirstOrDefaultAsync(order => order.Id == id && !order.IsDeleted);
+            if (order == null)
+            {
+                TempData["Error"] = "Order not found.";
+                return RedirectToAction(nameof(Sales));
+            }
+
+            order.Status = status;
+            order.UpdatedBy = GetCurrentUserEmail();
+            order.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            TempData["Success"] = $"Order #{id} status updated.";
+            return RedirectToAction(nameof(Sales));
         }
 
         [HttpPost]
@@ -232,6 +323,13 @@ namespace Mazeed.PL.Controllers
         private string GetCurrentUserEmail()
         {
             return User.FindFirstValue(ClaimTypes.Email) ?? "admin@mazeed.com";
+        }
+
+        private async Task PopulateCurrentAdminAsync()
+        {
+            var response = await _userService.GetUserByEmailAsync(GetCurrentUserEmail());
+            if (response.Succeeded)
+                ViewBag.CurrentUser = response.Data;
         }
 
         private async Task PopulateGovernoratesDropdownAsync(string? selectedGovId)

@@ -53,7 +53,8 @@
             </div>
             <div class="col-md-3">
                 <label class="form-label fw-bold fs-7">Categories</label>
-                <select id="categoryFilter" class="form-select form-select-sm" multiple onchange="loadDashboardData()">
+                <select id="categoryFilter" class="form-select form-select-sm" onchange="loadDashboardData()">
+                    <option value="">All categories</option>
                     @foreach (var cat in ViewBag.Categories)
                     {
                         <option value="@cat.Id">@cat.Name</option>
@@ -62,7 +63,8 @@
             </div>
             <div class="col-md-3">
                 <label class="form-label fw-bold fs-7">Brands</label>
-                <select id="brandFilter" class="form-select form-select-sm" multiple onchange="loadDashboardData()">
+                <select id="brandFilter" class="form-select form-select-sm" onchange="loadDashboardData()">
+                    <option value="">All brands</option>
                     @foreach (var brand in ViewBag.Brands)
                     {
                         <option value="@brand.Id">@brand.Name</option>
@@ -153,12 +155,15 @@
         brands.forEach(b => params.append('brandIds', b));
 
         fetch(`/Dashboard/GetDashboardData?${params.toString()}`)
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error(`Dashboard request failed (${res.status})`);
+                return res.json();
+            })
             .then(data => {
                 // Update KPIs
-                document.getElementById('kpiTotalSales').innerText = `$${data.kpis.totalSales.toLocaleString()}`;
+                document.getElementById('kpiTotalSales').innerText = `${data.kpis.totalSales.toLocaleString()} EGP`;
                 document.getElementById('kpiTotalOrders').innerText = data.kpis.totalOrders.toLocaleString();
-                document.getElementById('kpiAvgOrderValue').innerText = `$${data.kpis.avgOrderValue.toFixed(2)}`;
+                document.getElementById('kpiAvgOrderValue').innerText = `${data.kpis.avgOrderValue.toFixed(2)} EGP`;
                 document.getElementById('kpiActiveShoppers').innerText = data.kpis.activeShoppers.toLocaleString();
 
                 // Render Charts
@@ -167,6 +172,9 @@
                 renderChart('paymentChart', 'pie', data.paymentMethods.map(x => x.label), data.paymentMethods.map(x => x.count), 'Payments', ['#8b5cf6', '#f59e0b', '#ec4899']);
                 renderChart('topItemsChart', 'bar', data.topItems.map(x => x.label), data.topItems.map(x => x.totalQuantity), 'Top Items', '#111827');
                 renderChart('statusChart', 'doughnut', data.salesByStatus.map(x => x.label), data.salesByStatus.map(x => x.count), 'Status', ['#10b981', '#f59e0b', '#ef4444']);
+            })
+            .catch(error => {
+                console.error('Unable to load dashboard data:', error);
             });
     }
 

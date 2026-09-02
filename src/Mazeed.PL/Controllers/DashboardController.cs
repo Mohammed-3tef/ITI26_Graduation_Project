@@ -26,7 +26,7 @@ public class DashboardController : Controller
 
         // 1. تطبيق فلاتر التاريخ، الفئات، والبراندات
         if (startDate.HasValue) query = query.Where(o => o.OrderingDate >= startDate.Value);
-        if (endDate.HasValue) query = query.Where(o => o.OrderingDate <= endDate.Value);
+        if (endDate.HasValue) query = query.Where(o => o.OrderingDate < endDate.Value.Date.AddDays(1));
 
         if (categoryIds != null && categoryIds.Any())
         {
@@ -44,22 +44,32 @@ public class DashboardController : Controller
         var ordersList = await query.ToListAsync();
 
         // 2. حساب الـ 4 KPI Cards
-        var deliveredOrders = ordersList.Where(o => o.Status.Equals("Delivered", StringComparison.OrdinalIgnoreCase)).ToList();
-        decimal totalSales = deliveredOrders.Sum(o => o.TotalPrice);
+        var orderIds = ordersList.Select(o => o.Id).ToList();
+        var paidOrderIds = await _context.Payments
+            .Where(payment => orderIds.Contains(payment.OrderId) &&
+                payment.Status.Trim().Equals("Paid"))
+            .Select(payment => payment.OrderId)
+            .ToListAsync();
+
+        var completedOrders = ordersList.Where(o =>
+            paidOrderIds.Contains(o.Id) ||
+            o.Status.Trim().Equals("Paid", StringComparison.OrdinalIgnoreCase) ||
+            o.Status.Trim().Equals("Delivered", StringComparison.OrdinalIgnoreCase)).ToList();
+        decimal totalSales = completedOrders.Sum(o => o.TotalPrice);
         int totalOrders = ordersList.Count;
-        decimal avgOrderValue = totalOrders > 0 ? totalSales / totalOrders : 0;
-        int activeShoppers = ordersList.Select(o => o.UserId).Distinct().Count();
+        decimal avgOrderValue = completedOrders.Count > 0 ? totalSales / completedOrders.Count : 0;
+        int activeShoppers = completedOrders.Select(o => o.UserId).Distinct().Count();
 
         // 3. حساب الشارتات (Charts Data)
         // Chart 1: Sales Trend over time
-        var salesTrend = deliveredOrders
+        var salesTrend = completedOrders
             .GroupBy(o => o.OrderingDate.ToString("yyyy-MM"))
             .OrderBy(g => g.Key)
             .Select(g => new { Label = g.Key, Total = g.Sum(o => o.TotalPrice) });
 
         // Chart 2: Sales % by Category
         var salesByCategory = await _context.OrderDetails
-            .Where(od => deliveredOrders.Select(o => o.Id).Contains(od.OrderId))
+            .Where(od => completedOrders.Select(o => o.Id).Contains(od.OrderId))
             .SelectMany(od => _context.ItemCategories.Where(ic => ic.ItemId == od.ItemVariant.ItemId),
                 (od, ic) => new { CategoryName = ic.Category.Name, Total = od.Quantity * od.PricePerItem })
             .GroupBy(x => x.CategoryName)
@@ -67,13 +77,13 @@ public class DashboardController : Controller
 
         // Chart 3: Payment Methods
         var paymentMethods = await _context.Payments
-            .Where(p => deliveredOrders.Select(o => o.Id).Contains(p.OrderId))
+            .Where(p => completedOrders.Select(o => o.Id).Contains(p.OrderId))
             .GroupBy(p => p.Method)
             .Select(g => new { Label = g.Key, Count = g.Count() }).ToListAsync();
 
         // Chart 4: Top 8 Selling Items
         var topItems = await _context.OrderDetails
-            .Where(od => deliveredOrders.Select(o => o.Id).Contains(od.OrderId))
+            .Where(od => completedOrders.Select(o => o.Id).Contains(od.OrderId))
             .GroupBy(od => od.ItemVariant.Item.Name)
             .Select(g => new { Label = g.Key, TotalQuantity = g.Sum(od => od.Quantity) })
             .OrderByDescending(x => x.TotalQuantity)
@@ -81,7 +91,7 @@ public class DashboardController : Controller
 
         // Chart 5: Sales % by Order Status
         var salesByStatus = ordersList
-            .GroupBy(o => o.Status)
+            .GroupBy(o => o.Status.Trim())
             .Select(g => new { Label = g.Key, Count = g.Count() });
 
         return Json(new

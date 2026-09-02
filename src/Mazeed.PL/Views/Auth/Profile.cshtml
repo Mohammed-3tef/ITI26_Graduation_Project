@@ -232,7 +232,7 @@
                                         <td class="ps-4 fw-semibold">#@order.Id</td>
                                         <td>@order.OrderingDate.ToLocalTime().ToString("dd MMM yyyy")</td>
                                         <td>@order.ItemsCount</td>
-                                        <td class="fw-semibold">$@order.TotalPrice.ToString("F2")</td>
+                                        <td class="fw-semibold">@order.TotalPrice.ToString("F2") EGP</td>
                                         <td class="pe-4"><span class="badge @statusClass">@order.Status</span></td>
                                         <td class="text-end pe-4">
                                             <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#orderDetails-@order.Id" aria-expanded="false" aria-controls="orderDetails-@order.Id">
@@ -262,8 +262,8 @@
                                                                 <td>@item.ItemName</td>
                                                                 <td>@item.Color / @item.Size <span class="text-muted">(@item.SKU)</span></td>
                                                                 <td>@item.Quantity</td>
-                                                                <td>$@item.PricePerItem.ToString("F2")</td>
-                                                                <td class="text-end">$@item.TotalPrice.ToString("F2")</td>
+                                                                <td>@item.PricePerItem.ToString("F2") EGP</td>
+                                                                <td class="text-end">@item.TotalPrice.ToString("F2") EGP</td>
                                                             </tr>
                                                         }
                                                     </tbody>
@@ -594,7 +594,7 @@
                                 <span class="category-subtitle">${(item.brandName || '').toUpperCase()}</span>
                                 <h6 class="fw-bold text-dark mb-2 mt-1">${item.itemName}</h6>
                                 <div class="d-flex align-items-baseline gap-2 mb-3">
-                                    <span class="fs-5 fw-bold text-danger">$${item.price.toFixed(2)}</span>
+                                    <span class="fs-5 fw-bold text-danger">${item.price.toFixed(2)} EGP</span>
                                 </div>
                                 ${item.inStock
                                     ? `<a href="/Home/Details/${item.itemId}" class="btn btn-dark-custom w-100">Details</a>`

@@ -288,7 +288,7 @@
                                         </span>
                                         @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
                                         {
-                                            <span class="original-price">$@item.OldPrice.Value.ToString("N0")</span>
+                                            <span class="original-price">@item.OldPrice.Value.ToString("N0") EGP</span>
                                         }
                                     </div>
 

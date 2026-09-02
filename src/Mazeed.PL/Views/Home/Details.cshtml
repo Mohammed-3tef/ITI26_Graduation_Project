@@ -452,12 +452,12 @@
 
             <!-- Price -->
             <div class="d-flex align-items-center gap-3 mb-4">
-                <span id="mainDisplayPrice" class="fs-2 fw-bold text-danger">$@Model.Product.Price.ToString("F2")</span>
+                <span id="mainDisplayPrice" class="fs-2 fw-bold text-danger">@Model.Product.Price.ToString("F2") EGP</span>
                 @if (Model.Product.OldPrice.HasValue && Model.Product.OldPrice > Model.Product.Price)
                 {
-                    <span class="text-decoration-line-through text-muted fs-5">$@Model.Product.OldPrice.Value.ToString("F2")</span>
+                    <span class="text-decoration-line-through text-muted fs-5">@Model.Product.OldPrice.Value.ToString("F2") EGP</span>
                     <span class="badge bg-danger-subtle text-danger fw-bold fs-7 px-2 py-1">
-                        Save $@((Model.Product.OldPrice.Value - Model.Product.Price).ToString("F2"))
+                        Save @((Model.Product.OldPrice.Value - Model.Product.Price).ToString("F2")) EGP
                     </span>
                 }
             </div>
@@ -539,7 +539,7 @@
                 </div>
 
                 <button type="button" id="addToCartBtn" class="btn-add-cart flex-grow-1 text-center">
-                    Add to Cart — $@Model.Product.Price.ToString("F2")
+                    Add to Cart — @Model.Product.Price.ToString("F2") EGP
                 </button>
 
                 <button type="button" id="wishlistDetailBtn" class="wishlist-detail-btn" title="Add to Wishlist">
@@ -644,7 +644,7 @@
                                         <span class="small fw-bold text-dark related-rating-value" data-item-id="@item.Id">&#9734; —</span>
                                     </div>
                                     <h6 class="fw-bold text-dark text-truncate mb-2">@item.Name</h6>
-                                    <span class="fw-bold text-danger fs-6 d-block mb-3">$@item.Price.ToString("F2")</span>
+                                    <span class="fw-bold text-danger fs-6 d-block mb-3">@item.Price.ToString("F2") EGP</span>
                                 </div>
 
                                 <!-- Matching Buttons Style from Home -->
@@ -710,7 +710,7 @@
         document.getElementById('specColor').textContent = variant.Color || '—';
         document.getElementById('specSize').textContent = variant.Size || '—';
         document.getElementById('specPriceAdjustment').textContent =
-            (parseFloat(variant.PriceAdjustment || 0) >= 0 ? '+' : '') + '$' + parseFloat(variant.PriceAdjustment || 0).toFixed(2);
+            (parseFloat(variant.PriceAdjustment || 0) >= 0 ? '+' : '') + parseFloat(variant.PriceAdjustment || 0).toFixed(2) + ' EGP';
         document.getElementById('specAvailability').textContent = variant.StockQuantity > 0
             ? variant.StockQuantity + ' in stock'
             : 'Out of stock';
@@ -731,8 +731,8 @@
 
         let totalPrice = unitPrice * quantity;
 
-        document.getElementById('mainDisplayPrice').innerText = '$' + unitPrice.toFixed(2);
-        document.getElementById('addToCartBtn').innerText = 'Add to Cart — $' + totalPrice.toFixed(2);
+        document.getElementById('mainDisplayPrice').innerText = unitPrice.toFixed(2) + ' EGP';
+        document.getElementById('addToCartBtn').innerText = 'Add to Cart — ' + totalPrice.toFixed(2) + ' EGP';
         updateVariantSpecifications();
     }
 

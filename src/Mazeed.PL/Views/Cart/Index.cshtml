@@ -187,7 +187,7 @@
                             <button type="button" class="qty-increase" data-variant-id="@item.ItemVariantId" @(item.Quantity >= item.StockQuantity ? "disabled" : "")>+</button>
                         </div>
 
-                        <div class="cart-item-price fw-bold text-danger">$@item.LineTotal.ToString("F2")</div>
+                        <div class="cart-item-price fw-bold text-danger">@item.LineTotal.ToString("F2") EGP</div>
 
                         <button type="button" class="cart-item-remove" data-variant-id="@item.ItemVariantId" title="Remove">
                             <i class="fa-solid fa-xmark"></i>
@@ -201,12 +201,12 @@
                     <h5 class="fw-bold mb-3">Order Summary</h5>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Subtotal (@Model.TotalItemsCount items)</span>
-                        <span class="fw-semibold">$@Model.Subtotal.ToString("F2")</span>
+                        <span class="fw-semibold">@Model.Subtotal.ToString("F2") EGP</span>
                     </div>
                     <hr />
                     <div class="d-flex justify-content-between fs-5 fw-bold mb-4">
                         <span>Total</span>
-                        <span class="text-danger">$@Model.Subtotal.ToString("F2")</span>
+                        <span class="text-danger">@Model.Subtotal.ToString("F2") EGP</span>
                     </div>
 
                     <div class="border-top pt-4 mt-2">

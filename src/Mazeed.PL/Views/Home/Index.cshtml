@@ -365,11 +365,11 @@
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div>
                                         <span class="current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
-                                            $@item.Price.ToString("N2")
+                                            @item.Price.ToString("N2") EGP
                                         </span>
                                         @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
                                         {
-                                            <span class="original-price">$@item.OldPrice.Value.ToString("N2")</span>
+                                            <span class="original-price">@item.OldPrice.Value.ToString("N2") EGP</span>
                                         }
                                     </div>
                                     <button class="wishlist-btn" type="button" title="Add to Wishlist" data-item-id="@item.Id" onclick="toggleWishlist(this)">&#9825;</button>
