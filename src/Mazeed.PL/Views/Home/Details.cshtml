@@ -138,18 +138,6 @@
         background: #fff5f5;
     }
 
-    .avatar-circle {
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        background-color: #e5e7eb;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #9ca3af;
-        flex-shrink: 0;
-    }
-
     /* Product Cards Matching Home Page Style */
     .product-card {
         border: 1px solid #f0f0f0;
@@ -242,14 +230,103 @@
         font-weight: 600;
     }
 
-    /* Reviews Section */
+    /* ===== Reviews & Ratings — redesigned ===== */
+    .reviews-card {
+        border-radius: 20px;
+        border: 1px solid #f0f0f0;
+    }
+
+    .rating-overview {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .rating-overview-score {
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .rating-overview-score .big-num {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #111827;
+        line-height: 1;
+    }
+
+    .rating-overview-score .review-stars {
+        font-size: 16px;
+        margin: 6px 0;
+        display: block;
+    }
+
+    .rating-bars {
+        flex: 1 1 260px;
+        min-width: 220px;
+    }
+
+    .rating-bar-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 6px;
+        font-size: 12px;
+    }
+
+    .rating-bar-row .star-label {
+        width: 40px;
+        color: #6b7280;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+
+    .rating-bar-track {
+        flex: 1;
+        height: 8px;
+        border-radius: 4px;
+        background: #f3f4f6;
+        overflow: hidden;
+    }
+
+    .rating-bar-fill {
+        height: 100%;
+        background: #f59e0b;
+        border-radius: 4px;
+        width: 0%;
+        transition: width 0.4s ease;
+    }
+
+    .rating-bar-row .bar-count {
+        width: 28px;
+        text-align: right;
+        color: #9ca3af;
+        flex-shrink: 0;
+    }
+
     .review-item {
-        padding: 16px 0;
-        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        gap: 14px;
+        padding: 18px 0;
+        border-bottom: 1px solid #f3f4f6;
     }
 
     .review-item:last-child {
         border-bottom: none;
+    }
+
+    .review-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #111827;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 15px;
+        flex-shrink: 0;
     }
 
     .review-stars i {
@@ -264,21 +341,49 @@
         color: #e5e7eb;
     }
 
+    .review-body .review-name {
+        font-weight: 700;
+        color: #111827;
+        font-size: 14px;
+    }
+
+    .review-body .review-date {
+        font-size: 12px;
+        color: #9ca3af;
+    }
+
+    .review-body p {
+        font-size: 14px;
+        color: #374151;
+        margin: 6px 0 0;
+    }
+
+    /* Write-a-review box */
+    .write-review-box {
+        background: #f9fafb;
+        border: 1px solid #f0f0f0;
+        border-radius: 16px;
+        padding: 20px;
+    }
+
+    .write-review-box h6 {
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 12px;
+    }
+
     /* Star Rating Input (hover-to-rate) */
     .star-rating-input {
         display: inline-flex;
-        gap: 6px;
-        font-size: 28px;
+        gap: 8px;
+        font-size: 30px;
         cursor: pointer;
     }
 
-    /* === UPDATED: unhovered/unselected stars now use a darker, more visible gray
-       (was #e5e7eb, nearly invisible against a white background) === */
     .star-rating-input i {
-        color: #9ca3af;
+        color: #d1d5db;
         transition: color 0.15s ease, transform 0.1s ease;
     }
-    /* === END UPDATE === */
 
     .star-rating-input i.hovered,
     .star-rating-input i.selected {
@@ -286,7 +391,15 @@
     }
 
     .star-rating-input i:hover {
-        transform: scale(1.1);
+        transform: scale(1.12);
+    }
+
+    .verified-note {
+        font-size: 12.5px;
+        color: #9ca3af;
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
 </style>
 
@@ -437,15 +550,21 @@
     </div>
 
     <!-- Reviews & Ratings Section -->
-    <div class="card border-0 shadow-sm rounded-4 p-4 my-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold mb-0">Reviews & Ratings</h5>
-            <div class="text-end">
-                <span class="fs-4 fw-bold text-dark" id="summaryAvgRating">0.0</span>
-                <i class="fa-solid fa-star text-warning"></i>
+    <div class="card reviews-card shadow-sm p-4 my-5">
+        <h5 class="fw-bold mb-4">Reviews & Ratings</h5>
+
+        <div class="rating-overview mb-4">
+            <div class="rating-overview-score">
+                <div class="big-num" id="summaryAvgRating">0.0</div>
+                <span class="review-stars" id="summaryStarsDisplay"></span>
                 <div class="text-muted small" id="summaryReviewCount">0 reviews</div>
             </div>
+            <div class="rating-bars" id="ratingBarsContainer">
+                <!-- filled in by JS -->
+            </div>
         </div>
+
+        <hr class="my-4" />
 
         <div id="reviewsListContainer">
             <div class="text-center text-muted py-4">
@@ -457,12 +576,10 @@
 
         @if (User.Identity?.IsAuthenticated ?? false)
         {
-            <div id="writeReviewFormWrapper">
-                @* <h6 class="fw-bold mb-2">Write a Review</h6> *@
+            <div class="write-review-box" id="writeReviewFormWrapper">
+                <h6>Write a Review</h6>
                 <form id="reviewForm">
                     <div class="mb-3">
-                        @* <label class="form-label fw-semibold small d-block">Your Rating</label> *@
-                        
                         <div class="star-rating-input" id="starRatingInput">
                             <i class="fa-solid fa-star" data-value="1"></i>
                             <i class="fa-solid fa-star" data-value="2"></i>
@@ -472,12 +589,14 @@
                         </div>
                         <input type="hidden" id="reviewRateInput" value="" />
                     </div>
-                    <div class="mb-2">
+                    <div class="mb-3">
                         <textarea name="Comment" class="form-control" rows="3" placeholder="Share your thoughts about this product..." maxlength="1000"></textarea>
                     </div>
-                    <button type="submit" id="submitReviewBtn" class="btn-add-cart px-4 py-2">Submit Review</button>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <button type="submit" id="submitReviewBtn" class="btn-add-cart px-4 py-2">Submit Review</button>
+                        <span class="verified-note"><i class="fa-solid fa-circle-check text-success"></i> Only verified purchasers can review</span>
+                    </div>
                 </form>
-                @* <small class="text-muted d-block mt-2">Only customers who purchased and received this item can leave a review.</small> *@
             </div>
         }
         else
@@ -554,8 +673,11 @@
     const detailsItemId = @Model.Product.Id;
 
     function redirectToLogin() {
-        const returnUrl = window.location.pathname + window.location.search;
+    const returnUrl = window.location.pathname + window.location.search;
+    if (typeof toastr !== 'undefined') toastr.info('Please sign in to continue.');
+    setTimeout(function () {
         window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
+    }, 900);
     }
 
     function getSelectedVariant() {
@@ -849,26 +971,54 @@
     }
 
     // ---- Reviews & Ratings ----
-    function starsHtml(rate) {
-        let html = '<span class="review-stars">';
+    function starsMarkup(rate, filledClass, emptyClass) {
+        let html = '';
         for (let i = 1; i <= 5; i++) {
-            html += `<i class="fa-solid fa-star ${i <= rate ? 'filled' : 'empty'}"></i>`;
+            html += `<i class="fa-solid fa-star ${i <= rate ? filledClass : emptyClass}"></i>`;
         }
-        return html + '</span>';
+        return html;
+    }
+
+    function initialOf(name) {
+        return (name || '?').trim().charAt(0).toUpperCase();
     }
 
     function reviewItemHtml(r) {
         const date = new Date(r.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
-        const comment = r.comment ? `<p class="mb-0 mt-1 text-dark">${r.comment}</p>` : '';
+        const comment = r.comment ? `<p>${r.comment}</p>` : '';
         return `
             <div class="review-item">
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="fw-semibold">${r.reviewerName}</span>
-                    <span class="small text-muted">${date}</span>
+                <div class="review-avatar">${initialOf(r.reviewerName)}</div>
+                <div class="review-body flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-1">
+                        <span class="review-name">${r.reviewerName}</span>
+                        <span class="review-date">${date}</span>
+                    </div>
+                    <span class="review-stars">${starsMarkup(r.rate, 'filled', 'empty')}</span>
+                    ${comment}
                 </div>
-                ${starsHtml(r.rate)}
-                ${comment}
             </div>`;
+    }
+
+    function renderRatingBars(reviews, avgRating, reviewCount) {
+        document.getElementById('summaryStarsDisplay').innerHTML = starsMarkup(Math.round(avgRating), 'filled', 'empty');
+
+        const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+        reviews.forEach(r => { if (counts[r.rate] !== undefined) counts[r.rate]++; });
+
+        const barsContainer = document.getElementById('ratingBarsContainer');
+        let html = '';
+        for (let star = 5; star >= 1; star--) {
+            const count = counts[star];
+            const pct = reviewCount > 0 ? Math.round((count / reviewCount) * 100) : 0;
+            html += `
+                <div class="rating-bar-row">
+                    <span class="star-label">${star} <i class="fa-solid fa-star" style="color:#f59e0b;font-size:11px;"></i></span>
+                    <div class="rating-bar-track"><div class="rating-bar-fill" style="width:${pct}%;"></div></div>
+                    <span class="bar-count">${count}</span>
+                </div>`;
+        }
+        barsContainer.innerHTML = html;
     }
 
     async function loadRatingSummary() {
@@ -881,7 +1031,11 @@
             document.getElementById('reviewCountVal').textContent = summary.reviewCount || 0;
             document.getElementById('summaryAvgRating').textContent = (summary.averageRating || 0).toFixed(1);
             document.getElementById('summaryReviewCount').textContent = `${summary.reviewCount || 0} review${summary.reviewCount === 1 ? '' : 's'}`;
-        } catch (e) { /* silent */ }
+
+            return summary;
+        } catch (e) {
+            return { averageRating: 0, reviewCount: 0 };
+        }
     }
 
     async function loadReviews() {
@@ -894,9 +1048,17 @@
             container.innerHTML = reviews.length
                 ? reviews.map(reviewItemHtml).join('')
                 : '<p class="text-muted text-center py-3 mb-0">No reviews yet. Be the first to review this product.</p>';
+
+            return reviews;
         } catch (e) {
             container.innerHTML = '<p class="text-muted text-center py-3 mb-0">Failed to load reviews.</p>';
+            return [];
         }
+    }
+
+    async function loadReviewsAndBars() {
+        const [summary, reviews] = await Promise.all([loadRatingSummary(), loadReviews()]);
+        renderRatingBars(reviews, summary.averageRating || 0, summary.reviewCount || 0);
     }
 
     document.getElementById('reviewForm')?.addEventListener('submit', async function (e) {
@@ -938,8 +1100,7 @@
             if (typeof toastr !== 'undefined') toastr.success('Review submitted!');
             this.reset();
             resetStarRating();
-            await loadReviews();
-            await loadRatingSummary();
+            await loadReviewsAndBars();
         } catch (err) {
             if (typeof toastr !== 'undefined') toastr.error(err.message || 'Something went wrong.');
         } finally {
@@ -951,8 +1112,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         updateRelatedVisibility();
         updatePriceDisplay();
-        loadRatingSummary();
-        loadReviews();
+        loadReviewsAndBars();
         loadRelatedRatings();
     });
 </script>
