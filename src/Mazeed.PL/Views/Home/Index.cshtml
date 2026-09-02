@@ -329,7 +329,7 @@
     </div>
 
     <!-- Dynamic Product Grid -->
-    <div class="row g-3 g-md-4" id="productGrid">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4" id="productGrid">
         @if (Model?.Items != null && Model.Items.Any())
         {
             @foreach (var item in Model.Items)
@@ -376,20 +376,11 @@
                                 </div>
                             </div>
                             <div class="row g-2">
-                                <div class="col-6">
+                                <div class="col-12">
                                     <a asp-controller="Home"
                                        asp-action="Details"
                                        asp-route-id="@item.Id"
                                        class="btn-action-dark text-center d-block text-decoration-none">Details</a>
-                                </div>
-
-                                <!-- زرار Cancel يخفي الكارت بالكامل مباشرة -->
-                                <div class="col-6">
-                                    <button type="button"
-                                            class="btn-action-light w-100"
-                                            onclick="hideProductCard(@item.Id)">
-                                        Cancel
-                                    </button>
                                 </div>
                             </div>
                         </div>

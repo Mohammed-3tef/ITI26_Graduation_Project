@@ -4,6 +4,135 @@
     ViewData["Title"] = "Store Catalog";
 }
 
+<style>
+    .store-product-card {
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .store-product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .store-product-img {
+        position: relative;
+        height: 210px;
+        background-color: #f4f4f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .store-product-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .store-sale-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 2;
+        padding: 3px 8px;
+        border-radius: 4px;
+        background-color: #ff4d4f;
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    .store-product-body {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: space-between;
+        padding: 16px;
+    }
+
+    .store-category-tag {
+        color: #9ca3af;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    .store-rating {
+        color: #111827;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .store-product-title {
+        overflow: hidden;
+        margin: 4px 0 8px;
+        color: #111827;
+        font-size: 14px;
+        font-weight: 700;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .store-current-price {
+        color: #ff4d4f;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .store-current-price.dark {
+        color: #111827;
+    }
+
+    .store-original-price {
+        margin-left: 4px;
+        color: #9ca3af;
+        font-size: 11px;
+        text-decoration: line-through;
+    }
+
+    .store-wishlist-btn {
+        border: 0;
+        background: transparent;
+        color: #9ca3af;
+        cursor: pointer;
+        font-size: 22px;
+        line-height: 1;
+        padding: 0;
+    }
+
+    .store-wishlist-btn.active,
+    .store-wishlist-btn:hover {
+        color: #ff4d4f;
+    }
+
+    .store-details-btn {
+        display: block;
+        width: 100%;
+        border-radius: 6px;
+        background-color: #111827;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 8px 0;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .store-details-btn:hover {
+        background-color: #1f2937;
+        color: #ffffff;
+    }
+</style>
+
 <div class="container my-4">
     <!-- Search Query Banner & Filter Trigger -->
     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
@@ -26,35 +155,53 @@
     </div>
 
     <!-- Product Grid -->
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4">
         @if (Model.Items.Any())
         {
             @foreach (var item in Model.Items)
             {
-                <div class="col">
-                    <div class="card h-100 border-0 shadow-sm position-relative">
-                        <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm fav-toggle-btn" aria-label="Wishlist" data-item-id="@item.Id">
-                            <i class="fa-regular fa-heart"></i>
-                        </button>
-                        <div class="bg-light d-flex align-items-center justify-content-center overflow-hidden" style="height: 260px;">
+                <div class="col product-item">
+                    <div class="store-product-card">
+                        <div class="store-product-img">
+                            @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                            {
+                                <span class="store-sale-badge">SALE</span>
+                            }
                             @if (item.Photos != null && item.Photos.Any())
                             {
-                                <!-- بيجيب أول صورة مسجلة للمنتج -->
-                                <img src="@item.Photos.First()" class="card-img-top w-100 h-100" alt="@item.Name" style="object-fit: cover;" />
+                                <img src="@item.Photos.First()" alt="@item.Name" />
                             }
                             else
                             {
-                                <!-- أيقونة افتراضية في حالة عدم وجود صور -->
                                 <i class="fa-solid fa-box-open fa-3x text-secondary"></i>
                             }
                         </div>
-                        <div class="card-body d-flex flex-column justify-content-between p-3">
+                        <div class="store-product-body">
                             <div>
-                                <h6 class="card-title fw-bold text-uppercase mb-1">@item.Name</h6>
-                                <p class="text-muted small mb-2">@item.BrandName</p>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="store-category-tag">@string.Join(", ", item.CategoryNames ?? new List<string>())</span>
+                                    <span class="store-rating rating-value" data-item-id="@item.Id">&#9734; —</span>
+                                </div>
+                                <div class="store-product-title" title="@item.Name">@item.Name</div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <span class="store-current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
+                                            @item.Price.ToString("N0") EGP
+                                        </span>
+                                        @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                                        {
+                                            <span class="store-original-price">@item.OldPrice.Value.ToString("N0") EGP</span>
+                                        }
+                                    </div>
+                                    <button class="store-wishlist-btn fav-toggle-btn" type="button" title="Add to Wishlist" aria-label="Wishlist" data-item-id="@item.Id">
+                                        <i class="fa-regular fa-heart"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div>
-                                <p class="fw-bold fs-6 mb-0"> @item.Price.ToString("N2") EGP</p>
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="store-details-btn">Details</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -258,6 +405,27 @@
                     } catch (e) { /* handled */ }
                 });
             });
+
+            const ratingElements = document.querySelectorAll('.rating-value');
+            const itemIds = Array.from(ratingElements).map(el => parseInt(el.dataset.itemId, 10));
+            if (itemIds.length) {
+                fetch('/api/reviews/summaries', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ ItemIds: itemIds })
+                })
+                    .then(res => res.ok ? res.json() : null)
+                    .then(result => {
+                        const summaries = result?.data || {};
+                        ratingElements.forEach(el => {
+                            const summary = summaries[el.dataset.itemId];
+                            el.innerHTML = summary && summary.reviewCount > 0
+                                ? `&#9733; ${summary.averageRating.toFixed(1)} <span class="text-muted fw-normal">(${summary.reviewCount})</span>`
+                                : '&#9734; No reviews';
+                        });
+                    })
+                    .catch(() => { /* keep rating placeholders */ });
+            }
         });
     </script>
 }
