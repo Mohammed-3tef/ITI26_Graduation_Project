@@ -185,8 +185,11 @@
             const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
             function redirectToLogin() {
-                const returnUrl = window.location.pathname + window.location.search;
+            const returnUrl = window.location.pathname + window.location.search;
+            if (typeof toastr !== 'undefined') toastr.info('Please sign in to continue.');
+            setTimeout(function () {
                 window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
+            }, 900);
             }
 
             async function apiCall(url, method) {

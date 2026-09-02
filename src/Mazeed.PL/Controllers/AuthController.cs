@@ -103,12 +103,20 @@ namespace Mazeed.PL.Controllers
 
         #region Login
         [HttpGet, AllowAnonymous]
-        public IActionResult Login() => View();
+        public IActionResult Login(string? returnUrl = null)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginVM model, string? returnUrl = null)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ReturnUrl = returnUrl;
+                return View(model);
+            }
 
             var origin = $"{Request.Scheme}://{Request.Host}";
             var result = await _authService.LoginAsync(model, origin);
@@ -128,6 +136,7 @@ namespace Mazeed.PL.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            ViewBag.ReturnUrl = returnUrl;
             ModelState.AddModelError(string.Empty, result.Message ?? "Invalid login attempt.");
             return View(model);
         }

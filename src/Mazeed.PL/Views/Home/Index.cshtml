@@ -359,7 +359,7 @@
                                             ? item.CategoryNames.First()
                                             : (item.BrandName ?? "GENERAL"))
                                     </span>
-                                    <span class="rating">&#9734; 4.9</span>
+                                    <span class="rating rating-value" data-item-id="@item.Id">&#9734; —</span>
                                 </div>
                                 <div class="product-title" title="@item.Name">@item.Name</div>
                                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -372,7 +372,7 @@
                                             <span class="original-price">$@item.OldPrice.Value.ToString("N2")</span>
                                         }
                                     </div>
-                                    <button class="wishlist-btn" type="button" title="Add to Wishlist" onclick="toggleWishlist(this)">&#9825;</button>
+                                    <button class="wishlist-btn" type="button" title="Add to Wishlist" data-item-id="@item.Id" onclick="toggleWishlist(this)">&#9825;</button>
                                 </div>
                             </div>
                             <div class="row g-2">
@@ -573,13 +573,76 @@
         renderPagination();
     }
 
+    function redirectToLogin() {
+        const returnUrl = window.location.pathname + window.location.search;
+        if (typeof toastr !== 'undefined') toastr.info('Please sign in to continue.');
+        setTimeout(function () {
+            window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
+        }, 900);
+    }
+
     function toggleWishlist(btn) {
-        btn.classList.toggle('active');
-        if (btn.classList.contains('active')) {
-            btn.innerHTML = '&#9829;'; // قلب مصمت
-        } else {
-            btn.innerHTML = '&#9825;'; // قلب مفرغ
-        }
+        const itemId = btn.dataset.itemId;
+        const isActive = btn.classList.contains('active');
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const headers = { 'Accept': 'application/json' };
+        if (token) headers['RequestVerificationToken'] = token;
+
+        fetch(`/api/wishlist/${itemId}`, { method: isActive ? 'DELETE' : 'POST', headers })
+            .then(res => {
+                if (res.status === 401) {
+                    redirectToLogin();
+                    throw new Error('unauthenticated');
+                }
+                if (!res.ok) throw new Error('request failed');
+
+                btn.classList.toggle('active');
+                btn.innerHTML = btn.classList.contains('active') ? '&#9829;' : '&#9825;';
+                if (typeof toastr !== 'undefined') {
+                    toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
+                }
+            })
+            .catch(() => { /* handled or silent */ });
+    }
+
+    function prefillWishlistState() {
+        fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
+            .then(res => res.ok ? res.json() : null)
+            .then(result => {
+                const favoritedIds = (result?.data || []).map(i => String(i.itemId));
+                document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                    if (favoritedIds.includes(btn.dataset.itemId)) {
+                        btn.classList.add('active');
+                        btn.innerHTML = '&#9829;';
+                    }
+                });
+            })
+            .catch(() => { /* not signed in */ });
+    }
+
+    function loadRealRatings() {
+        const ratingEls = document.querySelectorAll('.rating-value');
+        const itemIds = Array.from(ratingEls).map(el => parseInt(el.dataset.itemId, 10));
+        if (!itemIds.length) return;
+
+        fetch('/api/reviews/summaries', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ ItemIds: itemIds })
+        })
+            .then(res => res.ok ? res.json() : null)
+            .then(result => {
+                const summaries = result?.data || {};
+                ratingEls.forEach(el => {
+                    const s = summaries[el.dataset.itemId];
+                    if (s && s.reviewCount > 0) {
+                        el.innerHTML = `&#9733; ${s.averageRating.toFixed(1)}`;
+                    } else {
+                        el.innerHTML = `&#9734; New`;
+                    }
+                });
+            })
+            .catch(() => { /* leave placeholder dashes */ });
     }
 
     function hideProductCard(productId) {
@@ -602,5 +665,7 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         renderPagination();
+        prefillWishlistState();
+        loadRealRatings();
     });
 </script>
