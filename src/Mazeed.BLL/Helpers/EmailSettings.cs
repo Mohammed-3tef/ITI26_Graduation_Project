@@ -1,4 +1,4 @@
-﻿namespace Mazeed.DAL.Entities
+﻿namespace Mazeed.BLL.Helpers
 {
     public class EmailSettings
     {

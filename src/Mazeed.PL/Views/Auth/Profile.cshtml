@@ -197,9 +197,86 @@
             </div>
         </div>
 
-        <!-- Orders Tab Placeholder -->
         <div class="tab-pane fade" id="orders" role="tabpanel">
-            <div class="profile-card p-4 p-md-5 text-center text-muted">Your order history will display here.</div>
+            @if (!Model.Orders.Any())
+            {
+                <div class="profile-card p-4 p-md-5 text-center text-muted">
+                    <i class="fa-solid fa-receipt fa-2x mb-3"></i>
+                    <p class="mb-0">You have no orders yet.</p>
+                </div>
+            }
+            else
+            {
+                <div class="profile-card overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Order</th>
+                                    <th>Date</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th class="pe-4">Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model.Orders)
+                                {
+                                    var statusClass = order.Status.Equals("Paid", StringComparison.OrdinalIgnoreCase)
+                                        ? "bg-success text-white"
+                                        : order.Status.Equals("Payment failed", StringComparison.OrdinalIgnoreCase)
+                                            ? "bg-danger text-white"
+                                            : "bg-warning text-dark";
+                                    <tr>
+                                        <td class="ps-4 fw-semibold">#@order.Id</td>
+                                        <td>@order.OrderingDate.ToLocalTime().ToString("dd MMM yyyy")</td>
+                                        <td>@order.ItemsCount</td>
+                                        <td class="fw-semibold">$@order.TotalPrice.ToString("F2")</td>
+                                        <td class="pe-4"><span class="badge @statusClass">@order.Status</span></td>
+                                        <td class="text-end pe-4">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#orderDetails-@order.Id" aria-expanded="false" aria-controls="orderDetails-@order.Id">
+                                                <i class="fa-solid fa-chevron-down"></i>
+                                                <span class="visually-hidden">View order details</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="collapse" id="orderDetails-@order.Id">
+                                        <td colspan="6" class="bg-light px-4 py-3">
+                                            <div class="small fw-semibold text-dark mb-2">Order details</div>
+                                            <div class="table-responsive">
+                                                <table class="table table-sm align-middle mb-0">
+                                                    <thead>
+                                                        <tr class="text-muted">
+                                                            <th>Product</th>
+                                                            <th>Variant</th>
+                                                            <th>Quantity</th>
+                                                            <th>Price</th>
+                                                            <th class="text-end">Line total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in order.Items)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.ItemName</td>
+                                                                <td>@item.Color / @item.Size <span class="text-muted">(@item.SKU)</span></td>
+                                                                <td>@item.Quantity</td>
+                                                                <td>$@item.PricePerItem.ToString("F2")</td>
+                                                                <td class="text-end">$@item.TotalPrice.ToString("F2")</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>

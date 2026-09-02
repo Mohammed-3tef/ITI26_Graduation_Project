@@ -1,5 +1,6 @@
 ﻿using Mazeed.BLL.Extensions;
 using Mazeed.BLL.Hubs;
+using Mazeed.BLL.Services;
 
 namespace Mazeed.PL;
 
@@ -13,6 +14,7 @@ public class Program
 
         builder.Services.AddApplicationServices(builder.Configuration);
         builder.Services.AddInfrastructureServices(builder.Configuration);
+        builder.Services.AddHttpClient<PaymobService>();
 
         var app = builder.Build();
 

@@ -73,6 +73,49 @@ namespace Mazeed.BLL.Services.Implementation
             );
         }
 
+        public async Task<ServiceResponse<IEnumerable<UserOrderVM>>> GetUserOrdersAsync(long userId)
+        {
+            var orders = await _unitOfWork.Repository<Order>().FindAsync(order => order.UserId == userId, order => order.OrderDetails);
+            var orderList = orders.ToList();
+            var variantIds = orderList
+                .SelectMany(order => order.OrderDetails)
+                .Select(detail => detail.ItemVariantId)
+                .Distinct()
+                .ToList();
+            var variants = await _unitOfWork.Repository<ItemVariant>()
+                .GetAllAsync(variant => variantIds.Contains(variant.Id), variant => variant.Item);
+            var variantLookup = variants.ToDictionary(variant => variant.Id);
+
+            var orderVMs = orderList
+                .OrderByDescending(order => order.OrderingDate)
+                .Select(order => new UserOrderVM
+                {
+                    Id = order.Id,
+                    OrderingDate = order.OrderingDate,
+                    TotalPrice = order.TotalPrice,
+                    Status = order.Status,
+                    ItemsCount = order.OrderDetails.Sum(detail => detail.Quantity),
+                    Items = order.OrderDetails
+                        .Where(detail => variantLookup.ContainsKey(detail.ItemVariantId))
+                        .Select(detail =>
+                        {
+                            var variant = variantLookup[detail.ItemVariantId];
+                            return new UserOrderDetailVM
+                            {
+                                ItemName = variant.Item.Name,
+                                SKU = variant.SKU,
+                                Color = variant.Color,
+                                Size = variant.Size,
+                                Quantity = detail.Quantity,
+                                PricePerItem = detail.PricePerItem
+                            };
+                        })
+                        .ToList()
+                });
+
+            return ServiceResponse<IEnumerable<UserOrderVM>>.SuccessResponse(orderVMs, "Orders retrieved successfully.");
+        }
+
         public async Task<ServiceResponse<bool>> CreateUserAsync(UserVM model)
         {
             var existingUser = await _userManager.FindByEmailAsync(model.Email);

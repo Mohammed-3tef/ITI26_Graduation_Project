@@ -4,6 +4,7 @@ using Mazeed.DAL.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mazeed.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260902141236_AddOrderShippingDetails")]
+    partial class AddOrderShippingDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7764,9 +7767,6 @@ namespace Mazeed.DAL.Migrations
                     b.Property<DateTime?>("PaidAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("PaymobOrderId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -8076,7 +8076,7 @@ namespace Mazeed.DAL.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "e9e4f2b1-6c23-5322-a3bc-987654321def",
-                            CreatedAt = new DateTime(2026, 9, 2, 15, 13, 27, 258, DateTimeKind.Utc).AddTicks(3878),
+                            CreatedAt = new DateTime(2026, 9, 2, 14, 12, 31, 743, DateTimeKind.Utc).AddTicks(7088),
                             CreatedBy = "SystemSeeder",
                             Email = "admin@mazeed.com",
                             EmailConfirmed = true,
@@ -8086,7 +8086,7 @@ namespace Mazeed.DAL.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAZEED.COM",
                             NormalizedUserName = "SYSTEM_ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAENQiA5GgzsdH5I3dNSlSSK9oQ5mfDthSM4gXooJUAUxHhKA+0DiL5SU0L75IZwdWFQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFh/umOMNxpBu0O5nkLI9Uu/SgvQhkYruJ4Pl6B3Mrn+bp09vYTPOs/2Xrr5sHwHYw==",
                             PhoneNumber = "01234567890",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "d8d3f1a0-5b12-4211-92ab-123456789abc",

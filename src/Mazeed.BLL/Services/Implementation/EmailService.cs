@@ -1,6 +1,6 @@
 ﻿using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.ViewModels;
-using Mazeed.DAL.Entities;
+using Mazeed.BLL.Helpers;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;

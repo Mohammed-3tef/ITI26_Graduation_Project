@@ -45,6 +45,8 @@ namespace Mazeed.DAL.Repos.Implementation
         public async Task<IEnumerable<ShopperCart>> GetCartByUserIdForDeleteAsync(long userId)
         {
             return await _context.Set<ShopperCart>()
+                .Include(sc => sc.ItemVariant)
+                    .ThenInclude(iv => iv.Item)
                 .Where(sc => sc.UserId == userId)
                 .ToListAsync();
         }

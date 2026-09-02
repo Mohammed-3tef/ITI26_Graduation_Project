@@ -273,6 +273,9 @@ namespace Mazeed.PL.Controllers
 
             var governorates = await _governorateService.GetAllGovernoratesAsync("en");
 
+            var orders = await _userService.GetUserOrdersAsync(long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!));
+            userModel.Data!.Orders = orders.Data ?? Enumerable.Empty<UserOrderVM>();
+
             // تمرير userModel.Governorate لتحديد المحافظة المختارة
             ViewBag.Governorates = new SelectList(governorates.Data, "Id", "EnglishName", userModel?.Data?.Governorate);
 

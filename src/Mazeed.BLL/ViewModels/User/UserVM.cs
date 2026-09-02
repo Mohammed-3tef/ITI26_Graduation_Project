@@ -51,5 +51,7 @@ namespace Mazeed.BLL.ViewModels.User
         public IFormFile? ProfileImage { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public IEnumerable<UserOrderVM> Orders { get; set; } = Enumerable.Empty<UserOrderVM>();
     }
 }

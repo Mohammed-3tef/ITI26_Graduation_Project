@@ -1,6 +1,7 @@
 ﻿using Mazeed.BLL.Responses;
 using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.ViewModels;
+using Mazeed.BLL.ViewModels.Cart;
 using Mazeed.DAL.Entities;
 using Mazeed.DAL.Repos.Abstraction;
 
@@ -107,6 +108,102 @@ namespace Mazeed.BLL.Services.Implementation
             await _unitOfWork.CompleteAsync();
 
             return ServiceResponse<bool>.SuccessResponse(true, "Cart cleared.");
+        }
+
+        public async Task<ServiceResponse<long>> CreateOrderAsync(long userId, CheckoutVM model)
+        {
+            var cartItems = (await _cartRepository.GetCartByUserIdForDeleteAsync(userId)).ToList();
+            if (!cartItems.Any())
+                return ServiceResponse<long>.FailureResponse("Your cart is empty.");
+
+            foreach (var cartItem in cartItems)
+            {
+                if (cartItem.Quantity > cartItem.ItemVariant.StockQuantity)
+                    return ServiceResponse<long>.FailureResponse($"Only {cartItem.ItemVariant.StockQuantity} unit(s) of {cartItem.ItemVariant.Item.Name} are available.");
+            }
+
+            var total = cartItems.Sum(item =>
+                (item.ItemVariant.Item.Price + item.ItemVariant.PriceAdjustment) * item.Quantity);
+
+            var order = new Order
+            {
+                UserId = userId,
+                CreatedBy = userId.ToString(),
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                ShippingAddress = model.ShippingAddress,
+                TotalPrice = total,
+                Status = "Pending",
+                Payment = new Payment
+                {
+                    CreatedBy = userId.ToString(),
+                    Method = "Paymob",
+                    Amount = total,
+                    Status = "Pending"
+                }
+            };
+
+            foreach (var cartItem in cartItems)
+            {
+                var unitPrice = cartItem.ItemVariant.Item.Price + cartItem.ItemVariant.PriceAdjustment;
+                order.OrderDetails.Add(new OrderDetail
+                {
+                    CreatedBy = userId.ToString(),
+                    ItemVariantId = cartItem.ItemVariantId,
+                    Quantity = cartItem.Quantity,
+                    PricePerItem = unitPrice
+                });
+                cartItem.ItemVariant.StockQuantity -= cartItem.Quantity;
+            }
+
+            await _unitOfWork.Repository<Order>().AddAsync(order);
+            _cartRepository.DeleteRange(cartItems);
+            await _unitOfWork.CompleteAsync();
+
+            return ServiceResponse<long>.SuccessResponse(order.Id, "Order created. Continue to Paymob to complete payment.");
+        }
+
+        public async Task<ServiceResponse<bool>> CompletePaymentAsync(long orderId, bool succeeded, string? transactionId)
+        {
+            var payments = await _unitOfWork.Repository<Payment>().FindAsync(payment => payment.OrderId == orderId);
+            var payment = payments.FirstOrDefault();
+            var order = await _unitOfWork.Repository<Order>().GetByIdAsync(orderId);
+
+            if (payment == null || order == null)
+                return ServiceResponse<bool>.FailureResponse("Order payment was not found.");
+
+            payment.Status = succeeded ? "Paid" : "Failed";
+            payment.TransactionId = transactionId;
+            payment.PaidAt = succeeded ? DateTime.UtcNow : null;
+            order.Status = succeeded ? "Paid" : "Payment failed";
+            _unitOfWork.Repository<Payment>().Update(payment);
+            _unitOfWork.Repository<Order>().Update(order);
+            await _unitOfWork.CompleteAsync();
+
+            return ServiceResponse<bool>.SuccessResponse(true);
+        }
+
+        public async Task<ServiceResponse<bool>> SetPaymobOrderIdAsync(long orderId, long paymobOrderId)
+        {
+            var payments = await _unitOfWork.Repository<Payment>().FindAsync(payment => payment.OrderId == orderId);
+            var payment = payments.FirstOrDefault();
+            if (payment == null)
+                return ServiceResponse<bool>.FailureResponse("Order payment was not found.");
+
+            payment.PaymobOrderId = paymobOrderId;
+            _unitOfWork.Repository<Payment>().Update(payment);
+            await _unitOfWork.CompleteAsync();
+            return ServiceResponse<bool>.SuccessResponse(true);
+        }
+
+        public async Task<ServiceResponse<long>> GetLocalOrderIdByPaymobOrderIdAsync(long paymobOrderId)
+        {
+            var payments = await _unitOfWork.Repository<Payment>().FindAsync(payment => payment.PaymobOrderId == paymobOrderId);
+            var payment = payments.FirstOrDefault();
+            return payment == null
+                ? ServiceResponse<long>.FailureResponse("Paymob order was not found.")
+                : ServiceResponse<long>.SuccessResponse(payment.OrderId);
         }
 
         private static CartItemVM MapToCartItemVM(ShopperCart cart)
