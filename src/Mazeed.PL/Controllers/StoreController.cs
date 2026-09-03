@@ -34,10 +34,14 @@ namespace Mazeed.Web.Controllers
 
             var items = itemsResponse.Data ?? new List<ItemVM>();
 
-            // 1. Search Query Filter
+            // 1. Search Query Filter (Item Name, Brand Name, Category Name)
             if (!string.IsNullOrWhiteSpace(searchQuery))
             {
-                items = items.Where(i => i.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase));
+                items = items.Where(i =>
+                    (i.Name != null && i.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) ||
+                    (i.BrandName != null && i.BrandName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) ||
+                    (i.CategoryNames != null && i.CategoryNames.Any(c => c.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)))
+                );
             }
 
             // 2. Brand Filter
@@ -86,6 +90,41 @@ namespace Mazeed.Web.Controllers
             };
 
             return View(viewModel);
+        }
+
+        // Endpoint للـ AJAX Suggestions أثناء الكتابة
+        [HttpGet]
+        public async Task<IActionResult> GetSuggestions(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return Json(new List<string>());
+            }
+
+            var itemsResponse = await _itemService.GetAllAsync();
+            var items = itemsResponse.Data ?? new List<ItemVM>();
+
+            // إرجاع الأسماء التي تبدأ بالمدخلات (Starts With) للإيتام والبراند والكتيجوري
+            var itemNames = items
+                .Where(i => i.Name != null && i.Name.StartsWith(query, StringComparison.OrdinalIgnoreCase))
+                .Select(i => i.Name);
+
+            var brandNames = items
+                .Where(i => i.BrandName != null && i.BrandName.StartsWith(query, StringComparison.OrdinalIgnoreCase))
+                .Select(i => i.BrandName!);
+
+            var categoryNames = items
+                .SelectMany(i => i.CategoryNames ?? new List<string>())
+                .Where(c => c.StartsWith(query, StringComparison.OrdinalIgnoreCase));
+
+            var suggestions = itemNames
+                .Concat(brandNames)
+                .Concat(categoryNames)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Take(8)
+                .ToList();
+
+            return Json(suggestions);
         }
     }
 }

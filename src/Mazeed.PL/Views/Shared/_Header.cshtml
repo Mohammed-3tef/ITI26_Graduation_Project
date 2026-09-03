@@ -3,6 +3,111 @@
     var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
 }
 
+<style>
+    /* ==========================================
+       Fix Search Bar & Suggestions Layout
+       ========================================== */
+
+    /* الحاوية الرئيسية */
+    .search-container {
+        position: relative !important;
+        width: 100%;
+        max-width: 380px;
+    }
+
+    /* تجميعة الـ Input والـ Button */
+    .search-input-group {
+        background-color: #F3F4F6;
+        border-radius: 50rem;
+        padding: 2px 6px;
+        border: 1px solid #E5E7EB;
+        transition: all 0.2s ease;
+    }
+
+        .search-input-group:focus-within {
+            border-color: #258cfb;
+            box-shadow: 0 0 0 0.25rem rgba(37, 140, 251, 0.25);
+            background-color: #FFFFFF;
+        }
+
+    /* مدخل البحث */
+    .search-container .search-input {
+        background-color: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        padding: 6px 14px;
+        font-size: 14px;
+    }
+
+    /* زر العدسة */
+    .search-container .search-btn {
+        background-color: transparent !important;
+        border: 0 !important;
+        color: #6B7280;
+        padding: 6px 12px;
+        box-shadow: none !important;
+    }
+
+        .search-container .search-btn:hover {
+            color: #EF4444;
+        }
+
+    /* قائمة الاقتراحات المنسدلة */
+    ul.search-suggestions-list {
+        position: absolute !important;
+        top: calc(100% + 8px) !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 9999 !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #E5E7EB !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+        list-style: none !important; /* لإزالة النقاط • */
+        padding: 6px 0 !important; /* إزالة المسافات البادئة القادمة من Bootstrap */
+        margin: 0 !important;
+        max-height: 280px;
+        overflow-y: auto;
+        display: none;
+    }
+
+        /* عناصر القائمة */
+        ul.search-suggestions-list li.search-suggestion-item {
+            padding: 10px 16px !important;
+            color: #374151 !important;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            list-style-type: none !important;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+            ul.search-suggestions-list li.search-suggestion-item i {
+                color: #9CA3AF;
+                font-size: 13px;
+                flex-shrink: 0;
+            }
+
+            ul.search-suggestions-list li.search-suggestion-item strong {
+                font-weight: 700;
+                color: #111827;
+            }
+
+            /* تأثير الـ Hover على العنصر */
+            ul.search-suggestions-list li.search-suggestion-item:hover {
+                background-color: #EF4444 !important;
+                color: #FFFFFF !important;
+            }
+
+                ul.search-suggestions-list li.search-suggestion-item:hover i,
+                ul.search-suggestions-list li.search-suggestion-item:hover span,
+                ul.search-suggestions-list li.search-suggestion-item:hover strong {
+                    color: #FFFFFF !important;
+                }
+</style>
+
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow py-2">
         <div class="container">
@@ -44,13 +149,21 @@
                 </ul>
 
                 <!-- Updated Search Bar Form -->
-                <form asp-controller="Store" asp-action="Index" method="get" class="me-lg-3 mb-2 mb-lg-0">
-                    <div class="input-group">
-                        <input class="form-control search-input" type="search" name="searchQuery" placeholder="Search..." value="@Context.Request.Query["searchQuery"]" />
-                        <button class="btn btn-outline-secondary" type="submit">
+                <!-- Updated Search Bar Form -->
+                <form id="searchForm" action="/Store/Index" method="get" class="me-lg-3 mb-2 mb-lg-0 search-container">
+                    <div class="input-group search-input-group">
+                        <input id="searchInput"
+                               class="form-control search-input"
+                               type="search"
+                               name="searchQuery"
+                               placeholder="Search by product, brand, category..."
+                               value="@Context.Request.Query["searchQuery"]"
+                               autocomplete="off" />
+                        <button class="btn search-btn" type="submit">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
                     </div>
+                    <ul id="suggestionsList" class="search-suggestions-list"></ul>
                 </form>
 
                 <!-- Account Dropdown Menu -->
@@ -122,3 +235,106 @@
         </div>
     </nav>
 </header>
+
+<script>
+       document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const suggestionsList = document.getElementById("suggestionsList");
+        const searchForm = document.getElementById("searchForm");
+
+        if (!searchInput || !suggestionsList || !searchForm) return;
+
+        // منع الـ Submit التقليدي وتحويله لـ AJAX
+        searchForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            performSearch(searchInput.value.trim());
+        });
+
+        // جلب الاقتراحات أثناء الكتابة
+        searchInput.addEventListener("input", function () {
+            const query = this.value.trim();
+
+            if (query.length === 0) {
+                suggestionsList.style.display = "none";
+                suggestionsList.innerHTML = "";
+                return;
+            }
+
+            fetch(`/Store/GetSuggestions?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsList.innerHTML = "";
+                    if (data && data.length > 0) {
+                        data.forEach(item => {
+                            const li = document.createElement("li");
+                            li.className = "search-suggestion-item";
+
+                            // تمييز النص المطابق
+                            let highlightedText = item;
+                            if (item.toLowerCase().startsWith(query.toLowerCase())) {
+                                const matchLength = query.length;
+                                const typed = item.substring(0, matchLength);
+                                const rest = item.substring(matchLength);
+                                highlightedText = `${typed}<strong>${rest}</strong>`;
+                            }
+
+                            li.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> <span>${highlightedText}</span>`;
+
+                            li.addEventListener("click", function () {
+                                searchInput.value = item;
+                                suggestionsList.style.display = "none";
+                                performSearch(item);
+                            });
+
+                            suggestionsList.appendChild(li);
+                        });
+                        suggestionsList.style.display = "block";
+                    } else {
+                        suggestionsList.style.display = "none";
+                    }
+                })
+                .catch(err => console.error("Error fetching suggestions:", err));
+        });
+
+        // إخفاء القائمة عند النقر خارج شريط البحث
+        document.addEventListener("click", function (e) {
+            if (!searchForm.contains(e.target)) {
+                suggestionsList.style.display = "none";
+            }
+        });
+
+        // تنفيذ البحث بدون Reload
+        function performSearch(query) {
+            suggestionsList.style.display = "none";
+
+            const currentUrl = new URL(window.location.href);
+            currentUrl.pathname = "/Store/Index";
+            if (query) {
+                currentUrl.searchParams.set("searchQuery", query);
+            } else {
+                currentUrl.searchParams.delete("searchQuery");
+            }
+
+            window.history.pushState({}, "", currentUrl);
+
+            fetch(currentUrl.toString(), {
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+
+                const newGrid = doc.getElementById("productGrid");
+                const currentGrid = document.getElementById("productGrid");
+
+                if (newGrid && currentGrid) {
+                    currentGrid.innerHTML = newGrid.innerHTML;
+                } else {
+                    window.location.href = currentUrl.toString();
+                }
+            })
+            .catch(err => console.error("Error updating products:", err));
+        }
+    });
+</script>

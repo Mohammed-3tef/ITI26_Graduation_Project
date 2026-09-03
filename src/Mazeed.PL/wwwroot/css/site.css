@@ -6,11 +6,11 @@
     min-height: 100%;
 }
 
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
     html {
         font-size: 16px;
     }
-}
+}*/
 
 /* Focus States */
 .btn:focus,
@@ -296,5 +296,132 @@ footer .muted {
 
     .table-hover tbody tr:hover {
         background-color: rgba(27, 110, 194, 0.04);
+    }
+    /* ==========================================
+   Global Search Bar & Autocomplete Styling
+   ========================================== */
+    /* ==========================================
+   Fix Search Bar & Suggestions Layout
+   ========================================== */
+
+    /* الحاوية الرئيسية */
+    .search-container {
+        position: relative !important;
+        width: 100%;
+        max-width: 380px;
+    }
+
+    /* تجميعة الـ Input والـ Button */
+    .search-input-group {
+        background-color: #F3F4F6;
+        border-radius: 50rem;
+        padding: 2px 6px;
+        border: 1px solid #E5E7EB;
+        transition: all 0.2s ease;
+    }
+
+        .search-input-group:focus-within {
+            border-color: #258cfb;
+            box-shadow: 0 0 0 0.25rem rgba(37, 140, 251, 0.25);
+            background-color: #FFFFFF;
+        }
+
+    /* مدخل البحث */
+    .search-container .search-input {
+        background-color: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        padding: 6px 14px;
+        font-size: 14px;
+    }
+
+    /* زر العدسة */
+    .search-container .search-btn {
+        background-color: transparent !important;
+        border: 0 !important;
+        color: #6B7280;
+        padding: 6px 12px;
+        box-shadow: none !important;
+    }
+
+        .search-container .search-btn:hover {
+            color: #EF4444;
+        }
+
+    /* قائمة الاقتراحات المنسدلة */
+    ul.search-suggestions-list {
+        position: absolute !important;
+        top: calc(100% + 8px) !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 9999 !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #E5E7EB !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+        list-style: none !important; /* لإزالة النقاط • */
+        padding: 6px 0 !important; /* إزالة المسافات البادئة القادمة من Bootstrap */
+        margin: 0 !important;
+        max-height: 280px;
+        overflow-y: auto;
+        display: none;
+    }
+
+        /* عناصر القائمة */
+        ul.search-suggestions-list li.search-suggestion-item {
+            padding: 10px 16px !important;
+            color: #374151 !important;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            list-style-type: none !important;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+            ul.search-suggestions-list li.search-suggestion-item i {
+                color: #9CA3AF;
+                font-size: 13px;
+                flex-shrink: 0;
+            }
+
+            ul.search-suggestions-list li.search-suggestion-item strong {
+                font-weight: 700;
+                color: #111827;
+            }
+
+            /* تأثير الـ Hover على العنصر */
+            ul.search-suggestions-list li.search-suggestion-item:hover {
+                background-color: #EF4444 !important;
+                color: #FFFFFF !important;
+            }
+
+                ul.search-suggestions-list li.search-suggestion-item:hover i,
+                ul.search-suggestions-list li.search-suggestion-item:hover span,
+                ul.search-suggestions-list li.search-suggestion-item:hover strong {
+                    color: #FFFFFF !important;
+                }
+
+    /* ==========================================
+   Media Queries (Responsive)
+   ========================================== */
+    @media (max-width: 991.98px) {
+        .mazeed-split-container {
+            flex-direction: column;
+        }
+
+        .mazeed-left-panel {
+            padding: 2rem;
+        }
+
+        .mazeed-right-panel {
+            display: none;
+        }
+
+        .search-container {
+            max-width: 100%;
+            margin-bottom: 1rem;
+        }
     }
 }
