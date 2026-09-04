@@ -828,6 +828,75 @@ html[data-theme="dark"] .mazeed-right-panel {
     background: radial-gradient(circle at 80% 20%, #854d0e 0%, transparent 40%), radial-gradient(circle at 20% 10%, #9a3412 0%, transparent 50%), linear-gradient(135deg, #991b1b 0%, #155e75 100%) !important;
 }
 
+html[data-theme="dark"] .mazeed-left-panel {
+    background-color: var(--theme-surface) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .brand-logo,
+html[data-theme="dark"] .mazeed-left-panel .text-dark,
+html[data-theme="dark"] .mazeed-left-panel .form-label {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .form-control,
+html[data-theme="dark"] .mazeed-left-panel .form-select {
+    background-color: var(--theme-surface-muted) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .form-control::placeholder,
+html[data-theme="dark"] .mazeed-left-panel .form-select::placeholder {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .input-prefix-icon,
+html[data-theme="dark"] .mazeed-left-panel .password-toggle-btn {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .btn-google {
+    background-color: var(--theme-surface-muted) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .btn-google:hover,
+html[data-theme="dark"] .mazeed-left-panel .btn-mazeed-outline:hover,
+html[data-theme="dark"] .mazeed-left-panel .btn-mazeed-secondary:hover {
+    background-color: #303b48 !important;
+    border-color: #526173 !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .btn-mazeed-outline,
+html[data-theme="dark"] .mazeed-left-panel .btn-mazeed-secondary {
+    background-color: var(--theme-surface-muted) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .divider::before,
+html[data-theme="dark"] .mazeed-left-panel .divider::after,
+html[data-theme="dark"] .mazeed-left-panel .step-progress::before {
+    border-color: var(--theme-border) !important;
+    background-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .step-circle {
+    background-color: var(--theme-surface) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .step-circle.active,
+html[data-theme="dark"] .mazeed-left-panel .step-circle.completed {
+    background-color: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+}
+}
+
 html[data-theme="dark"] .profile-card,
 html[data-theme="dark"] .account-details {
     background-color: #131928 !important;
