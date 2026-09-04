@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <partial name="_MetaDataPartial" />
     <title>@ViewData["Title"] - Mazeed</title>
+    <script>
+        (function () {
+            const theme = localStorage.getItem("mazeed-theme");
+            if (theme === "dark") document.documentElement.dataset.theme = "dark";
+        })();
+    </script>
 
     <!-- Bootstrap 5 CSS & Icons -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -320,6 +326,9 @@
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
+    <button type="button" class="theme-toggle theme-toggle-floating" data-theme-toggle aria-label="Switch to dark mode" title="Switch theme">
+        <i class="bi bi-moon-fill" data-theme-icon></i>
+    </button>
     <partial name="_Loader" />
     <partial name="_Notification" />
 
