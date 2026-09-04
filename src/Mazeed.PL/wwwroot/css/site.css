@@ -895,10 +895,17 @@ html[data-theme="dark"] .mazeed-left-panel .step-circle.completed {
     border-color: #ef4444 !important;
     color: #ffffff !important;
 }
-}
 
+
+/* إصلاح خلفية البروفايل للـ Dark Mode */
+html[data-theme="dark"] .profile-info,
+html[data-theme="dark"] .profile-info-card,
 html[data-theme="dark"] .profile-card,
-html[data-theme="dark"] .account-details {
+html[data-theme="dark"] .account-details,
+html[data-theme="dark"] .profile-info .card,
+html[data-theme="dark"] .profile-info .bg-white {
     background-color: #131928 !important;
+    color: var(--theme-text) !important;
+    border-color: var(--theme-border) !important;
 }
 
