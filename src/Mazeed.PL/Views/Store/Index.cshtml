@@ -1,431 +1,263 @@
-﻿@model Mazeed.BLL.ViewModels.ShopCatalogVM
+﻿@* @model Mazeed.BLL.ViewModels.Search.FilterSortViewModel
 
-@{
-    ViewData["Title"] = "Store Catalog";
-}
-
-<style>
-    .store-product-card {
-        border: 1px solid #f0f0f0;
-        border-radius: 12px;
-        overflow: hidden;
-        background: #ffffff;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .store-product-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    }
-
-    .store-product-img {
-        position: relative;
-        height: 210px;
-        background-color: #f4f4f5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-    }
-
-    .store-product-img img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .store-sale-badge {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        z-index: 2;
-        padding: 3px 8px;
-        border-radius: 4px;
-        background-color: #ff4d4f;
-        color: #ffffff;
-        font-size: 10px;
-        font-weight: 700;
-    }
-
-    .store-product-body {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        justify-content: space-between;
-        padding: 16px;
-    }
-
-    .store-category-tag {
-        color: #9ca3af;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-    }
-
-    .store-rating {
-        color: #111827;
-        font-size: 11px;
-        font-weight: 700;
-    }
-
-    .store-product-title {
-        overflow: hidden;
-        margin: 4px 0 8px;
-        color: #111827;
-        font-size: 14px;
-        font-weight: 700;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .store-current-price {
-        color: #ff4d4f;
-        font-size: 15px;
-        font-weight: 700;
-    }
-
-    .store-current-price.dark {
-        color: #111827;
-    }
-
-    .store-original-price {
-        margin-left: 4px;
-        color: #9ca3af;
-        font-size: 11px;
-        text-decoration: line-through;
-    }
-
-    .store-wishlist-btn {
-        border: 0;
-        background: transparent;
-        color: #9ca3af;
-        cursor: pointer;
-        font-size: 22px;
-        line-height: 1;
-        padding: 0;
-    }
-
-    .store-wishlist-btn.active,
-    .store-wishlist-btn:hover {
-        color: #ff4d4f;
-    }
-
-    .store-details-btn {
-        display: block;
-        width: 100%;
-        border-radius: 6px;
-        background-color: #111827;
-        color: #ffffff;
-        font-size: 12px;
-        font-weight: 600;
-        padding: 8px 0;
-        text-align: center;
-        text-decoration: none;
-    }
-
-    .store-details-btn:hover {
-        background-color: #1f2937;
-        color: #ffffff;
-    }
-</style>
-
-<div class="container my-4">
-    <!-- Search Query Banner & Filter Trigger -->
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
-        <div>
-            @if (!string.IsNullOrEmpty(Model.SearchQuery))
-            {
-                <span class="text-muted small">Your search Results for:</span>
-                <h1 class="fw-bold text-uppercase m-0">"@Model.SearchQuery" <span class="fs-6 text-muted">(@Model.TotalCount)</span></h1>
-            }
-            else
-            {
-                <h1 class="fw-bold text-uppercase m-0">ALL PRODUCTS <span class="fs-6 text-muted">(@Model.TotalCount)</span></h1>
-            }
-        </div>
-
-        <!-- Filter & Sort Trigger Button -->
-        <button class="btn btn-outline-dark px-4 py-2 fw-semibold border-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
-            Filter & Sort <i class="fa-solid fa-sliders ms-2"></i>
-        </button>
-    </div>
-
-    <!-- Product Grid -->
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4">
-        @if (Model.Items.Any())
-        {
-            @foreach (var item in Model.Items)
-            {
-                <div class="col product-item">
-                    <div class="store-product-card">
-                        <div class="store-product-img">
-                            @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
-                            {
-                                <span class="store-sale-badge">SALE</span>
-                            }
-                            @if (item.Photos != null && item.Photos.Any())
-                            {
-                                <img src="@item.Photos.First()" alt="@item.Name" />
-                            }
-                            else
-                            {
-                                <i class="fa-solid fa-box-open fa-3x text-secondary"></i>
-                            }
-                        </div>
-                        <div class="store-product-body">
-                            <div>
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span class="store-category-tag">@string.Join(", ", item.CategoryNames ?? new List<string>())</span>
-                                    <span class="store-rating rating-value" data-item-id="@item.Id">&#9734; —</span>
-                                </div>
-                                <div class="store-product-title" title="@item.Name">@item.Name</div>
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div>
-                                        <span class="store-current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
-                                            @item.Price.ToString("N0") EGP
-                                        </span>
-                                        @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
-                                        {
-                                            <span class="store-original-price">@item.OldPrice.Value.ToString("N0") EGP</span>
-                                        }
-                                    </div>
-                                    <button class="store-wishlist-btn fav-toggle-btn" type="button" title="Add to Wishlist" aria-label="Wishlist" data-item-id="@item.Id">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="row g-2">
-                                <div class="col-12">
-                                    <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="store-details-btn">Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="col-12 text-center py-5">
-                <i class="fa-solid fa-magnifying-glass fa-3x text-muted mb-3"></i>
-                <h5>No items found matching your filter criteria.</h5>
-                <a asp-action="Index" class="btn btn-dark mt-2">Clear Filters</a>
+<div class="container mt-4">
+    <div class="row">
+        <!-- قسم الفلاتر الجانبي المماثل للصور -->
+        <div class="col-md-4 card p-3 shadow-sm" style="max-height: 90vh; overflow-y: auto;">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                <h5 class="m-0 fw-bold">Filter and Sort</h5>
+                <button type="button" class="btn-close" aria-label="Close"></button>
             </div>
-        }
-    </div>
-</div>
 
-<!-- Offcanvas Sidebar Filter & Sort -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel" style="width: 380px;">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title fw-bold" id="filterOffcanvasLabel">Filter & Sort</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-
-    <form asp-action="Index" method="get" class="d-flex flex-column h-100">
-        <!-- Preserve existing search term -->
-        <input type="hidden" name="searchQuery" value="@Model.SearchQuery" />
-
-        <div class="offcanvas-body">
-            <div class="accordion accordion-flush" id="filterAccordion">
-
-                <!-- Sort By Accordion -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingSort">
-                        <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort">
-                            Sort By
-                        </button>
-                    </h2>
-                    <div id="collapseSort" class="accordion-collapse collapse show">
-                        <div class="accordion-body">
-                            <select name="sortBy" class="form-select">
-                                <option value="">Default Order</option>
-                                <option value="price_low_high" selected="@(Model.SortBy == "price_low_high")">Price: Low to High</option>
-                                <option value="price_high_low" selected="@(Model.SortBy == "price_high_low")">Price: High to Low</option>
-                                <option value="name_asc" selected="@(Model.SortBy == "name_asc")">Name: A to Z</option>
-                                <option value="name_desc" selected="@(Model.SortBy == "name_desc")">Name: Z to A</option>
-                            </select>
+             <form id="filterForm" method="get" action="@Url.Action("Index", "Store")">
+                
+                <!-- 1. قسم الترتيب (Sort) -->
+                <div class="border-bottom py-2">
+                    <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#sortSection">
+                        <span class="fw-semibold">Sort</span>
+                        <span class="toggle-icon">-</span>
+                    </div>
+                    <div id="sortSection" class="collapse show mt-2 ps-2">
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="radio" name="SelectedSort" id="sortRec" value="recommended" @(Model.SelectedSort == "recommended" ? "checked" : "")>
+                            <label class="form-check-label" for="sortRec">Recommended Sorting</label>
+                        </div>
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="radio" name="SelectedSort" id="sortLow" value="lowToHigh" @(Model.SelectedSort == "lowToHigh" ? "checked" : "")>
+                            <label class="form-check-label" for="sortLow">Price: Low to High</label>
+                        </div>
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="radio" name="SelectedSort" id="sortHigh" value="highToLow" @(Model.SelectedSort == "highToLow" ? "checked" : "")>
+                            <label class="form-check-label" for="sortHigh">Price: High to Low</label>
                         </div>
                     </div>
                 </div>
 
-                <!-- Category Filter -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingCategory">
-                        <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory">
-                            Product Category
-                        </button>
-                    </h2>
-                    <div id="collapseCategory" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                            @foreach (var category in Model.Categories)
-                            {
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="categoryId" id="cat_@category.Id" value="@category.Id" @(Model.CategoryId == category.Id ? "checked" : "") />
-                                    <label class="form-check-label ms-1" for="cat_@category.Id">@category.Name</label>
-                                </div>
-                            }
-                        </div>
+                <!-- 2. قسم نوع المنتج / الفئات (Categories / Product Type) -->
+                <div class="border-bottom py-2">
+                    <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#categorySection">
+                        <span class="fw-semibold">Product Type</span>
+                        <span class="toggle-icon">+</span>
                     </div>
-                </div>
-
-                <!-- Brand Filter -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingBrand">
-                        <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrand">
-                            Brand
-                        </button>
-                    </h2>
-                    <div id="collapseBrand" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                            @foreach (var brand in Model.Brands)
-                            {
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="brandId" id="brand_@brand.Id" value="@brand.Id" @(Model.BrandId == brand.Id ? "checked" : "") />
-                                    <label class="form-check-label ms-1" for="brand_@brand.Id">@brand.Name</label>
-                                </div>
-                            }
+                    <div id="categorySection" class="collapse mt-2 ps-2">
+                        <div class="form-check my-2">
+                            <input class="form-check-input select-all-categories" type="checkbox" id="allCategories">
+                            <label class="form-check-label fw-bold" for="allCategories">Select All</label>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Price Range Filter -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingPrice">
-                        <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
-                            Price
-                        </button>
-                    </h2>
-                    <div id="collapsePrice" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <input type="number" name="minPrice" class="form-control" placeholder="Min" value="@Model.MinPrice" />
-                                </div>
-                                <div class="col-6">
-                                    <input type="number" name="maxPrice" class="form-control" placeholder="Max" value="@Model.MaxPrice" />
-                                </div>
+                        @foreach (var category in Model.AvailableCategories)
+                        {
+                            <div class="form-check my-2">
+                                <input class="form-check-input cat-checkbox" type="checkbox" name="SelectedCategoryIds" value="@category.Id" id="cat_@category.Id" @(Model.SelectedCategoryIds != null && Model.SelectedCategoryIds.Contains(category.Id) ? "checked" : "")>
+                                <label class="form-check-label" for="cat_@category.Id">@category.Name</label>
                             </div>
-                        </div>
+                        }
                     </div>
                 </div>
 
-            </div>
+                <!-- 3. قسم المقاسات (Size) -->
+                <div class="border-bottom py-2">
+                    <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#sizeSection">
+                        <span class="fw-semibold">Size</span>
+                        <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="sizeSection" class="collapse mt-2 ps-2">
+                        @foreach (var size in Model.AvailableSizes)
+                        {
+                            <div class="form-check my-2">
+                                <input class="form-check-input" type="checkbox" name="SelectedSizes" value="@size" id="size_@size" @(Model.SelectedSizes != null && Model.SelectedSizes.Contains(size) ? "checked" : "")>
+                                <label class="form-check-label" for="size_@size">@size</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- 4. قسم الألوان (Color) مع معاينة اللون ودعم التدرجات -->
+                <div class="border-bottom py-2">
+                    <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#colorSection">
+                        <span class="fw-semibold">Color</span>
+                        <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="colorSection" class="collapse mt-2 ps-2">
+                        @foreach (var color in Model.AvailableColors)
+                        {
+                            <div class="form-check d-flex align-items-center my-2">
+                                <input class="form-check-input me-2" type="checkbox" name="SelectedColors" value="@color.Name" id="color_@color.Name" @(Model.SelectedColors != null && Model.SelectedColors.Contains(color.Name) ? "checked" : "")>
+                                <!-- تم استبدال background-color بـ background لتطبيق الـ Gradients للألوان المزدوجة بنجاح -->
+                                <span class="color-preview me-2" style="background: @color.HexCode; width: 18px; height: 18px; display: inline-block; border: 1px solid #ccc; border-radius: 2px;"></span>
+                                <label class="form-check-label" for="color_@color.Name">@color.Name</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- 5. قسم العلامات التجارية (Brand) -->
+                <div class="border-bottom py-2">
+                    <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#brandSection">
+                        <span class="fw-semibold">Brand</span>
+                        <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="brandSection" class="collapse mt-2 ps-2">
+                        <div class="form-check my-2">
+                            <input class="form-check-input select-all-brands" type="checkbox" id="allBrands">
+                            <label class="form-check-label fw-bold" for="allBrands">Select All</label>
+                        </div>
+                        @foreach (var brand in Model.AvailableBrands)
+                        {
+                            <div class="form-check my-2">
+                                <input class="form-check-input brand-checkbox" type="checkbox" name="SelectedBrandIds" value="@brand.Id" id="brand_@brand.Id" @(Model.SelectedBrandIds != null && Model.SelectedBrandIds.Contains(brand.Id) ? "checked" : "")>
+                                <label class="form-check-label" for="brand_@brand.Id">@brand.Name</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- 6. فلتر نطاق السعر (Price Range Slider) -->
+                <div class="border-bottom py-2">
+                    <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#priceSection">
+                        <span class="fw-semibold">Price</span>
+                        <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="priceSection" class="collapse mt-2 px-2">
+                        <div class="d-flex justify-content-between text-muted small mb-2">
+                            <span><span id="minPriceVal">@Model.MinPrice</span> EGP</span>
+                            <span><span id="maxPriceVal">@Model.MaxPrice</span> EGP</span>
+                        </div>
+                        <input type="range" class="form-range" name="MinPrice" min="199" max="3499" step="50" value="@Model.MinPrice" id="minPriceSlider">
+                        <input type="range" class="form-range mt-1" name="MaxPrice" min="199" max="3499" step="50" value="@Model.MaxPrice" id="maxPriceSlider">
+                    </div>
+                </div>
+
+                <!-- أزرار التحكم السفلية الثابتة المطلوبة -->
+                <div class="mt-4 pt-2 bg-white sticky-bottom">
+                    <button type="submit" class="btn btn-dark w-100 py-2.5 fw-bold text-uppercase">Show Products</button>
+                    <div class="text-center mt-2">
+                        <a href="@Url.Action("Index", "Store")" class="text-muted small text-decoration-underline">Remove Filters</a>
+                    </div>
+                </div>
+            </form>
         </div>
 
-        <!-- Offcanvas Apply Button -->
-        <div class="p-3 border-top bg-white">
-            <button type="submit" class="btn btn-dark w-100 py-2 fw-bold text-uppercase">
-                Apply (@Model.TotalCount) <i class="fa-solid fa-arrow-right ms-2"></i>
-            </button>
+        <!-- قسم عرض المنتجات المفلترة -->
+        <div class="col-md-8">
+            <h4>Products Results</h4>
+            <hr />
+            <!-- كود الكروت الخاصة بالمنتجات يوضع هنا بناءً على ViewBag.Products -->
         </div>
-    </form>
+    </div>
 </div>
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-
-            function redirectToLogin() {
-            const returnUrl = window.location.pathname + window.location.search;
-            if (typeof toastr !== 'undefined') toastr.info('Please sign in to continue.');
-            setTimeout(function () {
-                window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
-            }, 900);
-            }
-
-            async function apiCall(url, method) {
-                const headers = { 'Accept': 'application/json' };
-                if (token) headers['RequestVerificationToken'] = token;
-
-                const res = await fetch(url, { method, headers });
-
-                if (res.status === 401) {
-                    redirectToLogin();
-                    throw new Error('unauthenticated');
-                }
-
-                let data = null;
-                try { data = await res.json(); } catch (e) { /* no JSON body */ }
-
-                if (!res.ok) {
-                    if (typeof toastr !== 'undefined') {
-                        toastr.error((data && data.message) || 'Something went wrong.');
-                    }
-                    throw new Error('request failed');
-                }
-                return data;
-            }
-
-            function setHeartState(btn, active) {
-                const icon = btn.querySelector('i');
-                if (active) {
-                    icon.classList.remove('fa-regular');
-                    icon.classList.add('fa-solid');
-                    btn.classList.add('text-danger');
-                } else {
-                    icon.classList.remove('fa-solid');
-                    icon.classList.add('fa-regular');
-                    btn.classList.remove('text-danger');
-                }
-            }
-
-            // Pre-fill hearts for items already in the wishlist (silently no-ops if not signed in)
-            fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
-                .then(res => res.ok ? res.json() : null)
-                .then(result => {
-                    const favoritedIds = (result?.data || []).map(i => String(i.itemId));
-                    document.querySelectorAll('.fav-toggle-btn').forEach(btn => {
-                        if (favoritedIds.includes(btn.dataset.itemId)) setHeartState(btn, true);
-                    });
-                })
-                .catch(() => { /* not signed in — hearts stay outlined */ });
-
-            document.querySelectorAll('.fav-toggle-btn').forEach(btn => {
-                btn.addEventListener('click', async function (e) {
-                    e.preventDefault();
-                    const itemId = this.dataset.itemId;
-                    const isActive = this.classList.contains('text-danger');
-
-                    try {
-                        if (isActive) {
-                            await apiCall(`/api/wishlist/${itemId}`, 'DELETE');
-                            setHeartState(this, false);
-                            if (typeof toastr !== 'undefined') toastr.success('Removed from favorites.');
-                        } else {
-                            await apiCall(`/api/wishlist/${itemId}`, 'POST');
-                            setHeartState(this, true);
-                            if (typeof toastr !== 'undefined') toastr.success('Added to favorites.');
-                        }
-                    } catch (e) { /* handled */ }
+        document.addEventListener("DOMContentLoaded", function () {
+            
+            // 1. Toggle Accordion Icons (+ / -) smoothly
+            document.querySelectorAll('.collapse').forEach(collapseEl => {
+                collapseEl.addEventListener('show.bs.collapse', function () {
+                    const icon = this.previousElementSibling.querySelector('.toggle-icon');
+                    if(icon) icon.textContent = '-';
+                });
+                collapseEl.addEventListener('hide.bs.collapse', function () {
+                    const icon = this.previousElementSibling.querySelector('.toggle-icon');
+                    if(icon) icon.textContent = '+';
                 });
             });
 
-            const ratingElements = document.querySelectorAll('.rating-value');
-            const itemIds = Array.from(ratingElements).map(el => parseInt(el.dataset.itemId, 10));
-            if (itemIds.length) {
-                fetch('/api/reviews/summaries', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ ItemIds: itemIds })
-                })
-                    .then(res => res.ok ? res.json() : null)
-                    .then(result => {
-                        const summaries = result?.data || {};
-                        ratingElements.forEach(el => {
-                            const summary = summaries[el.dataset.itemId];
-                            el.innerHTML = summary && summary.reviewCount > 0
-                                ? `&#9733; ${summary.averageRating.toFixed(1)} <span class="text-muted fw-normal">(${summary.reviewCount})</span>`
-                                : '&#9734; No reviews';
-                        });
-                    })
-                    .catch(() => { /* keep rating placeholders */ });
+            // 2. Price Range Slider Logic & Constraint Management
+            const minSlider = document.getElementById('minPriceSlider');
+            const maxSlider = document.getElementById('maxPriceSlider');
+            const minPriceVal = document.getElementById('minPriceVal');
+            const maxPriceVal = document.getElementById('maxPriceVal');
+
+            function handlePriceChange() {
+                let minVal = parseInt(minSlider.value);
+                let maxVal = parseInt(maxSlider.value);
+
+                // Prevent the min handle from exceeding the max handle
+                if (minVal > maxVal) {
+                    minSlider.value = maxVal;
+                    minVal = maxVal;
+                }
+                
+                minPriceVal.textContent = minVal;
+                maxPriceVal.textContent = maxVal;
             }
+
+            if (minSlider && maxSlider) {
+                minSlider.addEventListener('input', handlePriceChange);
+                maxSlider.addEventListener('input', handlePriceChange);
+            }
+
+            // 3. 'Select All' Master Checkbox Logic (Generic Helper)
+            function setupSelectAll(masterId, childClass) {
+                const master = document.getElementById(masterId);
+                if (!master) return;
+
+                // When master checkbox changes, update all children
+                master.addEventListener('change', function() {
+                    document.querySelectorAll('.' + childClass).forEach(cb => {
+                        cb.checked = this.checked;
+                    });
+                });
+
+                // When any child checkbox changes, evaluate master checkbox state
+                document.querySelectorAll('.' + childClass).forEach(cb => {
+                    cb.addEventListener('change', function() {
+                        const allChildren = document.querySelectorAll('.' + childClass);
+                        const checkedChildren = document.querySelectorAll('.' + childClass + ':checked');
+                        master.checked = (allChildren.length === checkedChildren.length);
+                        master.indeterminate = (checkedChildren.length > 0 && checkedChildren.length < allChildren.length);
+                    });
+                });
+                
+                // Trigger initial check on load if some checkboxes came back pre-checked from the server
+                const allChildren = document.querySelectorAll('.' + childClass);
+                const checkedChildren = document.querySelectorAll('.' + childClass + ':checked');
+                if(allChildren.length > 0 && allChildren.length === checkedChildren.length) {
+                    master.checked = true;
+                }
+            }
+
+            // Initialize Select All for Categories and Brands
+            setupSelectAll('allCategories', 'cat-checkbox');
+            setupSelectAll('allBrands', 'brand-checkbox');
         });
     </script>
+
+    <style>
+        .style-pointer { 
+            cursor: pointer; 
+            user-select: none; 
+        }
+        .toggle-icon { 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            transition: transform 0.2s ease;
+        }
+        /* Visual optimization for standard double-range stacking layout */
+        .form-range {
+            margin-bottom: 0.5rem;
+        }
+    </style>
 }
+
+}
+ *@
+
+
+@model Mazeed.BLL.ViewModels.Search.FilterSortViewModel
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Render Sidebar Column Dynamic Frame -->
+        <div class="col-md-4">
+            @await Html.PartialAsync("_FilterSidebarPartial", Model)
+        </div>
+
+        <!-- Render Content Column -->
+        <div class="col-md-8">
+            <h4>Products Results</h4>
+            <hr />
+            <!-- Product Grid iteration loop logic goes here -->
+        </div>
+    </div>
+</div>

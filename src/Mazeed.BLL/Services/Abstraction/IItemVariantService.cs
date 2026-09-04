@@ -1,5 +1,6 @@
 ﻿using Mazeed.BLL.Responses;
 using Mazeed.BLL.ViewModels;
+using Mazeed.BLL.ViewModels.Search;
 
 namespace Mazeed.BLL.Services.Abstraction
 {
@@ -10,5 +11,8 @@ namespace Mazeed.BLL.Services.Abstraction
         Task<ServiceResponse<ItemVariantVM>> CreateAsync(ItemVariantVM model);
         Task<ServiceResponse<bool>> UpdateAsync(ItemVariantVM model);
         Task<ServiceResponse<bool>> DeleteAsync(long id);
+        Task<ServiceResponse<IEnumerable<ColorItem>>> GetDistinctColors();
+        Task<ServiceResponse<IEnumerable<string>>> GetDistinctSize();
+
     }
 }
