@@ -1,6 +1,8 @@
 ﻿using Mazeed.BLL.Extensions;
 using Mazeed.BLL.Hubs;
 using Mazeed.BLL.Services;
+using Mazeed.BLL.Services.Abstraction;
+using Mazeed.BLL.Services.Implementation;
 
 namespace Mazeed.PL;
 
@@ -13,7 +15,8 @@ public class Program
         builder.Services.AddApplicationServices(builder.Configuration);
         builder.Services.AddInfrastructureServices(builder.Configuration);
         builder.Services.AddHttpClient<PaymobService>();
-
+        builder.Services.AddMemoryCache();
+        builder.Services.AddScoped<IRecommendationService, RecommendationService>();
         builder.Services.ConfigureApplicationCookie(options =>
         {
             options.Events.OnRedirectToLogin = context =>

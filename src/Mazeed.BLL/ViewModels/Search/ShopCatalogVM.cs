@@ -11,7 +11,6 @@ namespace Mazeed.BLL.ViewModels
         public long? CategoryId { get; set; }
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
-
         // Data Lists
         public IEnumerable<ItemVM> Items { get; set; } = new List<ItemVM>();
         public IEnumerable<BrandVM> Brands { get; set; } = new List<BrandVM>();

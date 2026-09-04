@@ -1,5 +1,8 @@
-﻿using Mazeed.BLL.Services.Abstraction;
+﻿using System.Security.Claims;
+using Mazeed.BLL.Services.Abstraction;
+using Mazeed.BLL.Services.Implementation;
 using Mazeed.BLL.ViewModels;
+using Mazeed.DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mazeed.PL.Controllers;
@@ -9,55 +12,69 @@ public class HomeController : Controller
     private readonly IEmailService _emailService;
     private readonly IItemService _itemService;
     private readonly ICategoryService _categoryService;
+    private readonly IRecommendationService _recommendationService;
+    private readonly IBrandService _brandService;
 
-    public HomeController(IEmailService emailService, IItemService itemService, ICategoryService categoryService)
+    public HomeController(IEmailService emailService, IItemService itemService, ICategoryService categoryService, IRecommendationService recommendationService, IBrandService brandService)
     {
         _emailService = emailService;
         _itemService = itemService;
         _categoryService = categoryService;
+        _recommendationService = recommendationService;
+        _brandService = brandService;
     }
 
     // الصفحة الرئيسية
-    public IActionResult Index(long? categoryId)
+
+
+    // 1. Index Action
+    // 1. Index Action
+    public async Task<IActionResult> Index(long? categoryId, string? sortBy, decimal? minPrice, decimal? maxPrice, string? searchQuery)
     {
-        var itemsResponse = _itemService.GetAllAsync().Result;
-        var categoriesResponse = _categoryService.GetAllAsync().Result;
+        var itemsResponse = await _itemService.GetAllAsync();
+        var categoriesResponse = await _categoryService.GetAllAsync();
 
-        var itemsList = itemsResponse?.Data ?? new List<ItemVM>();
-        var categoriesList = categoriesResponse?.Data ?? new List<CategoryVM>();
+        var brandsResponse = _brandService != null ? await _brandService.GetAllAsync() : null;
+        var brandsList = brandsResponse?.Data?.ToList() ?? new List<BrandVM>();
+        var itemsList = itemsResponse?.Data?.ToList() ?? new List<ItemVM>();
+        var categoriesList = categoriesResponse?.Data?.ToList() ?? new List<CategoryVM>();
 
+        long? userId = null;
+        if (User?.Identity != null && User.Identity.IsAuthenticated)
+        {
+            var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (long.TryParse(userIdStr, out long parsedId)) userId = parsedId;
+        }
+
+        // 1. الفلترة حسب الكاتيجوري أو تطبيق التوصيات
+        // 1. الفلترة حسب الكاتيجوري مع تطبيق الـ Recommendation
         if (categoryId.HasValue && categoryId > 0)
         {
-            itemsList = itemsList.Where(item => item.CategoryIds != null && item.CategoryIds.Contains(categoryId.Value)).ToList();
+            var categoryItems = itemsList
+                .Where(item => item.CategoryIds != null && item.CategoryIds.Contains(categoryId.Value))
+                .ToList();
+
+            // نمرر المنتجات للسيرفس لتترتب بالتوصيات لو المستخدم ماختارش ترتيب يدوي
+            if (string.IsNullOrEmpty(sortBy))
+            {
+                itemsList = _recommendationService.GetHomeRecommendations(userId, categoryItems);
+            }
+            else
+            {
+                itemsList = categoryItems;
+            }
+        }
+        else if (string.IsNullOrEmpty(searchQuery) && !minPrice.HasValue && !maxPrice.HasValue && string.IsNullOrEmpty(sortBy))
+        {
+            // زر All أو الفتح لأول مرة: ترتيب الكاتالوج كامل
+            itemsList = _recommendationService.GetHomeRecommendations(userId, itemsList);
         }
 
-        var model = new ShopCatalogVM
+        // 2. الفلترة المتقدمة (Price & Search)
+        if (!string.IsNullOrEmpty(searchQuery))
         {
-            CategoryId = categoryId,
-            Items = itemsList,
-            Categories = categoriesList
-        };
-
-        return View(model);
-    }
-
-    // أكشن موحد لعرض أي كاتيجوري يتم الضغط عليه من الـ Navbar
-    [HttpGet]
-    public IActionResult Category(long? id, string? sortBy, decimal? minPrice, decimal? maxPrice)
-    {
-        var itemsResponse = _itemService.GetAllAsync().Result;
-        var categoriesResponse = _categoryService.GetAllAsync().Result;
-
-        var itemsList = itemsResponse?.Data ?? new List<ItemVM>();
-        var categoriesList = categoriesResponse?.Data ?? new List<CategoryVM>();
-
-        // 1. الفلترة حسب الكاتيجوري
-        if (id.HasValue && id > 0)
-        {
-            itemsList = itemsList.Where(item => item.CategoryIds != null && item.CategoryIds.Contains(id.Value)).ToList();
+            itemsList = itemsList.Where(i => i.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
         }
-
-        // 2. الفلترة حسب السعر
         if (minPrice.HasValue)
         {
             itemsList = itemsList.Where(i => i.Price >= minPrice.Value).ToList();
@@ -67,40 +84,44 @@ public class HomeController : Controller
             itemsList = itemsList.Where(i => i.Price <= maxPrice.Value).ToList();
         }
 
-        // 3. الترتيب (Sort By)
-        itemsList = sortBy switch
+        // 3. الترتيب
+        if (!string.IsNullOrEmpty(sortBy))
         {
-            "price_low_high" => itemsList.OrderBy(i => i.Price).ToList(),
-            "price_high_low" => itemsList.OrderByDescending(i => i.Price).ToList(),
-            "name_asc" => itemsList.OrderBy(i => i.Name).ToList(),
-            "name_desc" => itemsList.OrderByDescending(i => i.Name).ToList(),
-            _ => itemsList.ToList()
-        };
+            itemsList = sortBy switch
+            {
+                "price_low_high" => itemsList.OrderBy(i => i.Price).ToList(),
+                "price_high_low" => itemsList.OrderByDescending(i => i.Price).ToList(),
+                "name_asc" => itemsList.OrderBy(i => i.Name).ToList(),
+                "name_desc" => itemsList.OrderByDescending(i => i.Name).ToList(),
+                _ => itemsList
+            };
+        }
 
         var model = new ShopCatalogVM
         {
-            CategoryId = id,
+            CategoryId = categoryId,
             Items = itemsList,
             Categories = categoriesList,
+            Brands = brandsList,
             SortBy = sortBy,
             MinPrice = minPrice,
-            MaxPrice = maxPrice
+            MaxPrice = maxPrice,
+            SearchQuery = searchQuery,
         };
 
-        return View("CategoryCatalog", model);
+        return View(model);
     }
-
-    [HttpGet]
-    public IActionResult Details(long id)
+    // 2. Details Action
+    public async Task<IActionResult> Details(long id)
     {
-        var allItems = _itemService.GetAllAsync().Result?.Data ?? new List<ItemVM>();
+        var itemsResponse = await _itemService.GetAllAsync();
+        var allItems = itemsResponse?.Data?.ToList() ?? new List<ItemVM>();
         var item = allItems.FirstOrDefault(i => i.Id == id);
 
         if (item == null) return NotFound();
 
-        var variants = item.Variants ?? new List<ItemVariantVM>();
+        var variants = item.Variants?.ToList() ?? new List<ItemVariantVM>();
 
-        // استخراج الألوان والمقاسات الفريدة من الـ Variants
         var colors = variants
             .Select(v => v.Color)
             .Where(c => !string.IsNullOrEmpty(c))
@@ -113,11 +134,7 @@ public class HomeController : Controller
             .Distinct()
             .ToList();
 
-        // Recommendation System (منتجات من نفس القسم)
-        var relatedItems = allItems
-            .Where(i => i.Id != id && i.CategoryIds != null && item.CategoryIds != null && i.CategoryIds.Intersect(item.CategoryIds).Any())
-            .Take(3)
-            .ToList();
+        var relatedItems = _recommendationService.GetRelatedOrBoughtTogether(id, allItems, count: 3);
 
         var model = new ItemDetailsVM
         {
@@ -129,6 +146,82 @@ public class HomeController : Controller
         };
 
         return View(model);
+    }
+
+    // 3. Category Action
+    public async Task<IActionResult> Category(long? id, string? sortBy, decimal? minPrice, decimal? maxPrice)
+    {
+        var itemsResponse = await _itemService.GetAllAsync();
+        var categoriesResponse = await _categoryService.GetAllAsync();
+
+        var itemsList = itemsResponse?.Data?.ToList() ?? new List<ItemVM>();
+        var categoriesList = categoriesResponse?.Data?.ToList() ?? new List<CategoryVM>();
+
+        long? userId = null;
+        if (User?.Identity != null && User.Identity.IsAuthenticated)
+        {
+            var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (long.TryParse(userIdStr, out long parsedId)) userId = parsedId;
+        }
+
+        // 1. التعديل هنا: فلترة حسب الكاتيجوري ثم ترتيب النتائج بالتوصيات الخاصة بالمستخدم
+        if (id.HasValue && id > 0)
+        {
+            var categoryItems = itemsList.Where(item => item.CategoryIds != null && item.CategoryIds.Contains(id.Value)).ToList();
+
+            // لو لم يحدد المستخدم ترتيب معين للـ Sort، نقوم بترتيب منتجات الكاتيجوري بالتوصيات
+            if (string.IsNullOrEmpty(sortBy))
+            {
+                itemsList = _recommendationService.GetHomeRecommendations(userId, categoryItems);
+            }
+            else
+            {
+                itemsList = categoryItems;
+            }
+        }
+        else
+        {
+            // بدون count: 12 لإرجاع القائمة كاملة
+            if (string.IsNullOrEmpty(sortBy))
+            {
+                itemsList = _recommendationService.GetHomeRecommendations(userId, itemsList);
+            }
+        }
+
+        // 2. الفلترة بالسعر
+        if (minPrice.HasValue)
+        {
+            itemsList = itemsList.Where(i => i.Price >= minPrice.Value).ToList();
+        }
+        if (maxPrice.HasValue)
+        {
+            itemsList = itemsList.Where(i => i.Price <= maxPrice.Value).ToList();
+        }
+
+        // 3. الترتيب (إذا اختار المستخدم ترتيب يدوي)
+        if (!string.IsNullOrEmpty(sortBy))
+        {
+            itemsList = sortBy switch
+            {
+                "price_low_high" => itemsList.OrderBy(i => i.Price).ToList(),
+                "price_high_low" => itemsList.OrderByDescending(i => i.Price).ToList(),
+                "name_asc" => itemsList.OrderBy(i => i.Name).ToList(),
+                "name_desc" => itemsList.OrderByDescending(i => i.Name).ToList(),
+                _ => itemsList
+            };
+        }
+
+        var model = new ShopCatalogVM
+        {
+            CategoryId = id,
+            Items = itemsList,
+            Categories = categoriesList,
+            SortBy = sortBy,
+            MinPrice = minPrice,
+            MaxPrice = maxPrice
+        };
+
+        return View("CategoryCatalog", model);
     }
 
     public IActionResult Privacy() => View();
