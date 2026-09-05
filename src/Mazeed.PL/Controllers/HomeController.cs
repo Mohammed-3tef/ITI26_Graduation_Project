@@ -1,9 +1,11 @@
-﻿using System.Security.Claims;
-using Mazeed.BLL.Services.Abstraction;
+﻿using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.Services.Implementation;
 using Mazeed.BLL.ViewModels;
+using Mazeed.BLL.ViewModels.Search;
 using Mazeed.DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
+﻿using System.Security.Claims;
 
 namespace Mazeed.PL.Controllers;
 
@@ -11,18 +13,137 @@ public class HomeController : Controller
 {
     private readonly IEmailService _emailService;
     private readonly IItemService _itemService;
+    private readonly IItemVariantService _itemVariantService;
     private readonly ICategoryService _categoryService;
-    private readonly IRecommendationService _recommendationService;
     private readonly IBrandService _brandService;
+    private readonly IRecommendationService _recommendationService;
 
-    public HomeController(IEmailService emailService, IItemService itemService, ICategoryService categoryService, IRecommendationService recommendationService, IBrandService brandService)
+    public HomeController(IEmailService emailService, IItemService itemService,
+        ICategoryService categoryService, IRecommendationService recommendationService, IBrandService brandService,
+        IItemVariantService itemVariantService)
     {
         _emailService = emailService;
         _itemService = itemService;
         _categoryService = categoryService;
-        _recommendationService = recommendationService;
         _brandService = brandService;
+        _itemVariantService = itemVariantService;
+        _recommendationService = recommendationService;
     }
+
+    // الصفحة الرئيسية
+    // Created by hesham --> Home ---> Index
+    [HttpGet]
+    public async Task<IActionResult> Index_Filter(FilterSortViewModel model)
+    {
+        // 1. Fetch metadata options to populate layout dropdown fields
+        var itemsResponse = await _itemService.GetAllAsync();
+        var categoriesResponse = await _categoryService.GetAllAsync();
+        var brandsResponse = await _brandService.GetAllAsync();
+        var colorsResponse = await _itemVariantService.GetDistinctColors();
+        var sizeResponse = await _itemVariantService.GetDistinctSize();
+
+        var productsList = itemsResponse.Data ?? new List<ItemVM>();
+
+        model.AvailableCategories = categoriesResponse?.Data?.ToList() ?? new List<CategoryVM>();
+        model.AvailableBrands = brandsResponse?.Data?.ToList() ?? new List<BrandVM>();
+        model.AvailableColors = colorsResponse?.Data?.ToList() ?? new List<ColorItem>();
+        model.AvailableSizes = sizeResponse?.Data?.ToList() ?? new List<string>();
+
+        long? userId = null;
+        if (User?.Identity != null && User.Identity.IsAuthenticated)
+        {
+            var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (long.TryParse(userIdStr, out long parsedId)) userId = parsedId;
+        }
+
+        // Fallback range handles initialization
+        model.MinPrice ??= 0;
+        model.MaxPrice ??= 100000000;
+
+        var filteredQuery = productsList.AsQueryable();
+
+        // 2. Apply Text Navbar Search Filter (Item Name, Brand, Categories)
+        if (!string.IsNullOrWhiteSpace(model.SearchQuery))
+        {
+            filteredQuery = filteredQuery.Where(i =>
+                (i.Name != null && i.Name.Contains(model.SearchQuery, StringComparison.OrdinalIgnoreCase)) ||
+                (i.BrandName != null && i.BrandName.Contains(model.SearchQuery, StringComparison.OrdinalIgnoreCase)) ||
+                (i.CategoryNames != null && i.CategoryNames.Any(c => c.Contains(model.SearchQuery, StringComparison.OrdinalIgnoreCase)))
+            );
+        }
+
+        // 3. Multi-Select Category Filters
+        if (model.SelectedCategoryIds != null && model.SelectedCategoryIds.Any())
+        {
+            var itemsList = filteredQuery.Where(p => p.CategoryIds != null && p.CategoryIds.Any(id => model.SelectedCategoryIds.Contains(id)));
+
+            if (string.IsNullOrEmpty(model.SelectedSort))
+            {
+                filteredQuery = _recommendationService.GetHomeRecommendations(userId ,itemsList.ToList()).AsQueryable();
+            }
+            else
+            {
+                filteredQuery = itemsList;
+            }
+        }
+
+        // 4. Multi-Select Brand Filters
+        if (model.SelectedBrandIds != null && model.SelectedBrandIds.Any())
+        {
+            // Force the evaluation in memory cleanly
+            filteredQuery = filteredQuery.Where(p => model.SelectedBrandIds.Contains(p.BrandId));
+        }
+
+
+        // 5. Variant Size Filters
+        if (model.SelectedSizes != null && model.SelectedSizes.Any())
+        {
+            filteredQuery = filteredQuery.Where(p => p.Variants != null && p.Variants.Any(v => model.SelectedSizes.Contains(v.Size)));
+        }
+
+        // 6. Variant Color Filters
+        if (model.SelectedColors != null && model.SelectedColors.Any())
+        {
+            filteredQuery = filteredQuery.Where(p => p.Variants != null && p.Variants.Any(v => model.SelectedColors.Contains(v.Color)));
+        }
+
+        // 7. Double Pricing Filter Track constraints
+        filteredQuery = filteredQuery.Where(p => p.Price >= model.MinPrice.Value && p.Price <= model.MaxPrice.Value);
+
+        // 8. Sorting Rule evaluation
+        filteredQuery = model.SelectedSort switch
+        {
+            "lowToHigh" => filteredQuery.OrderBy(p => p.Price),
+            "highToLow" => filteredQuery.OrderByDescending(p => p.Price),
+            _ => filteredQuery.OrderByDescending(p => p.Id) // Recommended Order
+        };
+
+        // 9. Assign calculation results back to view payload data context
+        model.Items = filteredQuery.ToList();
+        model.TotalCount = model.Items.Count; // Calculates numerical indicator for action apply button
+
+        return View(model);
+    }
+
+
+    // أكشن موحد لعرض أي كاتيجوري يتم الضغط عليه من الـ Navbar 
+    // Commented By Hesham (gives Error)
+    //[HttpGet]
+    //public IActionResult Category(long? id, string? sortBy, decimal? minPrice, decimal? maxPrice)
+    //{
+    //    var itemsResponse = _itemService.GetAllAsync().Result;
+    //    var categoriesResponse = _categoryService.GetAllAsync().Result;
+
+    //    var itemsList = itemsResponse?.Data ?? new List<ItemVM>();
+    //    var categoriesList = categoriesResponse?.Data ?? new List<CategoryVM>();
+
+    //    // 1. الفلترة حسب الكاتيجوري
+    //    if (id.HasValue && id > 0)
+    //    {
+    //        itemsList = itemsList.Where(item => item.CategoryIds != null && item.CategoryIds.Contains(id.Value)).ToList();
+    //    _recommendationService = recommendationService;
+    //    _brandService = brandService;
+    //}
 
     // 1. Index Action
     public async Task<IActionResult> Index(long? categoryId, long? brandId, string? sortBy, decimal? minPrice, decimal? maxPrice, string? searchQuery)
