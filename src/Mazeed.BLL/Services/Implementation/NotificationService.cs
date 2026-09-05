@@ -4,6 +4,7 @@ using Mazeed.BLL.Services.Abstraction;
 using Mazeed.BLL.ViewModels;
 using Mazeed.DAL.Entities;
 using Mazeed.DAL.Repos.Abstraction;
+using Microsoft.AspNetCore.Identity;
 
 namespace Mazeed.BLL.Services.Implementation
 {
@@ -14,12 +15,18 @@ namespace Mazeed.BLL.Services.Implementation
         private readonly IUnitOfWork _unitOfWork;
         private readonly INotificationRepository _notificationRepository;
         private readonly INotificationPusher _pusher;
+        private readonly UserManager<User> _userManager;
 
-        public NotificationService(IUnitOfWork unitOfWork, INotificationRepository notificationRepository, INotificationPusher pusher)
+        public NotificationService(
+            IUnitOfWork unitOfWork,
+            INotificationRepository notificationRepository,
+            INotificationPusher pusher,
+            UserManager<User> userManager)
         {
             _unitOfWork = unitOfWork;
             _notificationRepository = notificationRepository;
             _pusher = pusher;
+            _userManager = userManager;
         }
 
         public async Task<ServiceResponse<IEnumerable<NotificationVM>>> GetUserNotificationsAsync(long userId, bool unreadOnly = false)
@@ -105,6 +112,17 @@ namespace Mazeed.BLL.Services.Implementation
 
             if (!userIds.Any())
                 return ServiceResponse<NotificationVM>.FailureResponse("No active users to notify.");
+
+            return await BroadcastAsync(userIds, title, msg, type, createdBy);
+        }
+
+        public async Task<ServiceResponse<NotificationVM>> BroadcastToRoleAsync(string role, string title, string msg, string type, string createdBy)
+        {
+            var usersInRole = await _userManager.GetUsersInRoleAsync(role);
+            var userIds = usersInRole.Where(u => !u.IsDeleted).Select(u => u.Id).ToList();
+
+            if (!userIds.Any())
+                return ServiceResponse<NotificationVM>.FailureResponse($"No active users found in role '{role}'.");
 
             return await BroadcastAsync(userIds, title, msg, type, createdBy);
         }

@@ -11,11 +11,13 @@ namespace Mazeed.BLL.Services.Implementation
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICartRepository _cartRepository;
+        private readonly INotificationService _notificationService;
 
-        public CartService(IUnitOfWork unitOfWork, ICartRepository cartRepository)
+        public CartService(IUnitOfWork unitOfWork, ICartRepository cartRepository, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _cartRepository = cartRepository;
+            _notificationService = notificationService;
         }
 
         public async Task<ServiceResponse<CartVM>> GetCartAsync(long userId)
@@ -144,6 +146,9 @@ namespace Mazeed.BLL.Services.Implementation
                 }
             };
 
+            // Track which variants dip to/below their low-stock threshold, to notify admins after the save succeeds.
+            var lowStockAlerts = new List<ItemVariant>();
+
             foreach (var cartItem in cartItems)
             {
                 var unitPrice = cartItem.ItemVariant.Item.Price + cartItem.ItemVariant.PriceAdjustment;
@@ -154,12 +159,27 @@ namespace Mazeed.BLL.Services.Implementation
                     Quantity = cartItem.Quantity,
                     PricePerItem = unitPrice
                 });
+
                 cartItem.ItemVariant.StockQuantity -= cartItem.Quantity;
+
+                if (cartItem.ItemVariant.StockQuantity <= cartItem.ItemVariant.LowStockThreshold)
+                    lowStockAlerts.Add(cartItem.ItemVariant);
             }
 
             await _unitOfWork.Repository<Order>().AddAsync(order);
             _cartRepository.DeleteRange(cartItems);
             await _unitOfWork.CompleteAsync();
+
+            foreach (var variant in lowStockAlerts)
+            {
+                var stockWord = variant.StockQuantity <= 0 ? "out of stock" : $"low on stock ({variant.StockQuantity} left)";
+                await _notificationService.BroadcastToRoleAsync(
+                        "Admin",
+                        "Low Stock Alert",
+                        $"{variant.Item.Name} ({variant.SKU}) is {stockWord}.",
+                        "Alert",
+                        "System");
+            }
 
             return ServiceResponse<long>.SuccessResponse(order.Id, "Order created. Continue to Paymob to complete payment.");
         }
@@ -180,6 +200,15 @@ namespace Mazeed.BLL.Services.Implementation
             _unitOfWork.Repository<Payment>().Update(payment);
             _unitOfWork.Repository<Order>().Update(order);
             await _unitOfWork.CompleteAsync();
+
+            await _notificationService.SendToUserAsync(
+                order.UserId,
+                succeeded ? "Payment successful!" : "Payment failed",
+                succeeded
+                    ? $"Your order #{order.Id} for {order.TotalPrice:F2} EGP has been paid and is now being processed."
+                    : $"Payment for order #{order.Id} was not approved. No charge was made.",
+                "OrderStatus",
+                "System");
 
             return ServiceResponse<bool>.SuccessResponse(true);
         }
