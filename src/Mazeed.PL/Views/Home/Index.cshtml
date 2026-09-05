@@ -68,6 +68,7 @@
         font-weight: 600;
         border: 1px solid #e5e7eb;
         background-color: #ffffff;
+        color: #111827;
         text-decoration: none;
         transition: all 0.2s ease;
         flex-shrink: 0;
@@ -412,15 +413,12 @@
         </div>
     </div>
 
-    <!-- Dynamic Product Grid -->
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4" id="productGrid">
     <!-- Dynamic Product Grid (Fixed to 4 items per row on desktop) -->
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4" id="productGrid">
         @if (Model?.Items != null && Model.Items.Any())
         {
             @foreach (var item in Model.Items)
             {
-                <div class="col-12 col-sm-6 col-lg-4 product-item" id="product-card-@item.Id">
                 <div class="col product-item" id="product-card-@item.Id">
                     <div class="product-card">
                         <div class="product-img-wrapper">
@@ -493,6 +491,7 @@
         </div>
 
         <form id="filterForm" asp-controller="Home" asp-action="Index" method="get" class="d-flex flex-column h-100">
+        <form asp-controller="Home" asp-action="Index" method="get" class="d-flex flex-column h-100">
             <input type="hidden" name="searchQuery" value="@Model.SearchQuery" />
 
             <div class="offcanvas-body" style="overflow-y: auto;">
@@ -662,8 +661,8 @@
 
     <!-- Pagination Controls -->
     @if (Model?.Items != null && Model.Items.Count() > 9)
+    @if (Model?.Items != null && Model.Items.Any())
     {
-        <div class="pagination-dots-container" id="paginationContainer">
         <div class="pagination-dots-container mt-4 mb-3 d-flex justify-content-center align-items-center gap-2" id="paginationContainer">
             <button class="page-nav-btn" id="prevBtn" onclick="changePage(-1)" title="Previous">&#10094;</button>
             <div id="dotsWrapper" class="d-flex align-items-center gap-2"></div>
