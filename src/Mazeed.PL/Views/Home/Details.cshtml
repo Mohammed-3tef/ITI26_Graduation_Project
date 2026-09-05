@@ -441,6 +441,10 @@
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="text-uppercase fw-bold text-danger small tracking-wider">
                     @(Model.Product.CategoryNames?.FirstOrDefault() ?? "General")
+                    @if (!string.IsNullOrEmpty(Model.Product.BrandName))
+                    {
+                        <span> &gt; @Model.Product.BrandName</span>
+                    }
                 </span>
                 <span class="small fw-bold text-dark" id="ratingSummaryDisplay">
                     &#9733; <span id="avgRatingVal">0.0</span>

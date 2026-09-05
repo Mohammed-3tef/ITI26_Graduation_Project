@@ -68,7 +68,6 @@
         font-weight: 600;
         border: 1px solid #e5e7eb;
         background-color: #ffffff;
-        color: #4b5563;
         text-decoration: none;
         transition: all 0.2s ease;
         flex-shrink: 0;
@@ -79,6 +78,17 @@
         color: #ffffff;
         border-color: #111827;
     }
+        .btn-filter.active {
+            background-color: #111827;
+            color: #ffffff;
+            border-color: #111827;
+        }
+
+        .btn-filter:hover {
+            background-color: #111827;
+            color: #ffffff;
+            border-color: #111827;
+        }
 
     .product-card {
         border: 1px solid #f0f0f0;
@@ -394,6 +404,8 @@
                 }
             </div>
 
+=======
+            <!-- Filter Button -->
             <button class="btn-filter border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas" style="cursor: pointer;">
                 Filter <i class="fa-solid fa-sliders ms-1"></i>
             </button>
@@ -402,11 +414,14 @@
 
     <!-- Dynamic Product Grid -->
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4" id="productGrid">
+    <!-- Dynamic Product Grid (Fixed to 4 items per row on desktop) -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4" id="productGrid">
         @if (Model?.Items != null && Model.Items.Any())
         {
             @foreach (var item in Model.Items)
             {
                 <div class="col-12 col-sm-6 col-lg-4 product-item" id="product-card-@item.Id">
+                <div class="col product-item" id="product-card-@item.Id">
                     <div class="product-card">
                         <div class="product-img-wrapper">
                             @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
@@ -649,10 +664,9 @@
     @if (Model?.Items != null && Model.Items.Count() > 9)
     {
         <div class="pagination-dots-container" id="paginationContainer">
+        <div class="pagination-dots-container mt-4 mb-3 d-flex justify-content-center align-items-center gap-2" id="paginationContainer">
             <button class="page-nav-btn" id="prevBtn" onclick="changePage(-1)" title="Previous">&#10094;</button>
-            <button class="page-dot-btn active" onclick="goToPage(0)">&bull;</button>
-            <button class="page-dot-btn" onclick="goToPage(1)">&bull;</button>
-            <button class="page-dot-btn" onclick="goToPage(2)">&bull;</button>
+            <div id="dotsWrapper" class="d-flex align-items-center gap-2"></div>
             <button class="page-nav-btn" id="nextBtn" onclick="changePage(1)" title="Next">&#10095;</button>
         </div>
     }
@@ -673,6 +687,14 @@
     <script>
         const itemsPerPage = 9;
         let currentPage = 0;
+<script>
+    const itemsPerPage = 12; // تم التعديل لعرض 12 كارت في الصفحة
+    let currentPage = 0;
+
+    function renderPagination() {
+        const items = document.querySelectorAll('.product-item');
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+        const dotsWrapper = document.getElementById('dotsWrapper');
 
         function renderPagination() {
             const items = document.querySelectorAll('.product-item');
@@ -683,6 +705,53 @@
                     item.style.display = 'block';
                 } else {
                     item.style.display = 'none';
+        if (dotsWrapper) {
+            dotsWrapper.innerHTML = '';
+            for (let i = 0; i < totalPages; i++) {
+                const dot = document.createElement('button');
+                dot.className = `page-dot-btn ${i === currentPage ? 'active' : ''}`;
+                dot.innerHTML = '&bull;';
+                dot.onclick = () => goToPage(i);
+                dotsWrapper.appendChild(dot);
+            }
+        }
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) prevBtn.disabled = currentPage === 0;
+        if (nextBtn) nextBtn.disabled = currentPage >= totalPages - 1 || totalPages === 0;
+    }
+
+    function goToPage(pageIndex) {
+        currentPage = pageIndex;
+        renderPagination();
+    }
+
+    function changePage(direction) {
+        currentPage += direction;
+        renderPagination();
+    }
+
+    function redirectToLogin() {
+        const returnUrl = window.location.pathname + window.location.search;
+        if (typeof toastr !== 'undefined') toastr.info('Please sign in to continue.');
+        setTimeout(function () {
+            window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
+        }, 900);
+    }
+
+    function toggleWishlist(btn) {
+        const itemId = btn.dataset.itemId;
+        const isActive = btn.classList.contains('active');
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const headers = { 'Accept': 'application/json' };
+        if (token) headers['RequestVerificationToken'] = token;
+
+        fetch(`/api/wishlist/${itemId}`, { method: isActive ? 'DELETE' : 'POST', headers })
+            .then(res => {
+                if (res.status === 401) {
+                    redirectToLogin();
+                    throw new Error('unauthenticated');
                 }
             });
 

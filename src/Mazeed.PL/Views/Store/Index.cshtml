@@ -7,6 +7,220 @@
             <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
                 <h5 class="m-0 fw-bold">Filter and Sort</h5>
                 <button type="button" class="btn-close" aria-label="Close"></button>
+@{
+    ViewData["Title"] = "Store Catalog";
+}
+
+<style>
+    .store-product-card {
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .store-product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .store-product-img {
+        position: relative;
+        height: 210px;
+        background-color: #f4f4f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .store-product-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .store-sale-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 2;
+        padding: 3px 8px;
+        border-radius: 4px;
+        background-color: #ff4d4f;
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    .store-product-body {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: space-between;
+        padding: 16px;
+    }
+
+    .store-category-tag {
+        color: #9ca3af;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    .store-rating {
+        color: #111827;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .store-product-title {
+        overflow: hidden;
+        margin: 4px 0 8px;
+        color: #111827;
+        font-size: 14px;
+        font-weight: 700;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .store-current-price {
+        color: #ff4d4f;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .store-current-price.dark {
+        color: #111827;
+    }
+
+    .store-original-price {
+        margin-left: 4px;
+        color: #9ca3af;
+        font-size: 11px;
+        text-decoration: line-through;
+    }
+
+    .store-wishlist-btn {
+        border: 0;
+        background: transparent;
+        color: #9ca3af;
+        cursor: pointer;
+        font-size: 22px;
+        line-height: 1;
+        padding: 0;
+    }
+
+    .store-wishlist-btn.active,
+    .store-wishlist-btn:hover {
+        color: #ff4d4f;
+    }
+
+    .store-details-btn {
+        display: block;
+        width: 100%;
+        border-radius: 6px;
+        background-color: #111827;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 8px 0;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .store-details-btn:hover {
+        background-color: #1f2937;
+        color: #ffffff;
+    }
+</style>
+
+<div class="container my-4">
+    <!-- Search Query Banner & Filter Trigger -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            @if (!string.IsNullOrEmpty(Model.SearchQuery))
+            {
+                <span class="text-muted small">Your search Results for:</span>
+                <h1 class="fw-bold text-uppercase m-0">"@Model.SearchQuery" <span class="fs-6 text-muted">(@Model.TotalCount)</span></h1>
+            }
+            else
+            {
+                <h1 class="fw-bold text-uppercase m-0">ALL PRODUCTS <span class="fs-6 text-muted">(@Model.TotalCount)</span></h1>
+            }
+        </div>
+
+        <!-- Filter & Sort Trigger Button -->
+        <button class="btn store-filter-button px-4 py-2 fw-semibold" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
+            Filter & Sort <i class="fa-solid fa-sliders ms-2"></i>
+        </button>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4">
+        @if (Model.Items.Any())
+        {
+            @foreach (var item in Model.Items)
+            {
+                <div class="col product-item">
+                    <div class="store-product-card">
+                        <div class="store-product-img">
+                            @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                            {
+                                <span class="store-sale-badge">SALE</span>
+                            }
+                            @if (item.Photos != null && item.Photos.Any())
+                            {
+                                <img src="@item.Photos.First()" alt="@item.Name" />
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-box-open fa-3x text-secondary"></i>
+                            }
+                        </div>
+                        <div class="store-product-body">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="store-category-tag">@string.Join(", ", item.CategoryNames ?? new List<string>())</span>
+                                    <span class="store-rating rating-value" data-item-id="@item.Id">&#9734; —</span>
+                                </div>
+                                <div class="store-product-title" title="@item.Name">@item.Name</div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <span class="store-current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
+                                            @item.Price.ToString("N0") EGP
+                                        </span>
+                                        @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                                        {
+                                            <span class="store-original-price">@item.OldPrice.Value.ToString("N0") EGP</span>
+                                        }
+                                    </div>
+                                    <button class="store-wishlist-btn fav-toggle-btn" type="button" title="Add to Wishlist" aria-label="Wishlist" data-item-id="@item.Id">
+                                        <i class="fa-regular fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="store-details-btn">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <i class="fa-solid fa-magnifying-glass fa-3x text-muted mb-3"></i>
+                <h5>No items found matching your filter criteria.</h5>
+                <a asp-action="Index" class="btn btn-dark mt-2">Clear Filters</a>
             </div>
 
              <form id="filterForm" method="get" action="@Url.Action("Index", "Store")">

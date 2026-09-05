@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <partial name="_MetaDataPartial" />
     <title>@ViewData["Title"] - Mazeed</title>
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem("mazeed-theme") === "dark") document.documentElement.dataset.theme = "dark";
+            } catch { }
+        })();
+    </script>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />

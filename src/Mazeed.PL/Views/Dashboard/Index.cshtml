@@ -37,11 +37,16 @@
         border: 1px solid #eef2f6;
         height: 100%;
     }
+
+    html[data-theme="dark"] .dashboard-page-card {
+        background: var(--theme-surface) !important;
+        border-color: var(--theme-border) !important;
+    }
 </style>
 
 <div class="container-fluid py-4">
     <!-- 3 Slicers / Controls -->
-    <div class="card p-3 mb-4 border-0 shadow-sm rounded-4">
+    <div class="card dashboard-page-card p-3 mb-4 border-0 shadow-sm rounded-4">
         <div class="row g-3 align-items-end">
             <div class="col-md-3">
                 <label class="form-label fw-bold fs-7">Start Date</label>
@@ -105,31 +110,31 @@
     <!-- 5 Charts Grid -->
     <div class="row g-3 mb-4">
         <div class="col-12 col-lg-8">
-            <div class="chart-card">
+            <div class="chart-card dashboard-page-card">
                 <h6 class="fw-bold mb-3">Total Sales Trend</h6>
                 <canvas id="salesTrendChart" height="120"></canvas>
             </div>
         </div>
         <div class="col-12 col-md-6 col-lg-4">
-            <div class="chart-card">
+            <div class="chart-card dashboard-page-card">
                 <h6 class="fw-bold mb-3">Sales % by Category</h6>
                 <canvas id="categoryChart"></canvas>
             </div>
         </div>
         <div class="col-12 col-md-6 col-lg-4">
-            <div class="chart-card">
+            <div class="chart-card dashboard-page-card">
                 <h6 class="fw-bold mb-3">Payment Methods</h6>
                 <canvas id="paymentChart"></canvas>
             </div>
         </div>
         <div class="col-12 col-md-6 col-lg-4">
-            <div class="chart-card">
+            <div class="chart-card dashboard-page-card">
                 <h6 class="fw-bold mb-3">Top 8 Selling Items</h6>
                 <canvas id="topItemsChart"></canvas>
             </div>
         </div>
         <div class="col-12 col-md-6 col-lg-4">
-            <div class="chart-card">
+            <div class="chart-card dashboard-page-card">
                 <h6 class="fw-bold mb-3">Sales % by Order Status</h6>
                 <canvas id="statusChart"></canvas>
             </div>
@@ -142,6 +147,10 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         loadDashboardData();
+    });
+
+    document.addEventListener("mazeed-theme-changed", function () {
+        if (Object.keys(charts).length > 0) loadDashboardData();
     });
 
     function loadDashboardData() {
@@ -181,6 +190,7 @@
     function renderChart(canvasId, type, labels, data, label, bgColors) {
         if (charts[canvasId]) charts[canvasId].destroy();
         const ctx = document.getElementById(canvasId).getContext('2d');
+        const isDark = document.documentElement.dataset.theme === 'dark';
         charts[canvasId] = new Chart(ctx, {
             type: type,
             data: {
@@ -194,7 +204,16 @@
                     fill: false
                 }]
             },
-            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            options: {
+                responsive: true,
+                scales: type === 'line' || type === 'bar' ? {
+                    x: { ticks: { color: isDark ? '#aab5c1' : '#6b7280' }, grid: { color: isDark ? '#354250' : '#e5e7eb' } },
+                    y: { ticks: { color: isDark ? '#aab5c1' : '#6b7280' }, grid: { color: isDark ? '#354250' : '#e5e7eb' } }
+                } : undefined,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: isDark ? '#aab5c1' : '#6b7280' } }
+                }
+            }
         });
     }
 </script>
