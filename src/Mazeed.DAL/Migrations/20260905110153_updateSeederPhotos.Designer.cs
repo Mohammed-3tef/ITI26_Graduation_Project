@@ -4,6 +4,7 @@ using Mazeed.DAL.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mazeed.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260905110153_updateSeederPhotos")]
+    partial class updateSeederPhotos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -5096,102 +5099,102 @@ namespace Mazeed.DAL.Migrations
                         new
                         {
                             ItemId = 38L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 39L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 40L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 41L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 42L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 43L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 44L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 45L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 46L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 47L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 48L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 49L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 50L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 51L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 52L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 53L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 54L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 55L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 56L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
                             ItemId = 57L,
-                            CategoryId = 2L
+                            CategoryId = 3L
                         },
                         new
                         {
@@ -11982,7 +11985,7 @@ namespace Mazeed.DAL.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "e9e4f2b1-6c23-5322-a3bc-987654321def",
-                            CreatedAt = new DateTime(2026, 9, 5, 11, 8, 0, 584, DateTimeKind.Utc).AddTicks(7896),
+                            CreatedAt = new DateTime(2026, 9, 5, 11, 1, 50, 254, DateTimeKind.Utc).AddTicks(8253),
                             CreatedBy = "SystemSeeder",
                             Email = "admin@mazeed.com",
                             EmailConfirmed = true,
@@ -11992,7 +11995,7 @@ namespace Mazeed.DAL.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAZEED.COM",
                             NormalizedUserName = "SYSTEM_ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAENqj21Brpal02IxtcNSBfET38EU/friGWvPIP/EVkcXmUlADv11hXrddXlD8ZqKq0g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECqRn8cFwZgV0azvSHq4/rkncVuQfUJWsbYcddlK3QaCfSQKD3393ivdgPSdNz6E3A==",
                             PhoneNumber = "01234567890",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "d8d3f1a0-5b12-4211-92ab-123456789abc",

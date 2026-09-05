@@ -279,12 +279,12 @@ namespace Mazeed.DAL.Seeders
                     // Apple → Sharp
                     categoryId = 1; // Electronics
                 }
-                else if (item.Id >= 30 && item.Id <= 37)
+                else if (item.Id >= 30 && item.Id <= 57)
                 {
                     // Zara → H&M
                     categoryId = 2; // Fashion
                 }
-                else if (item.Id >= 38 && item.Id <= 85)
+                else if (item.Id >= 58 && item.Id <= 85)
                 {
                     // Nike → Asics
                     categoryId = 3; // Sports
