@@ -89,15 +89,20 @@ Application configuration is read from `src/Mazeed.PL/appsettings.json` and the 
 For local development, use user secrets or environment variables. Example user-secret commands:
 
 ```bash
-cd src/Mazeed.PL
-dotnet user-secrets init
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost;Database=Mazeed;Trusted_Connection=True;TrustServerCertificate=True"
-dotnet user-secrets set "Authentication:Google:ClientId" "your-client-id"
-dotnet user-secrets set "Authentication:Google:ClientSecret" "your-client-secret"
-dotnet user-secrets set "Paymob:ApiKey" "your-paymob-api-key"
+dotnet user-secrets set --project src/Mazeed.PL/Mazeed.PL.csproj "ConnectionStrings:DefaultConnection" "your-connection-string"
+dotnet user-secrets set --project src/Mazeed.PL/Mazeed.PL.csproj "EmailSettings:SenderEmail" "your-sender-email"
+dotnet user-secrets set --project src/Mazeed.PL/Mazeed.PL.csproj "EmailSettings:Username" "your-smtp-username"
+dotnet user-secrets set --project src/Mazeed.PL/Mazeed.PL.csproj "EmailSettings:Password" "your-smtp-password"
+dotnet user-secrets set --project src/Mazeed.PL/Mazeed.PL.csproj "EmailSettings:AdminEmail" "your-admin-email"
+dotnet user-secrets set --project src/Mazeed.PL/Mazeed.PL.csproj "Authentication:Google:ClientId" "your-google-client-id"
+dotnet user-secrets set --project src/Mazeed.PL/Mazeed.PL.csproj "Authentication:Google:ClientSecret" "your-google-client-secret"
+dotnet user-secrets set --project src/Mazeed.PL/Mazeed.PL.csproj "Paymob:ApiKey" "your-paymob-api-key"
+dotnet user-secrets set --project src/Mazeed.PL/Mazeed.PL.csproj "Paymob:IntegrationId" "your-paymob-integration-id"
+dotnet user-secrets set --project src/Mazeed.PL/Mazeed.PL.csproj "Paymob:IframeId" "your-paymob-iframe-id"
+dotnet user-secrets set --project src/Mazeed.PL/Mazeed.PL.csproj "Paymob:HmacSecret" "your-paymob-hmac-secret"
 ```
 
-Configure the remaining `EmailSettings` and `Paymob` values through the same mechanism or through your deployment platform's secret store. Review the configuration files before sharing or deploying this repository, and rotate any credentials that may already have been exposed.
+These commands should be run from the repository root. The project already has a `UserSecretsId`, so `dotnet user-secrets init` is not required. Non-sensitive defaults such as the SMTP host, SMTP port, SSL setting, sender name, and Paymob base URL remain in `src/Mazeed.PL/appsettings.json`. Review the configuration files before sharing or deploying this repository, and rotate any credentials that may already have been exposed.
 
 ## Database Migrations
 
