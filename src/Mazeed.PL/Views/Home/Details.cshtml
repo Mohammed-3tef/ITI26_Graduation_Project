@@ -653,11 +653,8 @@
 
                                 <!-- Matching Buttons Style from Home -->
                                 <div class="row g-2">
-                                    <div class="col-6">
+                                    <div class="col-12">
                                         <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="btn-action-dark text-center d-block text-decoration-none">Details</a>
-                                    </div>
-                                    <div class="col-6">
-                                        <button type="button" class="btn-action-light w-100" onclick="removeRelatedProduct(@item.Id)">Cancel</button>
                                     </div>
                                 </div>
                             </div>

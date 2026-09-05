@@ -320,6 +320,9 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult Help() => View();
 
+    [HttpGet]
+    public IActionResult Terms() => View();
+
     [HttpPost, ValidateAntiForgeryToken]
     public IActionResult Contact(ContactVM model)
     {

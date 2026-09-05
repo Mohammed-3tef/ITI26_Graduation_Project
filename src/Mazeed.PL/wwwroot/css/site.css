@@ -1,16 +1,8 @@
 ﻿html {
- 
-
     font-size: 14px;
     position: relative;
     min-height: 100%;
 }
-
-/*@media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
-}*/
 
 /* Focus States */
 .btn:focus,
@@ -56,34 +48,32 @@ header .navbar-nav .nav-link:not(.dropdown-toggle) {
     padding-bottom: 6px !important;
 }
 
-    /* Hover Effect: Red Color (#EF4444) */
-    header .navbar-nav .nav-link:not(.dropdown-toggle):hover {
-        color: #EF4444 !important;
-    }
+/* Hover Effect: Red Color (#EF4444) */
+header .navbar-nav .nav-link:not(.dropdown-toggle):hover {
+    color: #EF4444 !important;
+}
 
-    /* Underline Setup */
-    header .navbar-nav .nav-link:not(.dropdown-toggle)::after {
-        content: '';
-        position: absolute;
-        width: 0%;
-        height: 2px;
-        bottom: 0;
-        left: 0;
-        background-color: #EF4444;
-        transition: width 0.3s ease-in-out;
-    }
+/* Underline Setup */
+/* header .navbar-nav .nav-link:not(.dropdown-toggle)::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #EF4444;
+    transition: width 0.3s ease-in-out;
+} */
 
+/* Active / Clicked State: Keeps Red Color & Underline */
+header .navbar-nav .nav-link:not(.dropdown-toggle).active {
+    color: #EF4444 !important;
+    font-weight: 600;
+}
 
-
-    /* Active / Clicked State: Keeps Red Color & Underline */
-    header .navbar-nav .nav-link:not(.dropdown-toggle).active {
-        color: #EF4444 !important;
-        font-weight: 600;
-    }
-
-        header .navbar-nav .nav-link:not(.dropdown-toggle).active::after {
-            width: 100%;
-        }
+header .navbar-nav .nav-link:not(.dropdown-toggle).active::after {
+    width: 100%;
+}
 
 /*------------- FOOTER ----------------*/
 
@@ -194,11 +184,11 @@ footer .muted {
     transition: all 0.2s ease-in-out;
 }
 
-    .btn-mazeed-primary:hover {
-        background-color: #dc2626;
-        border-color: #dc2626;
-        color: #ffffff;
-    }
+.btn-mazeed-primary:hover {
+    background-color: #dc2626;
+    border-color: #dc2626;
+    color: #ffffff;
+}
 
 .btn-mazeed-secondary {
     background-color: #f8fafc;
@@ -209,10 +199,10 @@ footer .muted {
     border-radius: 0.5rem;
 }
 
-    .btn-mazeed-secondary:hover {
-        background-color: #f1f5f9;
-        color: #0f172a;
-    }
+.btn-mazeed-secondary:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+}
 
 /* Feature Card Image Container */
 .featured-card-img {
@@ -344,9 +334,9 @@ footer .muted {
         box-shadow: none !important;
     }
 
-        .search-container .search-btn:hover {
-            color: #EF4444;
-        }
+    .search-container .search-btn:hover {
+        color: #EF4444;
+    }
 
     /* قائمة الاقتراحات المنسدلة */
     ul.search-suggestions-list {
@@ -380,28 +370,28 @@ footer .muted {
             transition: background-color 0.15s ease, color 0.15s ease;
         }
 
-            ul.search-suggestions-list li.search-suggestion-item i {
-                color: #9CA3AF;
-                font-size: 13px;
-                flex-shrink: 0;
-            }
+        ul.search-suggestions-list li.search-suggestion-item i {
+            color: #9CA3AF;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
 
-            ul.search-suggestions-list li.search-suggestion-item strong {
-                font-weight: 700;
-                color: #111827;
-            }
+        ul.search-suggestions-list li.search-suggestion-item strong {
+            font-weight: 700;
+            color: #111827;
+        }
 
-            /* تأثير الـ Hover على العنصر */
-            ul.search-suggestions-list li.search-suggestion-item:hover {
-                background-color: #EF4444 !important;
-                color: #FFFFFF !important;
-            }
+        /* تأثير الـ Hover على العنصر */
+        ul.search-suggestions-list li.search-suggestion-item:hover {
+            background-color: #EF4444 !important;
+            color: #FFFFFF !important;
+        }
 
-                ul.search-suggestions-list li.search-suggestion-item:hover i,
-                ul.search-suggestions-list li.search-suggestion-item:hover span,
-                ul.search-suggestions-list li.search-suggestion-item:hover strong {
-                    color: #FFFFFF !important;
-                }
+        ul.search-suggestions-list li.search-suggestion-item:hover i,
+        ul.search-suggestions-list li.search-suggestion-item:hover span,
+        ul.search-suggestions-list li.search-suggestion-item:hover strong {
+            color: #FFFFFF !important;
+        }
 
     /* ==========================================
    Media Queries (Responsive)
@@ -896,6 +886,71 @@ html[data-theme="dark"] .mazeed-left-panel .step-circle.completed {
     color: #ffffff !important;
 }
 
+html[data-theme="dark"] .help-wrapper,
+html[data-theme="dark"] .privacy-wrapper,
+html[data-theme="dark"] .about-wrapper {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .help-wrapper .section-title,
+html[data-theme="dark"] .help-wrapper .topic-card h3,
+html[data-theme="dark"] .help-wrapper .faq-question,
+html[data-theme="dark"] .help-wrapper .contact-card h3,
+html[data-theme="dark"] .privacy-wrapper h1,
+html[data-theme="dark"] .privacy-wrapper h2,
+html[data-theme="dark"] .privacy-wrapper .policy-section p,
+html[data-theme="dark"] .privacy-wrapper .policy-list li,
+html[data-theme="dark"] .privacy-wrapper .policy-list li strong,
+html[data-theme="dark"] .privacy-wrapper .contact-item,
+html[data-theme="dark"] .privacy-wrapper .contact-item strong,
+html[data-theme="dark"] .about-wrapper h1,
+html[data-theme="dark"] .about-wrapper h2,
+html[data-theme="dark"] .about-wrapper .about-section p,
+html[data-theme="dark"] .about-wrapper .about-intro,
+html[data-theme="dark"] .about-wrapper .value-card h3,
+html[data-theme="dark"] .about-wrapper .value-card p {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .help-wrapper .topic-card,
+html[data-theme="dark"] .help-wrapper .faq-item,
+html[data-theme="dark"] .privacy-wrapper .contact-card,
+html[data-theme="dark"] .about-wrapper .value-card {
+    background: var(--theme-surface) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .help-wrapper .contact-card,
+html[data-theme="dark"] .privacy-wrapper .policy-intro,
+html[data-theme="dark"] .about-wrapper .about-intro {
+    background: var(--theme-surface-muted) !important;
+    border-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .help-wrapper .topic-icon {
+    background-color: #3a2025 !important;
+    color: #f87171 !important;
+}
+
+html[data-theme="dark"] .privacy-wrapper .policy-intro,
+html[data-theme="dark"] .privacy-wrapper .policy-intro strong {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .help-wrapper .topic-card p,
+html[data-theme="dark"] .help-wrapper .faq-answer,
+html[data-theme="dark"] .help-wrapper .contact-card p,
+html[data-theme="dark"] .privacy-wrapper .last-updated,
+html[data-theme="dark"] .about-wrapper .sub-text {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .privacy-wrapper .privacy-header,
+html[data-theme="dark"] .about-wrapper .about-header {
+    border-color: var(--theme-border) !important;
+}
+
 
 /* إصلاح خلفية البروفايل للـ Dark Mode */
 html[data-theme="dark"] .profile-info,
@@ -908,4 +963,3 @@ html[data-theme="dark"] .profile-info .bg-white {
     color: var(--theme-text) !important;
     border-color: var(--theme-border) !important;
 }
-
