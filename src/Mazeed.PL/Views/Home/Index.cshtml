@@ -1,4 +1,4 @@
-﻿@model Mazeed.BLL.ViewModels.Search.FilterSortViewModel
+﻿@model Mazeed.BLL.ViewModels.ShopCatalogVM
 
 @{
     ViewData["Title"] = "Home";
@@ -57,9 +57,9 @@
         scrollbar-width: none;
     }
 
-    .filter-scroll-container::-webkit-scrollbar {
-        display: none;
-    }
+        .filter-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
 
     .btn-filter {
         border-radius: 50px;
@@ -74,11 +74,6 @@
         flex-shrink: 0;
     }
 
-    .btn-filter.active, .btn-filter:hover {
-        background-color: #111827;
-        color: #ffffff;
-        border-color: #111827;
-    }
         .btn-filter.active {
             background-color: #111827;
             color: #ffffff;
@@ -102,10 +97,10 @@
         flex-direction: column;
     }
 
-    .product-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    }
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
 
     .product-img-wrapper {
         position: relative;
@@ -168,9 +163,9 @@
         color: #ff4d4f;
     }
 
-    .current-price.dark {
-        color: #111827;
-    }
+        .current-price.dark {
+            color: #111827;
+        }
 
     .original-price {
         font-size: 12px;
@@ -179,6 +174,7 @@
         margin-left: 4px;
     }
 
+    /* تكبير وتصميم زر الـ Wishlist */
     .wishlist-btn {
         background: none;
         border: none;
@@ -190,13 +186,13 @@
         transition: color 0.2s ease, transform 0.2s ease;
     }
 
-    .wishlist-btn:hover {
-        transform: scale(1.15);
-    }
+        .wishlist-btn:hover {
+            transform: scale(1.15);
+        }
 
-    .wishlist-btn.active {
-        color: #ff4d4f;
-    }
+        .wishlist-btn.active {
+            color: #ff4d4f;
+        }
 
     .btn-action-dark {
         background-color: #111827;
@@ -212,11 +208,31 @@
         display: block;
     }
 
-    .btn-action-dark:hover {
-        background-color: #1f2937;
-        color: #ffffff;
+        .btn-action-dark:hover {
+            background-color: #1f2937;
+            color: #ffffff;
+        }
+
+    .btn-action-light {
+        background-color: #ffffff;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: block;
     }
 
+        .btn-action-light:hover {
+            background-color: #f9fafb;
+            color: #374151;
+        }
+
+    /* تنسيق أزرار التنقل Pagination */
     .pagination-dots-container {
         display: flex;
         align-items: center;
@@ -236,14 +252,15 @@
         transition: color 0.2s ease;
     }
 
-    .page-dot-btn:hover {
-        color: #9ca3af;
-    }
+        .page-dot-btn:hover {
+            color: #9ca3af;
+        }
 
-    .page-dot-btn.active {
-        color: #111827;
-    }
+        .page-dot-btn.active {
+            color: #111827;
+        }
 
+    /* أزرار الأسهم: مربع داكن #111827 وسهم أبيض */
     .page-nav-btn {
         background-color: #111827;
         border: none;
@@ -260,111 +277,10 @@
         transition: background-color 0.2s ease, transform 0.1s ease;
     }
 
-    .page-nav-btn:hover:not(:disabled) {
-        background-color: #1f2937;
-        transform: translateY(-1px);
-    }
-
-    .page-nav-btn:disabled {
-        background-color: #e5e7eb;
-        color: #9ca3af;
-        cursor: not-allowed;
-        transform: none;
-    }
-
-    .style-pointer { 
-        cursor: pointer; 
-        user-select: none; 
-    }
-    
-    .toggle-icon { 
-        font-size: 1.1rem; 
-        font-weight: bold; 
-    }
-</style>
-<style>
-    /* تصفير وإعادة تصميم الـ Accordion بالكامل ليطابق الصورة الأولى */
-.accordion-item {
-    border: none !important;
-    border-bottom: 1px solid #eaeaea !important;
-    background: transparent !important;
-}
-
-.accordion-button {
-    background: transparent !important;
-    color: #222222 !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    padding: 18px 0px !important;
-    box-shadow: none !important;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    border: none;
-    text-transform: capitalize;
-}
-
-/* إخفاء سهم Bootstrap الافتراضي تماماً */
-.accordion-button::after {
-    display: none !important;
-}
-
-/* إضافة علامة الزائد والناقص المخصصة الرفيعة */
-.accordion-button::before {
-    content: "+";
-    order: 2;
-    font-size: 1.25rem;
-    font-weight: 300;
-    color: #666;
-    transition: transform 0.2s ease;
-}
-
-.accordion-button:not(.collapsed)::before {
-    content: "−"; /* علامة الناقص الرفيعة */
-}
-
-.accordion-body {
-    padding: 0px 0px 15px 0px !important;
-}
-
-/* تنسيق خطوط الأسعار والنصوص الفرعية الرمادية */
-.filter-subtitle {
-    font-size: 12px;
-    color: #888888;
-    margin-top: -10px;
-    margin-bottom: 15px;
-    display: block;
-}
-
-/* تحويل شريط السعر إلى اللون الأسود الرفيع تماماً مثل الصورة الأولى */
-.form-range::-webkit-slider-thumb {
-    background: #111111 !important;
-    border: 2px solid #111111 !important;
-    width: 14px;
-    height: 14px;
-}
-.form-range::-moz-range-thumb {
-    background: #111111 !important;
-    border: 2px solid #111111 !important;
-    width: 14px;
-    height: 14px;
-}
-.form-range {
-    height: 2px;
-    background-color: #111111;
-}
-
-/* زر إزالة الفلاتر السفلي */
-.btn-remove-filters {
-    color: #222222 !important;
-    font-size: 13px;
-    text-decoration: underline;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
+        .page-nav-btn:hover:not(:disabled) {
+            background-color: #1f2937;
+            transform: translateY(-1px);
+        }
 
         .page-nav-btn:disabled {
             background-color: #e5e7eb;
@@ -499,20 +415,19 @@
         </div>
         <div class="d-flex align-items-center gap-2 w-100 w-md-auto justify-content-md-end">
             <div class="filter-scroll-container">
-                <a asp-controller="Home" asp-action="Index" class="btn-filter @(Model?.SelectedCategoryIds == null || !Model.SelectedCategoryIds.Any() ? "active" : "")">All</a>
-                @if (Model?.AvailableCategories != null && Model.AvailableCategories.Any())
+                <a asp-controller="Home" asp-action="Index" class="btn-filter @(Model?.CategoryId == null ? "active" : "")">All</a>
+                @if (Model?.Categories != null && Model.Categories.Any())
                 {
-                    @foreach (var cat in Model.AvailableCategories)
+                    @foreach (var cat in Model.Categories)
                     {
-                        <a asp-controller="Home" asp-action="Index" asp-route-SelectedCategoryIds="@cat.Id"
-                           class="btn-filter @(Model.SelectedCategoryIds != null && Model.SelectedCategoryIds.Contains(cat.Id) ? "active" : "")">
+                        <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@cat.Id"
+                           class="btn-filter @(Model.CategoryId == cat.Id ? "active" : "")">
                             @cat.Name
                         </a>
                     }
                 }
             </div>
 
-=======
             <!-- Filter Button -->
             <button class="btn-filter border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas" style="cursor: pointer;">
                 Filter <i class="fa-solid fa-sliders ms-1"></i>
@@ -551,7 +466,6 @@
                                             ? item.CategoryNames.First()
                                             : (item.BrandName ?? "GENERAL"))
                                     </span>
-                                    <span class="rating rating-value" data-item-id="@item.Id">&#9734; —</span>
                                     <!-- التعديل هنا: فصل النجمة وتحديد لونها بـ !important -->
                                     <span class="rating rating-value" data-item-id="@item.Id"><span style="color: #FFD700 !important;">&#9733;</span> —</span>
                                 </div>
@@ -559,12 +473,10 @@
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div>
                                         <span class="current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
-                                            @item.Price.ToString("N2") EGP
                                             @item.Price.ToString("N0") EGP
                                         </span>
                                         @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
                                         {
-                                            <span class="original-price">@item.OldPrice.Value.ToString("N2") EGP</span>
                                             <span class="original-price">@item.OldPrice.Value.ToString("N0") EGP</span>
                                         }
                                     </div>
@@ -594,72 +506,46 @@
         }
     </div>
 
-    <!-- Enhanced Offcanvas Filter Sidebar Component -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel" style="width: 380px;">
         <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title fw-bold" id="filterOffcanvasLabel">Filter & Sort</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
 
-        <form id="filterForm" asp-controller="Home" asp-action="Index" method="get" class="d-flex flex-column h-100">
-        <form asp-controller="Home" asp-action="Index" method="get" class="d-flex flex-column h-100">
         <form asp-action="Index" method="get" class="d-flex flex-column h-100" id="filterForm">
             <!-- Preserve existing search term -->
             <input type="hidden" name="searchQuery" value="@Model.SearchQuery" />
 
-            <div class="offcanvas-body" style="overflow-y: auto;">
+            <div class="offcanvas-body">
                 <div class="accordion accordion-flush" id="filterAccordion">
 
-                    <!-- 1. Sort Section -->
-                    <div class="accordion-item border-bottom py-1">
                     <!-- Sort By -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingSort">
-                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort">
                                 Sort By
                             </button>
                         </h2>
                         <div id="collapseSort" class="accordion-collapse collapse show">
-                            <div class="accordion-body ps-0">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="SelectedSort" id="sortRec" value="recommended" @(Model.SelectedSort == "recommended" || string.IsNullOrEmpty(Model.SelectedSort) ? "checked" : "")>
-                                    <label class="form-check-label ms-1" for="sortRec">Recommended Sorting</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="SelectedSort" id="sortLow" value="lowToHigh" @(Model.SelectedSort == "lowToHigh" ? "checked" : "")>
-                                    <label class="form-check-label ms-1" for="sortLow">Price: Low to High</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="SelectedSort" id="sortHigh" value="highToLow" @(Model.SelectedSort == "highToLow" ? "checked" : "")>
-                                    <label class="form-check-label ms-1" for="sortHigh">Price: High to Low</label>
-                                </div>
+                            <div class="accordion-body">
+                                <select name="sortBy" class="form-select">
+                                    <option value="">Default Order</option>
+                                    <option value="price_low_high" selected="@(Model.SortBy == "price_low_high")">Price: Low to High</option>
+                                    <option value="price_high_low" selected="@(Model.SortBy == "price_high_low")">Price: High to Low</option>
+                                    <option value="name_asc" selected="@(Model.SortBy == "name_asc")">Name: A to Z</option>
+                                    <option value="name_desc" selected="@(Model.SortBy == "name_desc")">Name: Z to A</option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 2. Product Category Section -->
-                    <div class="accordion-item border-bottom py-1">
                     <!-- Category Dropdown -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingCategory">
-                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory">
                                 Product Category
                             </button>
                         </h2>
-                        <div id="collapseCategory" class="accordion-collapse collapse">
-                            <div class="accordion-body ps-0" id="categorySection">
-                                @if (Model.AvailableCategories != null && Model.AvailableCategories.Any())
-                                {
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="allCategories" />
-                                        <label class="form-check-label fw-bold ms-1" for="allCategories">Select All</label>
-                                    </div>
-                                    @foreach (var category in Model.AvailableCategories)
-                                    {
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input cat-checkbox" type="checkbox" name="SelectedCategoryIds" id="cat_@category.Id" value="@category.Id" @(Model.SelectedCategoryIds != null && Model.SelectedCategoryIds.Contains(category.Id) ? "checked" : "") />
-                                            <label class="form-check-label ms-1" for="cat_@category.Id">@category.Name</label>
-                                        </div>
                         <div id="collapseCategory" class="accordion-collapse collapse show">
                             <div class="accordion-body">
                                 <select name="categoryId" id="categoryFilterSelect" class="form-select">
@@ -668,35 +554,18 @@
                                     {
                                         <option value="@category.Id" selected="@(Model.CategoryId == category.Id)">@category.Name</option>
                                     }
-                                }
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 3. Brand Section -->
-                    <div class="accordion-item border-bottom py-1">
                     <!-- Brand Dropdown (يتفلتر ديناميك حسب الكاتيجوري المختارة) -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingBrand">
-                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrand">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrand">
                                 Brand
                             </button>
                         </h2>
-                        <div id="collapseBrand" class="accordion-collapse collapse">
-                            <div class="accordion-body ps-0" id="brandSection">
-                                @if (Model.AvailableBrands != null && Model.AvailableBrands.Any())
-                                {
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="allBrands" />
-                                        <label class="form-check-label fw-bold ms-1" for="allBrands">Select All</label>
-                                    </div>
-                                    @foreach (var brand in Model.AvailableBrands)
-                                    {
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input brand-checkbox" type="checkbox" name="SelectedBrandIds" id="brand_@brand.Id" value="@brand.Id" @(Model.SelectedBrandIds != null && Model.SelectedBrandIds.Contains(brand.Id) ? "checked" : "") />
-                                            <label class="form-check-label ms-1" for="brand_@brand.Id">@brand.Name</label>
-                                        </div>
                         <div id="collapseBrand" class="accordion-collapse collapse show">
                             <div class="accordion-body">
                                 <select name="brandId" id="brandFilterSelect" class="form-select">
@@ -705,78 +574,18 @@
                                     {
                                         <option value="@brand.Id" selected="@(Model.BrandId == brand.Id)">@brand.Name</option>
                                     }
-                                }
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 4. Size Section -->
-                    <div class="accordion-item border-bottom py-1">
-                        <h2 class="accordion-header" id="headingSize">
-                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSize">
-                                Size
-                            </button>
-                        </h2>
-                        <div id="collapseSize" class="accordion-collapse collapse">
-                            <div class="accordion-body ps-0" id="sizeSection">
-                                @if (Model.AvailableSizes != null)
-                                {
-                                    @foreach (var size in Model.AvailableSizes)
-                                    {
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="SelectedSizes" value="@size" id="size_@size" @(Model.SelectedSizes != null && Model.SelectedSizes.Contains(size) ? "checked" : "")>
-                                            <label class="form-check-label ms-1" for="size_@size">@size</label>
-                                        </div>
-                                    }
-                                }
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 5. Color Section -->
-                    <div class="accordion-item border-bottom py-1">
-                        <h2 class="accordion-header" id="headingColor">
-                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseColor">
-                                Color
-                            </button>
-                        </h2>
-                        <div id="collapseColor" class="accordion-collapse collapse">
-                            <div class="accordion-body ps-0" id="colorSection">
-                                @if (Model.AvailableColors != null)
-                                {
-                                    @foreach (var color in Model.AvailableColors)
-                                    {
-                                        <div class="form-check d-flex align-items-center mb-2">
-                                            <input class="form-check-input me-2" type="checkbox" name="SelectedColors" value="@color.Name" id="color_@color.Name" @(Model.SelectedColors != null && Model.SelectedColors.Contains(color.Name) ? "checked" : "")>
-                                            <span class="color-preview me-2" style="background: @color.HexCode; width: 18px; height: 18px; display: inline-block; border: 1px solid #ccc; border-radius: 2px;"></span>
-                                            <label class="form-check-label" for="color_@color.Name">@color.Name</label>
-                                        </div>
-                                    }
-                                }
-                            </div>
-                        </div>
-                    </div>
-
-                    
-
-                    <!-- 6. Price Range Slider Section -->
-                    <div class="accordion-item border-bottom py-1">
                     <!-- Price Range Slider -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingPrice">
-                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
                                 Price
                             </button>
                         </h2>
-                        <div id="collapsePrice" class="accordion-collapse collapse">
-                            <div class="accordion-body ps-0 px-2">
-                                <div class="d-flex justify-content-between text-muted small mb-2">
-                                    <span><span id="minPriceVal">@(Model.MinPrice ?? 0)</span> EGP</span>
-                                    <span><span id="maxPriceVal">@(Model.MaxPrice ?? 100000000)</span> EGP</span>
-                                </div>
-                                <input type="range" class="form-range" name="MinPrice" min="0" max="100000000" step="50" value="@(Model.MinPrice ?? 199)" id="minPriceSlider">
-                                <input type="range" class="form-range mt-1" name="MaxPrice" min="0" max="100000000" step="50" value="@(Model.MaxPrice ?? 3499)" id="maxPriceSlider">
                         <div id="collapsePrice" class="accordion-collapse collapse show">
                             <div class="accordion-body">
                                 <div class="price-slider-wrap"
@@ -811,16 +620,11 @@
                 </div>
             </div>
 
-            <!-- Bottom Control Frame inside Offcanvas -->
+            <!-- Offcanvas Apply Button -->
             <div class="p-3 border-top bg-white">
-                <button type="submit" class="btn btn-dark w-100 py-2.5 fw-bold text-uppercase mb-2">
-                    Apply (@Model.TotalCount) <i class="fa-solid fa-arrow-right ms-2"></i>
                 <button type="submit" class="btn w-100 py-2 fw-bold text-uppercase btn-apply-filter">
                     Apply  <i class="fa-solid fa-arrow-right ms-2"></i>
                 </button>
-                <div class="text-center">
-                    <a href="@Url.Action("Index", "Home")" class="text-muted small text-decoration-underline">Remove Filters</a>
-                </div>
             </div>
         </form>
     </div>
@@ -830,7 +634,6 @@
 
 
     <!-- Pagination Controls -->
-    @if (Model?.Items != null && Model.Items.Count() > 9)
     @if (Model?.Items != null && Model.Items.Any())
     {
         <div class="pagination-dots-container mt-4 mb-3 d-flex justify-content-center align-items-center gap-2" id="paginationContainer">
@@ -841,21 +644,6 @@
     }
 </div>
 
-@section Scripts {
-    <!-- Inject current dataset variables directly into the browser DOM frame environment safely -->
-    <script>
-        window.CatalogItemsContext = @Html.Raw(Json.Serialize(Model.Items.Select(i => new
-            {
-                    id = i.Id,
-                    brandId = i.BrandId,
-                    categoryIds = i.CategoryIds,
-                    variants = i.Variants?.Select(v => new { color = v.Color, size = v.Size })
-            })));
-    </script>
-
-    <script>
-        const itemsPerPage = 9;
-        let currentPage = 0;
 <script>
     // ===================== Category -> Brand Dynamic Filter =====================
     (function () {
@@ -1008,15 +796,14 @@
         const totalPages = Math.ceil(items.length / itemsPerPage);
         const dotsWrapper = document.getElementById('dotsWrapper');
 
-        function renderPagination() {
-            const items = document.querySelectorAll('.product-item');
-            const totalPages = Math.ceil(items.length / itemsPerPage);
+        items.forEach((item, index) => {
+            if (index >= currentPage * itemsPerPage && index < (currentPage + 1) * itemsPerPage) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
 
-            items.forEach((item, index) => {
-                if (index >= currentPage * itemsPerPage && index < (currentPage + 1) * itemsPerPage) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
         if (dotsWrapper) {
             dotsWrapper.innerHTML = '';
             for (let i = 0; i < totalPages; i++) {
@@ -1065,303 +852,78 @@
                     redirectToLogin();
                     throw new Error('unauthenticated');
                 }
-            });
+                if (!res.ok) throw new Error('request failed');
 
-            const dots = document.querySelectorAll('.page-dot-btn');
-            dots.forEach((dot, index) => {
-                if (index < totalPages) {
-                    dot.style.display = 'inline-block';
-                    dot.classList.toggle('active', index === currentPage);
-                } else {
-                    dot.style.display = 'none';
+                btn.classList.toggle('active');
+                btn.innerHTML = btn.classList.contains('active') ? '&#9829;' : '&#9825;';
+                if (typeof toastr !== 'undefined') {
+                    toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
                 }
-            });
-
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            if (prevBtn) prevBtn.disabled = currentPage === 0;
-            if (nextBtn) nextBtn.disabled = currentPage >= totalPages - 1;
-        }
-
-        function goToPage(pageIndex) {
-            currentPage = pageIndex;
-            renderPagination();
-        }
-
-        function changePage(direction) {
-            currentPage += direction;
-            renderPagination();
-        }
-
-        function redirectToLogin() {
-            const returnUrl = window.location.pathname + window.location.search;
-            if (typeof toastr !== 'undefined') toastr.info('Please sign in to continue.');
-            setTimeout(function () {
-                window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
-            }, 900);
-        }
-
-        function toggleWishlist(btn) {
-            const itemId = btn.dataset.itemId;
-            const isActive = btn.classList.contains('active');
-            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-            const headers = { 'Accept': 'application/json' };
-            if (token) headers['RequestVerificationToken'] = token;
-
-            fetch(`/api/wishlist/${itemId}`, { method: isActive ? 'DELETE' : 'POST', headers })
-                .then(res => {
-                    if (res.status === 401) {
-                        redirectToLogin();
-                        throw new Error('unauthenticated');
-                    }
-                    if (!res.ok) throw new Error('request failed');
-
-                    btn.classList.toggle('active');
-                    btn.innerHTML = btn.classList.contains('active') ? '&#9829;' : '&#9825;';
-                    if (typeof toastr !== 'undefined') {
-                        toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
-                    }
-                })
-                .catch(() => { /* handled or silent */ });
-        }
-
-        function prefillWishlistState() {
-            fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
-                .then(res => res.ok ? res.json() : null)
-                .then(result => {
-                    const favoritedIds = (result?.data || []).map(i => String(i.itemId));
-                    document.querySelectorAll('.wishlist-btn').forEach(btn => {
-                        if (favoritedIds.includes(btn.dataset.itemId)) {
-                            btn.classList.add('active');
-                            btn.innerHTML = '&#9829;';
-                        }
-                    });
-                })
-                .catch(() => { /* not signed in */ });
-        }
-
-        function loadRealRatings() {
-            const ratingEls = document.querySelectorAll('.rating-value');
-            const itemIds = Array.from(ratingEls).map(el => parseInt(el.dataset.itemId, 10));
-            if (!itemIds.length) return;
-
-            fetch('/api/reviews/summaries', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify({ ItemIds: itemIds })
             })
-                .then(res => res.ok ? res.json() : null)
-                .then(result => {
-                    const summaries = result?.data || {};
-                    ratingEls.forEach(el => {
-                        const s = summaries[el.dataset.itemId];
-                        if (s && s.reviewCount > 0) {
-                            el.innerHTML = `&#9733; ${s.averageRating.toFixed(1)}`;
-                        } else {
-                            el.innerHTML = `&#9734; New`;
-                        }
-                    });
-                })
-                .catch(() => { /* leave placeholder dashes */ });
+            .catch(() => { /* handled or silent */ });
+    }
+
+    function prefillWishlistState() {
+        fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
+            .then(res => res.ok ? res.json() : null)
+            .then(result => {
+                const favoritedIds = (result?.data || []).map(i => String(i.itemId));
+                document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                    if (favoritedIds.includes(btn.dataset.itemId)) {
+                        btn.classList.add('active');
+                        btn.innerHTML = '&#9829;';
+                    }
+                });
+            })
+            .catch(() => { /* not signed in */ });
+    }
+
+    function loadRealRatings() {
+        const ratingEls = document.querySelectorAll('.rating-value');
+        const itemIds = Array.from(ratingEls).map(el => parseInt(el.dataset.itemId, 10));
+        if (!itemIds.length) return;
+
+        fetch('/api/reviews/summaries', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ ItemIds: itemIds })
+        })
+            .then(res => res.ok ? res.json() : null)
+            .then(result => {
+                const summaries = result?.data || {};
+                ratingEls.forEach(el => {
+                    const s = summaries[el.dataset.itemId];
+                    if (s && s.reviewCount > 0) {
+                        el.innerHTML = `&#9733; ${s.averageRating.toFixed(1)}`;
+                    } else {
+                        el.innerHTML = `&#9734; New`;
+                    }
+                });
+            })
+            .catch(() => { /* leave placeholder dashes */ });
+    }
+
+    function hideProductCard(productId) {
+        // تحديد الكارت بناءً على الـ ID
+        const cardElement = document.getElementById('product-card-' + productId);
+
+        if (cardElement) {
+            // تأثير اختفاء سلس (Smooth Transition)
+            cardElement.style.transition = "all 0.4s ease";
+            cardElement.style.opacity = "0";
+            cardElement.style.transform = "scale(0.9)";
+
+            // إزالة العنصر من الصفحة بعد انتهاء الأنيميشن
+            setTimeout(() => {
+                cardElement.remove();
+                renderPagination(); // تحديث الصفحات بعد مسح العنصر
+            }, 400);
         }
+    }
 
-        function hideProductCard(productId) {
-            const cardElement = document.getElementById('product-card-' + productId);
-            if (cardElement) {
-                cardElement.style.transition = "all 0.4s ease";
-                cardElement.style.opacity = "0";
-                cardElement.style.transform = "scale(0.9)";
-                setTimeout(() => {
-                    cardElement.remove();
-                    renderPagination();
-                }, 400);
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const filterForm = document.getElementById('filterForm');
-            if (!filterForm) return;
-
-            renderPagination();
-            prefillWishlistState();
-            loadRealRatings();
-
-            // 1. Dual Slider constraint management handles
-            const minSlider = document.getElementById('minPriceSlider');
-            const maxSlider = document.getElementById('maxPriceSlider');
-            const minPriceVal = document.getElementById('minPriceVal');
-            const maxPriceVal = document.getElementById('maxPriceVal');
-
-            function handlePriceChange() {
-                let minVal = parseInt(minSlider.value);
-                let maxVal = parseInt(maxSlider.value);
-
-                if (minVal > maxVal) {
-                    minSlider.value = maxVal;
-                    minVal = maxVal;
-                }
-                
-                minPriceVal.textContent = minVal;
-                maxPriceVal.textContent = maxVal;
-            }
-
-            if (minSlider && maxSlider) {
-                minSlider.addEventListener('input', handlePriceChange);
-                maxSlider.addEventListener('input', handlePriceChange);
-            }
-
-            // 2. Select All Master/Child checkbox handlers
-            function setupSelectAll(masterId, childClass) {
-                const master = document.getElementById(masterId);
-                if (!master) return;
-
-                master.addEventListener('change', function() {
-                    document.querySelectorAll('.' + childClass).forEach(cb => cb.checked = this.checked);
-                });
-
-                document.querySelectorAll('.' + childClass).forEach(cb => {
-                    cb.addEventListener('change', function() {
-                        const all = document.querySelectorAll('.' + childClass);
-                        const checked = document.querySelectorAll('.' + childClass + ':checked');
-                        master.checked = (all.length === checked.length);
-                        master.indeterminate = (checked.length > 0 && checked.length < all.length);
-                    });
-                });
-            }
-
-            setupSelectAll('allCategories', 'cat-checkbox');
-            setupSelectAll('allBrands', 'brand-checkbox');
-
-            // 3. Automatic Submit on Input Intercept
-            // const filterForm = document.getElementById('filterForm');
-            // if (filterForm) {
-            //     filterForm.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(input => {
-            //         input.addEventListener('change', function () {
-            //             if (this.id === 'allCategories' || this.id === 'allBrands') {
-            //                 setTimeout(() => filterForm.submit(), 50);
-            //             } else {
-            //                 filterForm.submit();
-            //             }
-            //         });
-            //     });
-
-            //     if (minSlider && maxSlider) {
-            //         minSlider.addEventListener('change', () => filterForm.submit());
-            //         maxSlider.addEventListener('change', () => filterForm.submit());
-            //     }
-            // }
-
-            // 4. Auto-Open Sidebar on Page Reload if filters are actively set
-            // const urlParams = new URLSearchParams(window.location.search);
-            // const hasActiveFilters = urlParams.has('SelectedCategoryIds') || 
-            //                          urlParams.has('SelectedBrandIds') || 
-            //                          urlParams.has('SelectedColors') || 
-            //                          urlParams.has('SelectedSizes') || 
-            //                          urlParams.has('SelectedSort') ||
-            //                          urlParams.has('MinPrice') || 
-            //                          urlParams.has('MaxPrice');
-
-            // if (hasActiveFilters) {
-            //     const filterSidebarEl = document.getElementById('filterOffcanvas');
-            //     if (filterSidebarEl) {
-            //         const bsOffcanvas = new bootstrap.Offcanvas(filterSidebarEl);
-            //         bsOffcanvas.show();
-            //     }
-            // }
-
-            // Helper function to dynamically filter colors and brands based on selected categories via DOM metadata attributes
-            function updateDependantFilters() {
-                // 1. Get all currently checked Category IDs
-                const checkedCategoryIds = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(cb => cb.value);
-
-                // 2. Fetch the catalog data model embedded as JSON data nodes from the page layout frame
-                const items = window.CatalogItemsContext || [];
-
-                // If no categories are explicitly selected, make all brands and colors available by default
-                if (checkedCategoryIds.length === 0) {
-                    document.querySelectorAll('#colorSection .form-check, #brandSection .form-check').forEach(el => {
-                        el.style.display = 'block';
-                    });
-                    document.querySelectorAll('#sizeSection .form-check, #brandSection .form-check').forEach(el => {
-                        el.style.display = 'block';
-                    });
-                    return;
-                }
-
-                // 3. Extract matching brands and colors from our local JSON array copy that belong to the active categories
-                const allowedBrandIds = new Set();
-                const allowedColorNames = new Set();
-                const allowedSizeNames = new Set();
-
-                items.forEach(item => {
-                    // Check if the item belongs to any of the checked category IDs
-                    const matchesCategory = item.categoryIds && item.categoryIds.some(catId => checkedCategoryIds.includes(String(catId)));
-
-                    if (matchesCategory) {
-                        if (item.brandId) allowedBrandIds.add(String(item.brandId));
-                        if (item.variants) {
-                            item.variants.forEach(v => {
-                                if (v.color) allowedColorNames.add(v.color.trim().toLowerCase());
-                                if (v.size) allowedSizeNames.add(v.size.trim().toLowerCase());
-                            });
-                        }
-                    }
-                });
-
-                // 4. Update the Brand checkboxes UI layer visibility
-                document.querySelectorAll('#brandSection .brand-checkbox').forEach(cb => {
-                    const container = cb.closest('.form-check');
-                    if (cb.id === 'allBrands') return; // Skip master check toggle button frame
-
-                    if (allowedBrandIds.has(cb.value)) {
-                        container.style.display = 'block';
-                    } else {
-                        container.style.display = 'none';
-                        cb.checked = false; // Automatically uncheck hidden items to keep form data accurate
-                    }
-                });
-
-                // 5. Update the Color checkboxes UI layer visibility
-                document.querySelectorAll('#colorSection input[name="SelectedColors"]').forEach(cb => {
-                    const container = cb.closest('.form-check');
-                    const colorValue = cb.value.trim().toLowerCase();
-
-                    if (allowedColorNames.has(colorValue)) {
-                        container.style.display = 'flex'; // Use flex to match alignment layout rules safely
-                    } else {
-                        container.style.display = 'none';
-                        cb.checked = false; // Automatically uncheck hidden colors
-                    }
-                });
-
-                // 6. Update the Size checkboxes UI layer visibility
-                document.querySelectorAll('#sizeSection input[name="SelectedSizes"]').forEach(cb => {
-                    const container = cb.closest('.form-check');
-                    const sizeValue = cb.value.trim().toLowerCase();
-
-                    if (allowedSizeNames.has(sizeValue)) {
-                        container.style.display = 'flex'; // Use flex to match alignment layout rules safely
-                    } else {
-                        container.style.display = 'none';
-                        cb.checked = false; // Automatically uncheck hidden Size
-                    }
-                });
-            }
-
-            // Bind event listeners to all category choices to run our dynamic UI filtering function
-            document.querySelectorAll('.cat-checkbox').forEach(cb => {
-                cb.addEventListener('change', updateDependantFilters);
-            });
-
-            const allCategoriesMaster = document.getElementById('allCategories');
-            if (allCategoriesMaster) {
-                allCategoriesMaster.addEventListener('change', function () {
-                    setTimeout(updateDependantFilters, 10);
-                });
-            }
-
-            // Run once on page load initialization to adjust state rules if parameters are active from a reload cycle
-            setTimeout(updateDependantFilters, 100);
-        });
-    </script>
-}
+    document.addEventListener("DOMContentLoaded", function () {
+        renderPagination();
+        prefillWishlistState();
+        loadRealRatings();
+    });
+</script>
