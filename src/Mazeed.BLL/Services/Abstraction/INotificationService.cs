@@ -1,6 +1,5 @@
 ﻿using Mazeed.BLL.Responses;
 using Mazeed.BLL.ViewModels;
-
 namespace Mazeed.BLL.Services.Abstraction
 {
     public interface INotificationService
@@ -10,6 +9,7 @@ namespace Mazeed.BLL.Services.Abstraction
         Task<ServiceResponse<NotificationVM>> SendToUserAsync(long userId, string title, string msg, string type, string createdBy);
         Task<ServiceResponse<NotificationVM>> BroadcastAsync(IEnumerable<long> userIds, string title, string msg, string type, string createdBy);
         Task<ServiceResponse<NotificationVM>> BroadcastToAllAsync(string title, string msg, string type, string createdBy);
+        Task<ServiceResponse<NotificationVM>> BroadcastToRoleAsync(string role, string title, string msg, string type, string createdBy);
         Task<ServiceResponse<bool>> MarkAsReadAsync(long userId, long notificationId);
         Task<ServiceResponse<bool>> MarkAllAsReadAsync(long userId);
     }

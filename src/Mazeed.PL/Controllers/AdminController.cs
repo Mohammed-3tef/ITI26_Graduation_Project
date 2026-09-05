@@ -22,6 +22,7 @@ namespace Mazeed.PL.Controllers
         private readonly IGovernorateService _governorateService;
         private readonly ICategoryService _categoryService; // 🟢 إضافة
         private readonly IBrandService _brandService;       // 🟢 إضافة
+        private readonly INotificationService _notificationService;
         private readonly ILogger<AdminController> _logger;
         private readonly AppDbContext _context;
 
@@ -31,6 +32,7 @@ namespace Mazeed.PL.Controllers
             IGovernorateService governorateService,
             ICategoryService categoryService,               // 🟢 حقن
             IBrandService brandService,                  // 🟢 حقن
+            INotificationService notificationService,
             ILogger<AdminController> logger,
             AppDbContext context)
         {
@@ -39,6 +41,7 @@ namespace Mazeed.PL.Controllers
             _governorateService = governorateService;
             _categoryService = categoryService;          // 🟢 تعيين
             _brandService = brandService;                // 🟢 تعيين
+            _notificationService = notificationService;
             _logger = logger;
             _context = context;
         }
@@ -172,6 +175,14 @@ namespace Mazeed.PL.Controllers
             order.UpdatedBy = GetCurrentUserEmail();
             order.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
+
+            await _notificationService.SendToUserAsync(
+                order.UserId,
+                "Order Status Updated",
+                $"Your order #{order.Id} is now {status}.",
+                "OrderStatus",
+                GetCurrentUserEmail());
+
             TempData["Success"] = $"Order #{id} status updated.";
             return RedirectToAction(nameof(Sales));
         }
