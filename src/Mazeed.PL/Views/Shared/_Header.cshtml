@@ -106,6 +106,50 @@
                 ul.search-suggestions-list li.search-suggestion-item:hover strong {
                     color: #FFFFFF !important;
                 }
+
+    /* Notification dropdown */
+    .notif-dropdown {
+        width: 340px;
+        max-height: 420px;
+        padding: 0 !important;
+    }
+
+    .notif-list {
+        max-height: 320px;
+        overflow-y: auto;
+    }
+
+    .notif-item {
+        display: block;
+        padding: 10px 14px;
+        border-bottom: 1px solid #f0f0f0;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .notif-item:hover {
+        background-color: #F3F4F6;
+    }
+
+    .notif-item.unread {
+        background-color: #FEF2F2;
+    }
+
+    .notif-item .notif-title {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #111827;
+    }
+
+    .notif-item .notif-msg {
+        font-size: 0.8rem;
+        color: #6B7280;
+    }
+
+    .notif-item .notif-time {
+        font-size: 0.7rem;
+        color: #9CA3AF;
+    }
 </style>
 
 <header>
@@ -132,7 +176,7 @@
                     </li>
 
                     <!-- Categories Section Link Added Here -->
-                  
+
 
                     <li class="nav-item">
                         <a class="nav-link fw-medium" asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="1">Electronics</a>
@@ -180,6 +224,26 @@
                                 <i class="fa-solid fa-cart-shopping fs-5"></i>
                                 <span id="cartBadge" class="notif-badge d-none">0</span>
                             </a>
+                        </li>
+                        <li class="nav-item dropdown me-2">
+                            <a class="nav-link position-relative" href="#" id="notifBell" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
+                                <i class="fa-regular fa-bell fs-5"></i>
+                                <span id="notifBadge" class="notif-badge d-none">0</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2 notif-dropdown" aria-labelledby="notifBell">
+                                <li class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                                    <span class="fw-semibold small">Notifications</span>
+                                    <button type="button" id="notifMarkAllRead" class="btn btn-link btn-sm p-0 text-decoration-none">Mark all read</button>
+                                </li>
+                                <li>
+                                    <div id="notifList" class="notif-list">
+                                        <div class="text-center text-muted small py-4">Loading...</div>
+                                    </div>
+                                </li>
+                                <li class="border-top text-center py-2">
+                                    <a href="/Notifications" class="small fw-semibold text-decoration-none">View all notifications</a>
+                                </li>
+                            </ul>
                         </li>
                     }
                     <li class="nav-item dropdown">

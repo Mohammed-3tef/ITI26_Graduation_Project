@@ -1,0 +1,235 @@
+﻿@{
+    ViewData["Title"] = "Notifications";
+}
+
+<style>
+    .notif-page-card {
+        background: #ffffff;
+        border: 1px solid #f0f0f0;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .notif-filter-tabs {
+        display: flex;
+        gap: 8px;
+        padding: 16px 20px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .notif-filter-btn {
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        color: #4b5563;
+        border-radius: 50px;
+        padding: 6px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .notif-filter-btn.active {
+        background: #111827;
+        color: #ffffff;
+        border-color: #111827;
+    }
+
+    .notif-page-item {
+        display: flex;
+        gap: 14px;
+        padding: 16px 20px;
+        border-bottom: 1px solid #f3f4f6;
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+    }
+
+    .notif-page-item:hover {
+        background-color: #f9fafb;
+    }
+
+    .notif-page-item.unread {
+        background-color: #fef2f2;
+    }
+
+    .notif-page-item:last-child {
+        border-bottom: none;
+    }
+
+    .notif-icon-box {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+    }
+
+    .notif-icon-box.type-OrderStatus {
+        background: #e0f2fe;
+        color: #0284c7;
+    }
+
+    .notif-icon-box.type-Alert {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    .notif-icon-box.type-Promotion {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .notif-page-body .notif-page-title {
+        font-weight: 700;
+        color: #111827;
+        font-size: 14.5px;
+    }
+
+    .notif-page-body .notif-page-msg {
+        font-size: 13.5px;
+        color: #4b5563;
+        margin-top: 2px;
+    }
+
+    .notif-page-body .notif-page-time {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-top: 4px;
+    }
+
+    .notif-unread-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ef4444;
+        flex-shrink: 0;
+        margin-top: 6px;
+    }
+</style>
+
+<div class="container my-4 my-md-5" style="max-width: 720px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark mb-0"><i class="fa-regular fa-bell text-danger me-2"></i>Notifications</h3>
+        <button type="button" id="pageMarkAllRead" class="btn btn-outline-dark btn-sm rounded-pill px-3">Mark all as read</button>
+    </div>
+
+    <div class="notif-page-card">
+        <div class="notif-filter-tabs">
+            <button type="button" class="notif-filter-btn active" data-filter="all">All</button>
+            <button type="button" class="notif-filter-btn" data-filter="unread">Unread</button>
+        </div>
+        <div id="notifPageList">
+            <div class="text-center text-muted py-5">
+                <div class="spinner-border text-danger" role="status"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const listContainer = document.getElementById('notifPageList');
+            const markAllBtn = document.getElementById('pageMarkAllRead');
+            const filterBtns = document.querySelectorAll('.notif-filter-btn');
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            let allNotifications = [];
+            let currentFilter = 'all';
+
+            function headers(extra) {
+                const h = { 'Accept': 'application/json', ...(extra || {}) };
+                if (token) h['RequestVerificationToken'] = token;
+                return h;
+            }
+
+            function iconFor(type) {
+                if (type === 'OrderStatus') return 'fa-box';
+                if (type === 'Alert') return 'fa-triangle-exclamation';
+                if (type === 'Promotion') return 'fa-tag';
+                return 'fa-bell';
+            }
+
+            function timeAgo(dateStr) {
+                const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
+                if (mins < 1) return 'just now';
+                if (mins < 60) return mins + 'm ago';
+                const hours = Math.floor(mins / 60);
+                if (hours < 24) return hours + 'h ago';
+                return Math.floor(hours / 24) + 'd ago';
+            }
+
+            function itemHtml(n) {
+                return `
+                    <div class="notif-page-item ${n.isRead ? '' : 'unread'}" data-id="${n.id}">
+                        <div class="notif-icon-box type-${n.type}"><i class="fa-solid ${iconFor(n.type)}"></i></div>
+                        <div class="notif-page-body flex-grow-1">
+                            <div class="notif-page-title">${n.title}</div>
+                            <div class="notif-page-msg">${n.msg}</div>
+                            <div class="notif-page-time">${timeAgo(n.createdAt)}</div>
+                        </div>
+                        ${n.isRead ? '' : '<div class="notif-unread-dot"></div>'}
+                    </div>`;
+            }
+
+            function render() {
+                const items = currentFilter === 'unread'
+                    ? allNotifications.filter(n => !n.isRead)
+                    : allNotifications;
+
+                listContainer.innerHTML = items.length
+                    ? items.map(itemHtml).join('')
+                    : `<div class="text-center text-muted py-5">No ${currentFilter === 'unread' ? 'unread ' : ''}notifications.</div>`;
+            }
+
+            async function loadAll() {
+                try {
+                    const res = await fetch('/api/notifications', { headers: headers() });
+                    const result = await res.json();
+                    allNotifications = result.data || [];
+                    render();
+                } catch (e) {
+                    listContainer.innerHTML = '<div class="text-center text-muted py-5">Failed to load notifications.</div>';
+                }
+            }
+
+            listContainer.addEventListener('click', async function (e) {
+                const item = e.target.closest('.notif-page-item');
+                if (!item || !item.classList.contains('unread')) return;
+
+                const id = item.dataset.id;
+                try {
+                    await fetch(`/api/notifications/${id}/read`, { method: 'PUT', headers: headers() });
+                    const notif = allNotifications.find(n => String(n.id) === id);
+                    if (notif) notif.isRead = true;
+                    render();
+                } catch (e) { /* silent */ }
+            });
+
+            markAllBtn.addEventListener('click', async function () {
+                try {
+                    await fetch('/api/notifications/read-all', { method: 'PUT', headers: headers() });
+                    allNotifications.forEach(n => n.isRead = true);
+                    render();
+                    if (typeof toastr !== 'undefined') toastr.success('All notifications marked as read.');
+                } catch (e) { /* silent */ }
+            });
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    render();
+                });
+            });
+
+            loadAll();
+        })();
+    </script>
+}
