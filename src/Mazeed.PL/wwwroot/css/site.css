@@ -596,14 +596,37 @@ html[data-theme="dark"] .dropdown-item:hover {
     background-color: var(--theme-surface-muted);
 }
 
-html[data-theme="dark"] .search-suggestions-list {
-    background-color: var(--theme-surface) !important;
-    border-color: var(--theme-border) !important;
+html[data-theme="dark"] .dropdown-item,
+html[data-theme="dark"] .table th,
+html[data-theme="dark"] .table td {
+    color: var(--theme-text);
 }
 
-html[data-theme="dark"] .search-container .search-input {
-    background-color: transparent !important;
-}
+    html[data-theme="dark"] .dropdown-item:hover {
+        background-color: var(--theme-surface-muted);
+    }
+
+/* ضبط خلفية وحدود وألوان القائمة لـ Dark Mode */
+    html[data-theme="dark"] ul.search-suggestions-list {
+        background-color: var(--theme-surface) !important;
+        border-color: var(--theme-border) !important;
+    }
+
+    /* لون الكلام العادي داخل عناصر الـ Suggestion ليطابق لون الـ Placeholder */
+    html[data-theme="dark"] ul.search-suggestions-list li.search-suggestion-item {
+        color: var(--theme-text-muted) !important;
+    }
+
+        /* لون الحروف المطابقة/المشتركة ليصبح أبيض ناصع */
+        html[data-theme="dark"] ul.search-suggestions-list li.search-suggestion-item strong {
+            color: #ffffff !important;
+        }
+
+        /* الحفاظ على تغير اللون لأبيض كاملاً عند الـ Hover */
+        html[data-theme="dark"] ul.search-suggestions-list li.search-suggestion-item:hover,
+        html[data-theme="dark"] ul.search-suggestions-list li.search-suggestion-item:hover strong {
+            color: #ffffff !important;
+        }
 
 html[data-theme="dark"] .offcanvas {
     --bs-offcanvas-bg: var(--theme-surface);
@@ -611,6 +634,7 @@ html[data-theme="dark"] .offcanvas {
     background-color: var(--theme-surface) !important;
     color: var(--theme-text) !important;
 }
+
 
 html[data-theme="dark"] .offcanvas-header,
 html[data-theme="dark"] .offcanvas .border-top,
@@ -755,11 +779,11 @@ html[data-theme="dark"] .wishlist-detail-btn {
     color: var(--theme-text) !important;
 }
 
-html[data-theme="dark"] .opt-btn.active,
-html[data-theme="dark"] .btn-action-dark {
-    background-color: #0f172a !important;
-    color: #ffffff !important;
-}
+    html[data-theme="dark"] .opt-btn.active,
+    html[data-theme="dark"] .btn-action-dark {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+    }
 
 html[data-theme="dark"] .review-item,
 html[data-theme="dark"] .reviews-card hr {
@@ -871,3 +895,17 @@ html[data-theme="dark"] .mazeed-left-panel .step-circle.completed {
     border-color: #ef4444 !important;
     color: #ffffff !important;
 }
+
+
+/* إصلاح خلفية البروفايل للـ Dark Mode */
+html[data-theme="dark"] .profile-info,
+html[data-theme="dark"] .profile-info-card,
+html[data-theme="dark"] .profile-card,
+html[data-theme="dark"] .account-details,
+html[data-theme="dark"] .profile-info .card,
+html[data-theme="dark"] .profile-info .bg-white {
+    background-color: #131928 !important;
+    color: var(--theme-text) !important;
+    border-color: var(--theme-border) !important;
+}
+

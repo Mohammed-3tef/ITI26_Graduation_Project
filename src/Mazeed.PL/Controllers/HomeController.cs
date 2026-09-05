@@ -132,12 +132,8 @@ public class HomeController : Controller
         _brandService = brandService;
     }
 
-    // الصفحة الرئيسية
-
-
     // 1. Index Action
-    // 1. Index Action
-    public async Task<IActionResult> Index(long? categoryId, string? sortBy, decimal? minPrice, decimal? maxPrice, string? searchQuery)
+    public async Task<IActionResult> Index(long? categoryId, long? brandId, string? sortBy, decimal? minPrice, decimal? maxPrice, string? searchQuery)
     {
         var itemsResponse = await _itemService.GetAllAsync();
         var categoriesResponse = await _categoryService.GetAllAsync();
@@ -154,7 +150,37 @@ public class HomeController : Controller
             if (long.TryParse(userIdStr, out long parsedId)) userId = parsedId;
         }
 
-        // 1. الفلترة حسب الكاتيجوري أو تطبيق التوصيات
+        // حساب القيم الدنيا والعليا للأسعار من الداتابيز
+        decimal dbMinPrice = itemsList.Any() ? itemsList.Min(i => i.Price) : 0m;
+        decimal dbMaxPrice = itemsList.Any() ? itemsList.Max(i => i.Price) : 0m;
+
+        // بناء الـ CategoryBrandMap لتشغيل فلترة البراندات ديناميكياً
+        var categoryBrandMap = new Dictionary<long, List<long>>();
+        foreach (var item in itemsList)
+        {
+            if (item.CategoryIds != null)
+            {
+                foreach (var catId in item.CategoryIds)
+                {
+                    if (!categoryBrandMap.ContainsKey(catId))
+                        categoryBrandMap[catId] = new List<long>();
+
+                    if (item.BrandId > 0 && !categoryBrandMap[catId].Contains(item.BrandId))
+                        categoryBrandMap[catId].Add(item.BrandId);
+                }
+            }
+        }
+
+        // بناء الـ ItemsFilterMeta للفلترة اللحظية في الفلونت أوفكانفاس
+        var itemsFilterMeta = itemsList.Select(i => new ItemFilterMetaVM
+        {
+            Id = i.Id,
+            Name = i.Name,
+            BrandId = i.BrandId,
+            Price = i.Price,
+            CategoryIds = i.CategoryIds ?? new List<long>()
+        }).ToList();
+
         // 1. الفلترة حسب الكاتيجوري مع تطبيق الـ Recommendation
         if (categoryId.HasValue && categoryId > 0)
         {
@@ -162,7 +188,6 @@ public class HomeController : Controller
                 .Where(item => item.CategoryIds != null && item.CategoryIds.Contains(categoryId.Value))
                 .ToList();
 
-            // نمرر المنتجات للسيرفس لتترتب بالتوصيات لو المستخدم ماختارش ترتيب يدوي
             if (string.IsNullOrEmpty(sortBy))
             {
                 itemsList = _recommendationService.GetHomeRecommendations(userId, categoryItems);
@@ -172,13 +197,16 @@ public class HomeController : Controller
                 itemsList = categoryItems;
             }
         }
-        else if (string.IsNullOrEmpty(searchQuery) && !minPrice.HasValue && !maxPrice.HasValue && string.IsNullOrEmpty(sortBy))
+        else if (string.IsNullOrEmpty(searchQuery) && !brandId.HasValue && !minPrice.HasValue && !maxPrice.HasValue && string.IsNullOrEmpty(sortBy))
         {
-            // زر All أو الفتح لأول مرة: ترتيب الكاتالوج كامل
             itemsList = _recommendationService.GetHomeRecommendations(userId, itemsList);
         }
 
-        // 2. الفلترة المتقدمة (Price & Search)
+        // 2. الفلترة المتقدمة (Brand, Price & Search)
+        if (brandId.HasValue && brandId > 0)
+        {
+            itemsList = itemsList.Where(i => i.BrandId == brandId.Value).ToList();
+        }
         if (!string.IsNullOrEmpty(searchQuery))
         {
             itemsList = itemsList.Where(i => i.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -209,17 +237,23 @@ public class HomeController : Controller
         var model = new ShopCatalogVM
         {
             CategoryId = categoryId,
+            BrandId = brandId,
             Items = itemsList,
             Categories = categoriesList,
             Brands = brandsList,
             SortBy = sortBy,
             MinPrice = minPrice,
             MaxPrice = maxPrice,
+            DbMinPrice = dbMinPrice,
+            DbMaxPrice = dbMaxPrice,
             SearchQuery = searchQuery,
+            CategoryBrandMap = categoryBrandMap,
+            ItemsFilterMeta = itemsFilterMeta
         };
 
         return View(model);
     }
+
     // 2. Details Action
     public async Task<IActionResult> Details(long id)
     {
@@ -258,13 +292,15 @@ public class HomeController : Controller
     }
 
     // 3. Category Action
-    public async Task<IActionResult> Category(long? id, string? sortBy, decimal? minPrice, decimal? maxPrice)
+    public async Task<IActionResult> Category(long? id, long? brandId, string? sortBy, decimal? minPrice, decimal? maxPrice)
     {
         var itemsResponse = await _itemService.GetAllAsync();
         var categoriesResponse = await _categoryService.GetAllAsync();
+        var brandsResponse = _brandService != null ? await _brandService.GetAllAsync() : null;
 
         var itemsList = itemsResponse?.Data?.ToList() ?? new List<ItemVM>();
         var categoriesList = categoriesResponse?.Data?.ToList() ?? new List<CategoryVM>();
+        var brandsList = brandsResponse?.Data?.ToList() ?? new List<BrandVM>();
 
         long? userId = null;
         if (User?.Identity != null && User.Identity.IsAuthenticated)
@@ -273,31 +309,73 @@ public class HomeController : Controller
             if (long.TryParse(userIdStr, out long parsedId)) userId = parsedId;
         }
 
-        // 1. التعديل هنا: فلترة حسب الكاتيجوري ثم ترتيب النتائج بالتوصيات الخاصة بالمستخدم
+        // 1. تحديد المنتجات المتاحة في هذه الفئة
+        List<ItemVM> baseCategoryItems = itemsList;
         if (id.HasValue && id > 0)
         {
-            var categoryItems = itemsList.Where(item => item.CategoryIds != null && item.CategoryIds.Contains(id.Value)).ToList();
+            baseCategoryItems = itemsList.Where(item => item.CategoryIds != null && item.CategoryIds.Contains(id.Value)).ToList();
 
-            // لو لم يحدد المستخدم ترتيب معين للـ Sort، نقوم بترتيب منتجات الكاتيجوري بالتوصيات
+            // إظهار فقط البراندات المتاحة لهذه الكاتيجوري
+            var availableBrandIds = baseCategoryItems.Select(i => i.BrandId).Where(bId => bId > 0).Distinct().ToList();
+            brandsList = brandsList.Where(b => availableBrandIds.Contains(b.Id)).ToList();
+        }
+
+        // حساب السعر الأقل والأعلى الخاص بالمنتجات المتاحة
+        decimal dbMinPrice = baseCategoryItems.Any() ? baseCategoryItems.Min(i => i.Price) : 0m;
+        decimal dbMaxPrice = baseCategoryItems.Any() ? baseCategoryItems.Max(i => i.Price) : 0m;
+
+        // إعداد CategoryBrandMap للفلترة الديناميكية
+        var categoryBrandMap = new Dictionary<long, List<long>>();
+        foreach (var item in baseCategoryItems)
+        {
+            if (item.CategoryIds != null)
+            {
+                foreach (var catId in item.CategoryIds)
+                {
+                    if (!categoryBrandMap.ContainsKey(catId))
+                        categoryBrandMap[catId] = new List<long>();
+
+                    if (item.BrandId > 0 && !categoryBrandMap[catId].Contains(item.BrandId))
+                        categoryBrandMap[catId].Add(item.BrandId);
+                }
+            }
+        }
+
+        // إعداد ItemsFilterMeta اللحظية الخاصة بمنتجات هذه الفئة فقط
+        var itemsFilterMeta = baseCategoryItems.Select(i => new ItemFilterMetaVM
+        {
+            Id = i.Id,
+            Name = i.Name,
+            BrandId = i.BrandId,
+            Price = i.Price,
+            CategoryIds = i.CategoryIds ?? new List<long>()
+        }).ToList();
+
+        // ترتيب التوصيات
+        if (id.HasValue && id > 0)
+        {
             if (string.IsNullOrEmpty(sortBy))
             {
-                itemsList = _recommendationService.GetHomeRecommendations(userId, categoryItems);
+                itemsList = _recommendationService.GetHomeRecommendations(userId, baseCategoryItems);
             }
             else
             {
-                itemsList = categoryItems;
+                itemsList = baseCategoryItems;
             }
         }
         else
         {
-            // بدون count: 12 لإرجاع القائمة كاملة
             if (string.IsNullOrEmpty(sortBy))
             {
                 itemsList = _recommendationService.GetHomeRecommendations(userId, itemsList);
             }
         }
 
-        // 2. الفلترة بالسعر
+        // 2. الفلترة المتقدمة (Brand & Price)
+        if (brandId.HasValue && brandId > 0)
+        {
+            itemsList = itemsList.Where(i => i.BrandId == brandId.Value).ToList();
+        }
         if (minPrice.HasValue)
         {
             itemsList = itemsList.Where(i => i.Price >= minPrice.Value).ToList();
@@ -307,7 +385,7 @@ public class HomeController : Controller
             itemsList = itemsList.Where(i => i.Price <= maxPrice.Value).ToList();
         }
 
-        // 3. الترتيب (إذا اختار المستخدم ترتيب يدوي)
+        // 3. الترتيب
         if (!string.IsNullOrEmpty(sortBy))
         {
             itemsList = sortBy switch
@@ -323,11 +401,17 @@ public class HomeController : Controller
         var model = new ShopCatalogVM
         {
             CategoryId = id,
+            BrandId = brandId,
             Items = itemsList,
             Categories = categoriesList,
+            Brands = brandsList,
             SortBy = sortBy,
             MinPrice = minPrice,
-            MaxPrice = maxPrice
+            MaxPrice = maxPrice,
+            DbMinPrice = dbMinPrice,
+            DbMaxPrice = dbMaxPrice,
+            CategoryBrandMap = categoryBrandMap,
+            ItemsFilterMeta = itemsFilterMeta
         };
 
         return View("CategoryCatalog", model);

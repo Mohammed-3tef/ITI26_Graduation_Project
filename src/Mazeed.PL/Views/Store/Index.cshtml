@@ -12,6 +12,7 @@
 }
 
 <style>
+    /* Styling Card Products */
     .store-product-card {
         border: 1px solid #f0f0f0;
         border-radius: 12px;
@@ -27,6 +28,10 @@
         transform: translateY(-3px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
     }
+        .store-product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
 
     .store-product-img {
         position: relative;
@@ -43,6 +48,11 @@
         height: 100%;
         object-fit: cover;
     }
+        .store-product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
     .store-sale-badge {
         position: absolute;
@@ -98,6 +108,9 @@
     .store-current-price.dark {
         color: #111827;
     }
+        .store-current-price.dark {
+            color: #111827;
+        }
 
     .store-original-price {
         margin-left: 4px;
@@ -120,6 +133,10 @@
     .store-wishlist-btn:hover {
         color: #ff4d4f;
     }
+        .store-wishlist-btn.active,
+        .store-wishlist-btn:hover {
+            color: #ff4d4f;
+        }
 
     .store-details-btn {
         display: block;
@@ -136,26 +153,128 @@
 
     .store-details-btn:hover {
         background-color: #1f2937;
+        .store-details-btn:hover {
+            background-color: #1f2937;
+            color: #ffffff;
+        }
+
+    .store-filter-button {
+        border: 1px solid #111827;
+        background: #111827;
         color: #ffffff;
+        border-radius: 8px;
+        transition: all 0.2s ease;
     }
+
+        .store-filter-button:hover {
+            background: #1f2937;
+            color: #ffffff;
+        }
+
+    /* Styling Filter Offcanvas UI */
+    .custom-filter-select {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 14px;
+        color: #111827;
+        background-color: #ffffff;
+    }
+
+        .custom-filter-select:focus {
+            border-color: #ff4d4f;
+            box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.15);
+        }
+
+    .filter-collapse-btn:focus {
+        outline: none;
+    }
+
+    /* Dual Range Slider Styling */
+    .price-slider-wrapper {
+        position: relative;
+        height: 6px;
+        width: 100%;
+        margin: 20px 0 10px;
+    }
+
+    .slider-track {
+        position: absolute;
+        height: 6px;
+        border-radius: 3px;
+        background-color: #ff4d4f;
+        top: 0;
+        bottom: 0;
+        z-index: 1;
+    }
+
+    .price-slider-wrapper input[type="range"] {
+        position: absolute;
+        width: 100%;
+        height: 6px;
+        top: 0;
+        left: 0;
+        background: none;
+        pointer-events: none;
+        -webkit-appearance: none;
+        z-index: 2;
+    }
+
+        .price-slider-wrapper input[type="range"]::-webkit-slider-thumb {
+            height: 22px;
+            width: 22px;
+            border-radius: 50%;
+            border: 3px solid #ff4d4f;
+            background: #ffffff;
+            pointer-events: auto;
+            -webkit-appearance: none;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .price-slider-wrapper input[type="range"]::-moz-range-thumb {
+            height: 22px;
+            width: 22px;
+            border-radius: 50%;
+            border: 3px solid #ff4d4f;
+            background: #ffffff;
+            pointer-events: auto;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+    .custom-apply-btn {
+        background-color: #ff4d4f;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
+    }
+
+        .custom-apply-btn:hover {
+            background-color: #e03e40;
+            color: #ffffff;
+        }
 </style>
 
 <div class="container my-4">
     <!-- Search Query Banner & Filter Trigger -->
+    <!-- Header & Filter Trigger -->
     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
         <div>
             @if (!string.IsNullOrEmpty(Model.SearchQuery))
             {
                 <span class="text-muted small">Your search Results for:</span>
                 <h1 class="fw-bold text-uppercase m-0">"@Model.SearchQuery" <span class="fs-6 text-muted">(@Model.TotalCount)</span></h1>
+                <h1 class="fw-bold text-uppercase m-0">"@Model.SearchQuery" <span class="fs-6 text-muted">(<span class="total-count-label">@Model.TotalCount</span>)</span></h1>
             }
             else
             {
                 <h1 class="fw-bold text-uppercase m-0">ALL PRODUCTS <span class="fs-6 text-muted">(@Model.TotalCount)</span></h1>
+                <h1 class="fw-bold text-uppercase m-0">ALL PRODUCTS <span class="fs-6 text-muted">(<span class="total-count-label">@Model.TotalCount</span>)</span></h1>
             }
         </div>
 
-        <!-- Filter & Sort Trigger Button -->
         <button class="btn store-filter-button px-4 py-2 fw-semibold" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
             Filter & Sort <i class="fa-solid fa-sliders ms-2"></i>
         </button>
@@ -163,6 +282,7 @@
 
     <!-- Product Grid -->
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4" id="productsGrid">
         @if (Model.Items.Any())
         {
             @foreach (var item in Model.Items)
@@ -245,7 +365,36 @@
                             <label class="form-check-label" for="sortHigh">Price: High to Low</label>
                         </div>
                     </div>
+<!-- Offcanvas Sidebar Filter & Sort -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel" style="width: 400px;">
+    <div class="offcanvas-header border-bottom py-3">
+        <h5 class="offcanvas-title fw-bold text-dark fs-5" id="filterOffcanvasLabel">Filter & Sort</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <form asp-action="Index" method="get" class="d-flex flex-column h-100" id="filterForm">
+        <input type="hidden" name="searchQuery" value="@Model.SearchQuery" />
+        <input type="hidden" name="minPrice" id="minPriceInput" value="@(Model.MinPrice ?? Model.DbMinPrice)" />
+        <input type="hidden" name="maxPrice" id="maxPriceInput" value="@(Model.MaxPrice ?? Model.DbMaxPrice)" />
+
+        <div class="offcanvas-body px-4 py-3">
+
+            <!-- SORT BY -->
+            <div class="filter-section mb-4">
+                <button class="filter-collapse-btn d-flex justify-content-between align-items-center w-100 border-0 bg-transparent p-0 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort" aria-expanded="true">
+                    <span class="fw-bold text-dark text-uppercase fs-6">SORT BY</span>
+                    <i class="fa-solid fa-chevron-down text-muted fs-6"></i>
+                </button>
+                <div id="collapseSort" class="collapse show">
+                    <select name="sortBy" id="sortBySelect" class="form-select form-select-lg custom-filter-select">
+                        <option value="">Default Order</option>
+                        <option value="price_low_high" selected="@(Model.SortBy == "price_low_high")">Price: Low to High</option>
+                        <option value="price_high_low" selected="@(Model.SortBy == "price_high_low")">Price: High to Low</option>
+                        <option value="name_asc" selected="@(Model.SortBy == "name_asc")">Name: A to Z</option>
+                        <option value="name_desc" selected="@(Model.SortBy == "name_desc")">Name: Z to A</option>
+                    </select>
                 </div>
+            </div>
 
                 <!-- 2. قسم نوع المنتج / الفئات (Categories / Product Type) -->
                 <div class="border-bottom py-2">
@@ -356,6 +505,76 @@
             <h4>Products Results</h4>
             <hr />
             <!-- كود الكروت الخاصة بالمنتجات يوضع هنا بناءً على ViewBag.Products -->
+            <hr class="my-3 text-muted opacity-25" />
+
+            <!-- CATEGORY -->
+            @if (Model.Categories != null && Model.Categories.Any())
+            {
+                <div class="filter-section mb-4">
+                    <button class="filter-collapse-btn d-flex justify-content-between align-items-center w-100 border-0 bg-transparent p-0 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory" aria-expanded="true">
+                        <span class="fw-bold text-dark text-uppercase fs-6">CATEGORY</span>
+                        <i class="fa-solid fa-chevron-down text-muted fs-6"></i>
+                    </button>
+                    <div id="collapseCategory" class="collapse show">
+                        <select name="categoryId" id="categorySelect" class="form-select form-select-lg custom-filter-select">
+                            <option value="">All Categories</option>
+                            @foreach (var category in Model.Categories)
+                            {
+                                <option value="@category.Id" selected="@(Model.CategoryId == category.Id)">@category.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <hr class="my-3 text-muted opacity-25" />
+            }
+
+            <!-- BRAND -->
+            <div class="filter-section mb-4">
+                <button class="filter-collapse-btn d-flex justify-content-between align-items-center w-100 border-0 bg-transparent p-0 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrand" aria-expanded="true">
+                    <span class="fw-bold text-dark text-uppercase fs-6">BRAND</span>
+                    <i class="fa-solid fa-chevron-down text-muted fs-6"></i>
+                </button>
+                <div id="collapseBrand" class="collapse show">
+                    <select name="brandId" id="brandSelect" class="form-select form-select-lg custom-filter-select">
+                        <option value="">All Brands</option>
+                        @foreach (var brand in Model.Brands)
+                        {
+                            <option value="@brand.Id" selected="@(Model.BrandId == brand.Id)">@brand.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <hr class="my-3 text-muted opacity-25" />
+
+            <!-- PRICE RANGE -->
+            <div class="filter-section mb-4">
+                <button class="filter-collapse-btn d-flex justify-content-between align-items-center w-100 border-0 bg-transparent p-0 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice" aria-expanded="true">
+                    <span class="fw-bold text-dark text-uppercase fs-6">PRICE RANGE</span>
+                    <i class="fa-solid fa-chevron-down text-muted fs-6"></i>
+                </button>
+                <div id="collapsePrice" class="collapse show">
+                    <div class="d-flex justify-content-between text-dark fw-bold mb-2 fs-6">
+                        <span id="minPriceDisplay">@((Model.MinPrice ?? Model.DbMinPrice).ToString("N0")) EGP</span>
+                        <span id="maxPriceDisplay">@((Model.MaxPrice ?? Model.DbMaxPrice).ToString("N0")) EGP</span>
+                    </div>
+
+                    <div class="price-slider-wrapper">
+                        <div class="slider-track" id="sliderTrack"></div>
+                        <input type="range" id="sliderMin" min="@Model.DbMinPrice" max="@Model.DbMaxPrice" value="@(Model.MinPrice ?? Model.DbMinPrice)" step="1" />
+                        <input type="range" id="sliderMax" min="@Model.DbMinPrice" max="@Model.DbMaxPrice" value="@(Model.MaxPrice ?? Model.DbMaxPrice)" step="1" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- APPLY BUTTON -->
+        <div class="p-3 border-top bg-white mt-auto">
+            <button type="submit" class="btn custom-apply-btn w-100 py-3 fw-bold text-uppercase fs-6 d-flex align-items-center justify-content-center gap-2">
+                APPLY (<span class="filter-count-label">@Model.TotalCount</span>) <i class="fa-solid fa-arrow-right fs-6"></i>
+            </button>
         </div>
     </div>
 </div>
@@ -394,6 +613,208 @@
                 
                 minPriceVal.textContent = minVal;
                 maxPriceVal.textContent = maxVal;
+        document.addEventListener('DOMContentLoaded', function () {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            // البيانات للفلترة اللحظية من الـ Model
+            const categoryBrandMap = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CategoryBrandMap ?? new Dictionary<long, List<long>>()));
+            const itemsMeta = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ItemsFilterMeta ?? new List<Mazeed.BLL.ViewModels.ItemFilterMetaVM>()));
+
+            // 1. Dual Range Slider Logic
+            const minSlider = document.getElementById('sliderMin');
+            const maxSlider = document.getElementById('sliderMax');
+            const minDisplay = document.getElementById('minPriceDisplay');
+            const maxDisplay = document.getElementById('maxPriceDisplay');
+            const minInput = document.getElementById('minPriceInput');
+            const maxInput = document.getElementById('maxPriceInput');
+            const track = document.getElementById('sliderTrack');
+
+            function updateSliderAndMeta() {
+                if (!minSlider || !maxSlider) return;
+
+                const dbMin = parseFloat(minSlider.min) || 0;
+                const dbMax = parseFloat(minSlider.max) || 1;
+
+                let minVal = parseFloat(minSlider.value);
+                let maxVal = parseFloat(maxSlider.value);
+
+                if (minVal > maxVal - 1) {
+                    minVal = maxVal - 1;
+                    minSlider.value = minVal;
+                }
+                if (maxVal < minVal + 1) {
+                    maxVal = minVal + 1;
+                    maxSlider.value = maxVal;
+                }
+
+                const range = dbMax - dbMin || 1;
+                const percent1 = ((minVal - dbMin) / range) * 100;
+                const percent2 = ((maxVal - dbMin) / range) * 100;
+
+                track.style.left = percent1 + "%";
+                track.style.width = (percent2 - percent1) + "%";
+
+                minDisplay.innerText = Math.round(minVal).toLocaleString() + " EGP";
+                maxDisplay.innerText = Math.round(maxVal).toLocaleString() + " EGP";
+
+                minInput.value = minVal;
+                maxInput.value = maxVal;
+
+                updateDynamicCount();
+            }
+
+            if (minSlider && maxSlider) {
+                minSlider.addEventListener('input', updateSliderAndMeta);
+                maxSlider.addEventListener('input', updateSliderAndMeta);
+            }
+
+            // 2. تحديث الخيارات المتاحة للـ Brand بناءً على الـ Category والعدّاد اللحظي
+            const categorySelect = document.getElementById('categorySelect');
+            const brandSelect = document.getElementById('brandSelect');
+
+            function updateDynamicCount() {
+                const selectedCat = categorySelect ? categorySelect.value : "";
+                const selectedBrand = brandSelect ? brandSelect.value : "";
+                const minP = parseFloat(minInput.value) || 0;
+                const maxP = parseFloat(maxInput.value) || Infinity;
+
+                let matchedCount = itemsMeta.filter(item => {
+                    let matchCat = !selectedCat || (item.CategoryIds && item.CategoryIds.includes(parseInt(selectedCat, 10)));
+                    let matchBrand = !selectedBrand || item.BrandId === parseInt(selectedBrand, 10);
+                    let matchPrice = item.Price >= minP && item.Price <= maxP;
+                    return matchCat && matchBrand && matchPrice;
+                }).length;
+
+                document.querySelectorAll('.filter-count-label').forEach(el => el.innerText = matchedCount);
+            }
+
+            if (categorySelect) {
+                categorySelect.addEventListener('change', function () {
+                    const selectedCat = this.value;
+                    if (brandSelect) {
+                        const options = brandSelect.querySelectorAll('option');
+                        if (selectedCat && categoryBrandMap[selectedCat]) {
+                            const validBrandIds = categoryBrandMap[selectedCat];
+                            options.forEach(opt => {
+                                if (opt.value === "" || validBrandIds.includes(parseInt(opt.value, 10))) {
+                                    opt.style.display = 'block';
+                                    opt.disabled = false;
+                                } else {
+                                    opt.style.display = 'none';
+                                    opt.disabled = true;
+                                    if (opt.selected) brandSelect.value = "";
+                                }
+                            });
+                        } else {
+                            options.forEach(opt => {
+                                opt.style.display = 'block';
+                                opt.disabled = false;
+                            });
+                        }
+                    }
+                    updateDynamicCount();
+                });
+            }
+
+            if (brandSelect) {
+                brandSelect.addEventListener('change', updateDynamicCount);
+            }
+
+            // تشغيل التهيئة الأولية للـ Slider
+            updateSliderAndMeta();
+
+            // 3. Wishlist Logic
+            function redirectToLogin() {
+                const returnUrl = window.location.pathname + window.location.search;
+                if (typeof toastr !== 'undefined') toastr.info('Please sign in to continue.');
+                setTimeout(function () {
+                    window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
+                }, 900);
+            }
+
+            async function apiCall(url, method) {
+                const headers = { 'Accept': 'application/json' };
+                if (token) headers['RequestVerificationToken'] = token;
+
+                const res = await fetch(url, { method, headers });
+                if (res.status === 401) {
+                    redirectToLogin();
+                    throw new Error('unauthenticated');
+                }
+
+                let data = null;
+                try { data = await res.json(); } catch (e) { }
+
+                if (!res.ok) {
+                    if (typeof toastr !== 'undefined') toastr.error((data && data.message) || 'Something went wrong.');
+                    throw new Error('request failed');
+                }
+                return data;
+            }
+
+            function setHeartState(btn, active) {
+                const icon = btn.querySelector('i');
+                if (active) {
+                    icon.classList.remove('fa-regular');
+                    icon.classList.add('fa-solid');
+                    btn.classList.add('text-danger');
+                } else {
+                    icon.classList.remove('fa-solid');
+                    icon.classList.add('fa-regular');
+                    btn.classList.remove('text-danger');
+                }
+            }
+
+            fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
+                .then(res => res.ok ? res.json() : null)
+                .then(result => {
+                    const favoritedIds = (result?.data || []).map(i => String(i.itemId));
+                    document.querySelectorAll('.fav-toggle-btn').forEach(btn => {
+                        if (favoritedIds.includes(btn.dataset.itemId)) setHeartState(btn, true);
+                    });
+                })
+                .catch(() => { });
+
+            document.querySelectorAll('.fav-toggle-btn').forEach(btn => {
+                btn.addEventListener('click', async function (e) {
+                    e.preventDefault();
+                    const itemId = this.dataset.itemId;
+                    const isActive = this.classList.contains('text-danger');
+
+                    try {
+                        if (isActive) {
+                            await apiCall(`/api/wishlist/${itemId}`, 'DELETE');
+                            setHeartState(this, false);
+                            if (typeof toastr !== 'undefined') toastr.success('Removed from favorites.');
+                        } else {
+                            await apiCall(`/api/wishlist/${itemId}`, 'POST');
+                            setHeartState(this, true);
+                            if (typeof toastr !== 'undefined') toastr.success('Added to favorites.');
+                        }
+                    } catch (e) { }
+                });
+            });
+
+            // 4. Reviews Summary Fetch
+            const ratingElements = document.querySelectorAll('.rating-value');
+            const itemIds = Array.from(ratingElements).map(el => parseInt(el.dataset.itemId, 10));
+            if (itemIds.length) {
+                fetch('/api/reviews/summaries', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ ItemIds: itemIds })
+                })
+                    .then(res => res.ok ? res.json() : null)
+                    .then(result => {
+                        const summaries = result?.data || {};
+                        ratingElements.forEach(el => {
+                            const summary = summaries[el.dataset.itemId];
+                            el.innerHTML = summary && summary.reviewCount > 0
+                                ? `&#9733; ${summary.averageRating.toFixed(1)} <span class="text-muted fw-normal">(${summary.reviewCount})</span>`
+                                : '&#9734; No reviews';
+                        });
+                    })
+                    .catch(() => { });
             }
 
             if (minSlider && maxSlider) {
