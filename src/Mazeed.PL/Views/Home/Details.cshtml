@@ -1,0 +1,1120 @@
+@model Mazeed.BLL.ViewModels.ItemDetailsVM
+@using System.Text.Json
+@using Mazeed.BLL.Helpers
+
+@{
+    ViewData["Title"] = Model.Product?.Name ?? "Product Details";
+    var primaryImage = Model.Product?.Photos?.FirstOrDefault();
+    var productCategory = Model.Product?.CategoryNames?.FirstOrDefault() ?? "General";
+    var variantLabels = VariantLabelHelper.GetLabels(Model.Product?.CategoryNames);
+}
+
+<style>
+    .main-img-box {
+        position: relative;
+        background-color: #f8f9fa;
+        border-radius: 16px;
+        height: 420px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border: 1px solid #edf2f7;
+    }
+
+    .main-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .thumb-img {
+        width: 75px;
+        height: 75px;
+        border-radius: 10px;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background-color: #f8f9fa;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .thumb-img.active, .thumb-img:hover {
+        border-color: #ff4d4f;
+        transform: scale(1.03);
+    }
+
+    .badge-sale-drop {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        background-color: #ff4d4f;
+        color: white;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 5px 12px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+    }
+
+    .opt-btn {
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        border-radius: 30px;
+        padding: 6px 18px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .opt-btn:hover {
+            border-color: #111827;
+        }
+
+        .opt-btn.active {
+            border-color: #111827;
+            background: #111827;
+            color: #ffffff;
+        }
+
+    .qty-picker {
+        display: inline-flex;
+        align-items: center;
+        background: #f3f4f6;
+        border-radius: 8px;
+        padding: 8px 18px;
+        gap: 16px;
+        font-weight: bold;
+    }
+
+        .qty-picker button {
+            cursor: pointer;
+            font-size: 16px;
+            color: #4b5563;
+        }
+
+    .btn-add-cart {
+        background-color: #ff4d4f;
+        color: white;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-block;
+        border: none;
+        transition: background-color 0.2s ease;
+    }
+
+        .btn-add-cart:hover {
+            background-color: #e03e41;
+            color: white;
+        }
+
+    .wishlist-detail-btn {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        color: #9ca3af;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .wishlist-detail-btn:hover {
+        border-color: #ff4d4f;
+    }
+
+    .wishlist-detail-btn.active {
+        color: #ff4d4f;
+        border-color: #ff4d4f;
+        background: #fff5f5;
+    }
+
+    /* Product Cards Matching Home Page Style */
+    .product-card {
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+    .product-img-wrapper {
+        position: relative;
+        background-color: #f4f4f5;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .product-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .btn-action-dark {
+        background-color: #111827;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+    .btn-action-dark:hover {
+        background-color: #1f2937;
+        color: #ffffff;
+    }
+
+    .btn-action-light {
+        background-color: #ffffff;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+    .btn-action-light:hover {
+        background-color: #f9fafb;
+        color: #374151;
+    }
+
+    .variant-specifications {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    .specification-label {
+        color: #6c757d;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    .specification-value {
+        color: #212529;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* ===== Reviews & Ratings — redesigned ===== */
+    .reviews-card {
+        border-radius: 20px;
+        border: 1px solid #f0f0f0;
+    }
+
+    .rating-overview {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .rating-overview-score {
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .rating-overview-score .big-num {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #111827;
+        line-height: 1;
+    }
+
+    .rating-overview-score .review-stars {
+        font-size: 16px;
+        margin: 6px 0;
+        display: block;
+    }
+
+    .rating-bars {
+        flex: 1 1 260px;
+        min-width: 220px;
+    }
+
+    .rating-bar-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 6px;
+        font-size: 12px;
+    }
+
+    .rating-bar-row .star-label {
+        width: 40px;
+        color: #6b7280;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+
+    .rating-bar-track {
+        flex: 1;
+        height: 8px;
+        border-radius: 4px;
+        background: #f3f4f6;
+        overflow: hidden;
+    }
+
+    .rating-bar-fill {
+        height: 100%;
+        background: #f59e0b;
+        border-radius: 4px;
+        width: 0%;
+        transition: width 0.4s ease;
+    }
+
+    .rating-bar-row .bar-count {
+        width: 28px;
+        text-align: right;
+        color: #9ca3af;
+        flex-shrink: 0;
+    }
+
+    .review-item {
+        display: flex;
+        gap: 14px;
+        padding: 18px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .review-item:last-child {
+        border-bottom: none;
+    }
+
+    .review-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #111827;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 15px;
+        flex-shrink: 0;
+    }
+
+    .review-stars i {
+        font-size: 13px;
+    }
+
+    .review-stars .filled {
+        color: #f59e0b;
+    }
+
+    .review-stars .empty {
+        color: #e5e7eb;
+    }
+
+    .review-body .review-name {
+        font-weight: 700;
+        color: #111827;
+        font-size: 14px;
+    }
+
+    .review-body .review-date {
+        font-size: 12px;
+        color: #9ca3af;
+    }
+
+    .review-body p {
+        font-size: 14px;
+        color: #374151;
+        margin: 6px 0 0;
+    }
+
+    /* Write-a-review box */
+    .write-review-box {
+        background: #f9fafb;
+        border: 1px solid #f0f0f0;
+        border-radius: 16px;
+        padding: 20px;
+    }
+
+    .write-review-box h6 {
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 12px;
+    }
+
+    /* Star Rating Input (hover-to-rate) */
+    .star-rating-input {
+        display: inline-flex;
+        gap: 8px;
+        font-size: 30px;
+        cursor: pointer;
+    }
+
+    .star-rating-input i {
+        color: #d1d5db;
+        transition: color 0.15s ease, transform 0.1s ease;
+    }
+
+    .star-rating-input i.hovered,
+    .star-rating-input i.selected {
+        color: #f59e0b;
+    }
+
+    .star-rating-input i:hover {
+        transform: scale(1.12);
+    }
+
+    .verified-note {
+        font-size: 12.5px;
+        color: #9ca3af;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+</style>
+
+<div class="container my-5">
+    <!-- Main Product Details -->
+    <div class="row g-5 align-items-start">
+
+        <!-- Left: Images Gallery -->
+        <div class="col-lg-6">
+            <div class="main-img-box mb-3">
+                @if (Model.Product.OldPrice.HasValue && Model.Product.OldPrice > Model.Product.Price)
+                {
+                    <span class="badge-sale-drop">SALE DROP</span>
+                }
+
+                @if (primaryImage != null)
+                {
+                    <img id="mainImage" src="@primaryImage" alt="@Model.Product.Name" />
+                }
+                else
+                {
+                    <i class="fa-solid fa-box-open fa-5x text-muted"></i>
+                }
+            </div>
+
+            <div id="thumbnailsContainer" class="d-flex gap-2 overflow-auto py-1">
+                @if (Model.Product.Photos != null && Model.Product.Photos.Any())
+                {
+                    @foreach (var photo in Model.Product.Photos)
+                    {
+                        <img src="@photo" class="thumb-img @(photo == primaryImage ? "active" : "")" onclick="switchImage(this, '@photo')" />
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Right: Info Details -->
+        <div class="col-lg-6">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-uppercase fw-bold text-danger small tracking-wider">
+                    @(Model.Product.CategoryNames?.FirstOrDefault() ?? "General")
+                    @if (!string.IsNullOrEmpty(Model.Product.BrandName))
+                    {
+                        <span> &gt; @Model.Product.BrandName</span>
+                    }
+                </span>
+                <span class="small fw-bold text-dark" id="ratingSummaryDisplay">
+                    &#9733; <span id="avgRatingVal">0.0</span>
+                    <span class="text-muted fw-normal">(<span id="reviewCountVal">0</span> Reviews)</span>
+                </span>
+            </div>
+
+            <h1 class="fw-bold text-dark mb-3">@Model.Product.Name</h1>
+
+            <!-- Price -->
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <span id="mainDisplayPrice" class="fs-2 fw-bold text-danger">@Model.Product.Price.ToString("N0") EGP</span>
+                @if (Model.Product.OldPrice.HasValue && Model.Product.OldPrice > Model.Product.Price)
+                {
+                    <span class="text-decoration-line-through text-muted fs-5">@Model.Product.OldPrice.Value.ToString("N0") EGP</span>
+                    <span class="badge bg-danger-subtle text-danger fw-bold fs-7 px-2 py-1">
+                        Save @((Model.Product.OldPrice.Value - Model.Product.Price).ToString("N0")) EGP
+                    </span>
+                }
+            </div>
+
+            <!-- Dynamic Colors from Variants -->
+            @if (Model.AvailableColors != null && Model.AvailableColors.Any())
+            {
+                <div class="mb-4">
+                    <label class="form-label text-uppercase fw-bold text-muted small d-block mb-2">@variantLabels.Color</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var color in Model.AvailableColors)
+                        {
+                            <button type="button" class="opt-btn color-opt @(color == Model.AvailableColors.First() ? "active" : "")" data-type="color" data-value="@color" onclick="selectOption(this)">
+                                @color
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Dynamic Sizes from Variants -->
+            @if (Model.AvailableSizes != null && Model.AvailableSizes.Any())
+            {
+                <div class="mb-4">
+                    <label class="form-label text-uppercase fw-bold text-muted small d-block mb-2">@variantLabels.Size</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var size in Model.AvailableSizes)
+                        {
+                            <button type="button" class="opt-btn size-opt @(size == Model.AvailableSizes.First() ? "active" : "")" data-type="size" data-value="@size" onclick="selectOption(this)">
+                                @size
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.Variants != null && Model.Variants.Any())
+            {
+                <div class="variant-specifications mb-4" aria-live="polite">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="fa-solid fa-clipboard-list text-danger"></i>
+                        <h6 class="fw-bold mb-0">Selected Variant Specifications</h6>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">SKU</div>
+                            <div class="specification-value" id="specSku">—</div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">@variantLabels.Color</div>
+                            <div class="specification-value" id="specColor">—</div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">@variantLabels.Size</div>
+                            <div class="specification-value" id="specSize">—</div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">Price Adjustment</div>
+                            <div class="specification-value" id="specPriceAdjustment">—</div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">Availability</div>
+                            <div class="specification-value" id="specAvailability">—</div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="specification-label">Brand</div>
+                            <div class="specification-value">@(Model.Product.BrandName ?? "—")</div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Action Controls (Quantity + Add to Cart + Wishlist) -->
+            <div class="d-flex align-items-center gap-3 pt-2">
+                <div class="qty-picker">
+                    <button class="border-0 bg-transparent" type="button" onclick="decreaseQty()">-</button>
+                    <span id="qtyVal">1</span>
+                    <button class="border-0 bg-transparent" type="button" onclick="increaseQty()">+</button>
+                </div>
+
+                <button type="button" id="addToCartBtn" class="btn-add-cart flex-grow-1 text-center">
+                    Add to Cart — @Model.Product.Price.ToString("N0") EGP
+                </button>
+
+                <button type="button" id="wishlistDetailBtn" class="wishlist-detail-btn" title="Add to Wishlist">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews & Ratings Section -->
+    <div class="card reviews-card shadow-sm p-4 my-5">
+        <h5 class="fw-bold mb-4">Reviews & Ratings</h5>
+
+        <div class="rating-overview mb-4">
+            <div class="rating-overview-score">
+                <div class="big-num" id="summaryAvgRating">0.0</div>
+                <span class="review-stars" id="summaryStarsDisplay"></span>
+                <div class="text-muted small" id="summaryReviewCount">0 reviews</div>
+            </div>
+            <div class="rating-bars" id="ratingBarsContainer">
+                <!-- filled in by JS -->
+            </div>
+        </div>
+
+        <hr class="my-4" />
+
+        <div id="reviewsListContainer">
+            <div class="text-center text-muted py-4">
+                <div class="spinner-border text-danger" role="status"></div>
+            </div>
+        </div>
+
+        <hr class="my-4" />
+
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <div class="write-review-box" id="writeReviewFormWrapper">
+                <h6>Write a Review</h6>
+                <form id="reviewForm">
+                    <div class="mb-3">
+                        <div class="star-rating-input" id="starRatingInput">
+                            <i class="fa-solid fa-star" data-value="1"></i>
+                            <i class="fa-solid fa-star" data-value="2"></i>
+                            <i class="fa-solid fa-star" data-value="3"></i>
+                            <i class="fa-solid fa-star" data-value="4"></i>
+                            <i class="fa-solid fa-star" data-value="5"></i>
+                        </div>
+                        <input type="hidden" id="reviewRateInput" value="" />
+                    </div>
+                    <div class="mb-3">
+                        <textarea name="Comment" class="form-control" rows="3" placeholder="Share your thoughts about this product..." maxlength="1000"></textarea>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <button type="submit" id="submitReviewBtn" class="btn-add-cart px-4 py-2">Submit Review</button>
+                        <span class="verified-note"><i class="fa-solid fa-circle-check text-success"></i> Only verified purchasers can review</span>
+                    </div>
+                </form>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-3">
+                <p class="text-muted mb-2">Sign in to write a review.</p>
+                <a href="/Auth/Login?ReturnUrl=@Uri.EscapeDataString(Context.Request.Path + Context.Request.QueryString)" class="btn btn-outline-dark btn-sm">Sign In</a>
+            </div>
+        }
+    </div>
+
+    <!-- Recommendation System (Dynamic Same Category Items) -->
+    @if (Model.RelatedProducts != null && Model.RelatedProducts.Any())
+    {
+        <div class="mt-5 pt-3">
+            <span class="text-uppercase fw-bold text-danger small tracking-wide d-block mb-1">RELATED DROPS</span>
+            <h3 class="fw-bold mb-4">You May Also Like</h3>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="relatedContainer">
+                @foreach (var item in Model.RelatedProducts)
+                {
+                    var relImg = item.Photos?.FirstOrDefault();
+                    <div class="col related-item" id="related-card-@item.Id">
+                        <div class="product-card">
+                            <div class="product-img-wrapper">
+                                @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                                {
+                                    <span class="badge-sale-drop">SALE</span>
+                                }
+                                @if (relImg != null)
+                                {
+                                    <img src="@relImg" alt="@item.Name" />
+                                }
+                                else
+                                {
+                                    <i class="fa-solid fa-box-open fa-3x text-muted"></i>
+                                }
+                            </div>
+                            <div class="p-3 d-flex flex-column justify-content-between flex-grow-1">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="text-uppercase fw-bold text-muted small">
+                                            @(item.CategoryNames?.FirstOrDefault() ?? "General")
+                                        </span>
+                                        <span class="small fw-bold text-dark related-rating-value" data-item-id="@item.Id">&#9734; —</span>
+                                    </div>
+                                    <h6 class="fw-bold text-dark text-truncate mb-2">@item.Name</h6>
+                                    <span class="fw-bold text-danger fs-6 d-block mb-3">@item.Price.ToString("N0") EGP</span>
+                                </div>
+
+                                <!-- Matching Buttons Style from Home -->
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="btn-action-dark text-center d-block text-decoration-none">Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    const visibleLimit = 3;
+    const allVariants = @Html.Raw(JsonSerializer.Serialize(Model.Variants ?? new List<Mazeed.BLL.ViewModels.ItemVariantVM>()));
+    const productPhotos = @Html.Raw(JsonSerializer.Serialize(Model.Product.Photos ?? new List<string>()));
+    const basePrice = parseFloat('@Model.Product.Price');
+    const detailsItemId = @Model.Product.Id;
+
+    function redirectToLogin() {
+    const returnUrl = window.location.pathname + window.location.search;
+    if (typeof toastr !== 'undefined') toastr.info('Please sign in to continue.');
+    setTimeout(function () {
+        window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
+    }, 900);
+    }
+
+    function getSelectedVariant() {
+        const activeColorBtn = document.querySelector('.color-opt.active');
+        const activeSizeBtn = document.querySelector('.size-opt.active');
+        const selectedColor = activeColorBtn ? activeColorBtn.getAttribute('data-value') : null;
+        const selectedSize = activeSizeBtn ? activeSizeBtn.getAttribute('data-value') : null;
+
+        return allVariants.find(v =>
+            (!selectedColor || v.Color === selectedColor) &&
+            (!selectedSize || v.Size === selectedSize)
+        );
+    }
+
+    function updateVariantSpecifications() {
+        const variant = getSelectedVariant();
+        const specSku = document.getElementById('specSku');
+        if (!specSku) return;
+
+        if (!variant) {
+            specSku.textContent = 'Select available options';
+            document.getElementById('specColor').textContent = '—';
+            document.getElementById('specSize').textContent = '—';
+            document.getElementById('specPriceAdjustment').textContent = '—';
+            document.getElementById('specAvailability').textContent = 'Unavailable';
+            return;
+        }
+
+        specSku.textContent = variant.SKU || '—';
+        document.getElementById('specColor').textContent = variant.Color || '—';
+        document.getElementById('specSize').textContent = variant.Size || '—';
+        document.getElementById('specPriceAdjustment').textContent =
+            (parseFloat(variant.PriceAdjustment || 0) >= 0 ? '+' : '') + parseFloat(variant.PriceAdjustment || 0).toFixed(2) + ' EGP';
+        document.getElementById('specAvailability').textContent = variant.StockQuantity > 0
+            ? variant.StockQuantity + ' in stock'
+            : 'Out of stock';
+    }
+
+    function updatePriceDisplay() {
+        let matchingVariant = getSelectedVariant();
+
+        let priceAdjustment = 0;
+        if (matchingVariant && matchingVariant.PriceAdjustment) {
+            priceAdjustment = parseFloat(matchingVariant.PriceAdjustment);
+        }
+
+        let unitPrice = basePrice + priceAdjustment;
+
+        let qtySpan = document.getElementById('qtyVal');
+        let quantity = parseInt(qtySpan.innerText) || 1;
+
+        let totalPrice = unitPrice * quantity;
+
+            // الكود الجديد
+    document.getElementById('mainDisplayPrice').innerText = Math.round(unitPrice).toLocaleString() + ' EGP';
+        document.getElementById('addToCartBtn').innerText = 'Add to Cart — ' + totalPrice.toFixed(2) + ' EGP';
+        updateVariantSpecifications();
+    }
+
+    function switchImage(thumb, src) {
+        document.getElementById('mainImage').src = src;
+        document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
+        if (thumb) thumb.classList.add('active');
+    }
+
+    function selectOption(btn) {
+        const parent = btn.parentElement;
+        parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateVariantGallery();
+    }
+
+    function updateVariantGallery() {
+        let matchingVariant = getSelectedVariant();
+
+        let photosToShow = productPhotos;
+        if (matchingVariant && matchingVariant.Photos && matchingVariant.Photos.length > 0) {
+            photosToShow = matchingVariant.Photos;
+        }
+
+        const container = document.getElementById('thumbnailsContainer');
+        container.innerHTML = '';
+
+        if (photosToShow.length > 0) {
+            document.getElementById('mainImage').src = photosToShow[0];
+            photosToShow.forEach((photo, index) => {
+                const img = document.createElement('img');
+                img.src = photo;
+                img.className = 'thumb-img' + (index === 0 ? ' active' : '');
+                img.onclick = function() { switchImage(this, photo); };
+                container.appendChild(img);
+            });
+        }
+
+        updatePriceDisplay();
+    }
+
+    function increaseQty() {
+        let qtySpan = document.getElementById('qtyVal');
+        let current = parseInt(qtySpan.innerText);
+        qtySpan.innerText = current + 1;
+        updatePriceDisplay();
+    }
+
+    function decreaseQty() {
+        let qtySpan = document.getElementById('qtyVal');
+        let current = parseInt(qtySpan.innerText);
+        if (current > 1) {
+            qtySpan.innerText = current - 1;
+            updatePriceDisplay();
+        }
+    }
+
+    function updateRelatedVisibility() {
+        const items = document.querySelectorAll('.related-item');
+        items.forEach((item, index) => {
+            if (index < visibleLimit) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function removeRelatedProduct(id) {
+        var card = document.getElementById('related-card-' + id);
+        if (card) {
+            card.style.transition = 'all 0.3s ease';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.8)';
+            setTimeout(function() {
+                card.remove();
+                updateRelatedVisibility();
+            }, 300);
+        }
+    }
+
+    function loadRelatedRatings() {
+        const ratingEls = document.querySelectorAll('.related-rating-value');
+        const itemIds = Array.from(ratingEls).map(el => parseInt(el.dataset.itemId, 10));
+        if (!itemIds.length) return;
+
+        fetch('/api/reviews/summaries', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ ItemIds: itemIds })
+        })
+            .then(res => res.ok ? res.json() : null)
+            .then(result => {
+                const summaries = result?.data || {};
+                ratingEls.forEach(el => {
+                    const s = summaries[el.dataset.itemId];
+                    if (s && s.reviewCount > 0) {
+                        el.innerHTML = `&#9733; ${s.averageRating.toFixed(1)}`;
+                    } else {
+                        el.innerHTML = `&#9734; New`;
+                    }
+                });
+            })
+            .catch(() => { /* leave placeholder dashes */ });
+    }
+
+    async function addToCart() {
+        const variant = getSelectedVariant();
+
+        if (!variant) {
+            if (typeof toastr !== 'undefined') toastr.error('Please select available options.');
+            return;
+        }
+        if (variant.StockQuantity <= 0) {
+            if (typeof toastr !== 'undefined') toastr.error('This variant is out of stock.');
+            return;
+        }
+
+        const quantity = parseInt(document.getElementById('qtyVal').innerText, 10) || 1;
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const btn = document.getElementById('addToCartBtn');
+        const originalText = btn.innerText;
+
+        btn.disabled = true;
+        btn.innerText = 'Adding...';
+
+        try {
+            const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+            if (token) headers['RequestVerificationToken'] = token;
+
+            const res = await fetch('/api/cart', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ ItemVariantId: variant.Id, Quantity: quantity })
+            });
+
+            if (res.status === 401) {
+                redirectToLogin();
+                return;
+            }
+
+            const data = await res.json().catch(() => null);
+
+            if (!res.ok) {
+                throw new Error((data && data.message) || 'Failed to add to cart.');
+            }
+
+            if (typeof toastr !== 'undefined') toastr.success('Added to cart!');
+        } catch (err) {
+            if (typeof toastr !== 'undefined') toastr.error(err.message || 'Something went wrong.');
+        } finally {
+            btn.disabled = false;
+            btn.innerText = originalText;
+        }
+    }
+
+    document.getElementById('addToCartBtn')?.addEventListener('click', addToCart);
+
+    // ---- Wishlist ----
+    function setWishlistBtnState(active) {
+        const btn = document.getElementById('wishlistDetailBtn');
+        const icon = btn.querySelector('i');
+        if (active) {
+            icon.classList.remove('fa-regular');
+            icon.classList.add('fa-solid');
+            btn.classList.add('active');
+        } else {
+            icon.classList.remove('fa-solid');
+            icon.classList.add('fa-regular');
+            btn.classList.remove('active');
+        }
+    }
+
+    async function toggleWishlistDetail() {
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const headers = { 'Accept': 'application/json' };
+        if (token) headers['RequestVerificationToken'] = token;
+        const isActive = document.getElementById('wishlistDetailBtn').classList.contains('active');
+
+        try {
+            const res = await fetch(`/api/wishlist/${detailsItemId}`, { method: isActive ? 'DELETE' : 'POST', headers });
+
+            if (res.status === 401) {
+                redirectToLogin();
+                return;
+            }
+            if (!res.ok) throw new Error('request failed');
+
+            setWishlistBtnState(!isActive);
+            if (typeof toastr !== 'undefined') toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
+        } catch (e) { /* handled */ }
+    }
+
+    document.getElementById('wishlistDetailBtn')?.addEventListener('click', toggleWishlistDetail);
+
+    fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
+        .then(res => res.ok ? res.json() : null)
+        .then(result => {
+            const favoritedIds = (result?.data || []).map(i => String(i.itemId));
+            if (favoritedIds.includes(String(detailsItemId))) setWishlistBtnState(true);
+        })
+        .catch(() => { /* not signed in */ });
+
+    // ---- Star Rating Input (hover-to-rate) ----
+    let selectedRate = 0;
+    const starEls = document.querySelectorAll('#starRatingInput i');
+    const rateInput = document.getElementById('reviewRateInput');
+
+    function paintStars(upTo, cls) {
+        starEls.forEach(star => {
+            const val = parseInt(star.dataset.value, 10);
+            star.classList.toggle(cls, val <= upTo);
+        });
+    }
+
+    starEls.forEach(star => {
+        star.addEventListener('mouseenter', function () {
+            paintStars(parseInt(this.dataset.value, 10), 'hovered');
+        });
+        star.addEventListener('click', function () {
+            selectedRate = parseInt(this.dataset.value, 10);
+            if (rateInput) rateInput.value = selectedRate;
+            paintStars(selectedRate, 'selected');
+        });
+    });
+
+    document.getElementById('starRatingInput')?.addEventListener('mouseleave', function () {
+        starEls.forEach(s => s.classList.remove('hovered'));
+        paintStars(selectedRate, 'selected');
+    });
+
+    function resetStarRating() {
+        selectedRate = 0;
+        if (rateInput) rateInput.value = '';
+        starEls.forEach(s => s.classList.remove('selected', 'hovered'));
+    }
+
+    // ---- Reviews & Ratings ----
+    function starsMarkup(rate, filledClass, emptyClass) {
+        let html = '';
+        for (let i = 1; i <= 5; i++) {
+            html += `<i class="fa-solid fa-star ${i <= rate ? filledClass : emptyClass}"></i>`;
+        }
+        return html;
+    }
+
+    function initialOf(name) {
+        return (name || '?').trim().charAt(0).toUpperCase();
+    }
+
+    function reviewItemHtml(r) {
+        const date = new Date(r.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+        const comment = r.comment ? `<p>${r.comment}</p>` : '';
+        return `
+            <div class="review-item">
+                <div class="review-avatar">${initialOf(r.reviewerName)}</div>
+                <div class="review-body flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-1">
+                        <span class="review-name">${r.reviewerName}</span>
+                        <span class="review-date">${date}</span>
+                    </div>
+                    <span class="review-stars">${starsMarkup(r.rate, 'filled', 'empty')}</span>
+                    ${comment}
+                </div>
+            </div>`;
+    }
+
+    function renderRatingBars(reviews, avgRating, reviewCount) {
+        document.getElementById('summaryStarsDisplay').innerHTML = starsMarkup(Math.round(avgRating), 'filled', 'empty');
+
+        const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+        reviews.forEach(r => { if (counts[r.rate] !== undefined) counts[r.rate]++; });
+
+        const barsContainer = document.getElementById('ratingBarsContainer');
+        let html = '';
+        for (let star = 5; star >= 1; star--) {
+            const count = counts[star];
+            const pct = reviewCount > 0 ? Math.round((count / reviewCount) * 100) : 0;
+            html += `
+                <div class="rating-bar-row">
+                    <span class="star-label">${star} <i class="fa-solid fa-star" style="color:#f59e0b;font-size:11px;"></i></span>
+                    <div class="rating-bar-track"><div class="rating-bar-fill" style="width:${pct}%;"></div></div>
+                    <span class="bar-count">${count}</span>
+                </div>`;
+        }
+        barsContainer.innerHTML = html;
+    }
+
+    async function loadRatingSummary() {
+        try {
+            const res = await fetch(`/api/reviews/item/${detailsItemId}/summary`, { headers: { 'Accept': 'application/json' } });
+            const result = await res.json();
+            const summary = result.data;
+
+            document.getElementById('avgRatingVal').textContent = (summary.averageRating || 0).toFixed(1);
+            document.getElementById('reviewCountVal').textContent = summary.reviewCount || 0;
+            document.getElementById('summaryAvgRating').textContent = (summary.averageRating || 0).toFixed(1);
+            document.getElementById('summaryReviewCount').textContent = `${summary.reviewCount || 0} review${summary.reviewCount === 1 ? '' : 's'}`;
+
+            return summary;
+        } catch (e) {
+            return { averageRating: 0, reviewCount: 0 };
+        }
+    }
+
+    async function loadReviews() {
+        const container = document.getElementById('reviewsListContainer');
+        try {
+            const res = await fetch(`/api/reviews/item/${detailsItemId}`, { headers: { 'Accept': 'application/json' } });
+            const result = await res.json();
+            const reviews = result.data || [];
+
+            container.innerHTML = reviews.length
+                ? reviews.map(reviewItemHtml).join('')
+                : '<p class="text-muted text-center py-3 mb-0">No reviews yet. Be the first to review this product.</p>';
+
+            return reviews;
+        } catch (e) {
+            container.innerHTML = '<p class="text-muted text-center py-3 mb-0">Failed to load reviews.</p>';
+            return [];
+        }
+    }
+
+    async function loadReviewsAndBars() {
+        const [summary, reviews] = await Promise.all([loadRatingSummary(), loadReviews()]);
+        renderRatingBars(reviews, summary.averageRating || 0, summary.reviewCount || 0);
+    }
+
+    document.getElementById('reviewForm')?.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const rate = rateInput?.value;
+        const comment = this.querySelector('textarea[name="Comment"]').value;
+        const submitBtn = document.getElementById('submitReviewBtn');
+
+        if (!rate) {
+            if (typeof toastr !== 'undefined') toastr.error('Please select a rating.');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Submitting...';
+
+        try {
+            const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+            if (token) headers['RequestVerificationToken'] = token;
+
+            const res = await fetch('/api/reviews', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ ItemId: detailsItemId, Rate: parseInt(rate, 10), Comment: comment })
+            });
+
+            if (res.status === 401) {
+                redirectToLogin();
+                return;
+            }
+
+            const data = await res.json().catch(() => null);
+
+            if (!res.ok) {
+                throw new Error((data && data.message) || 'Failed to submit review.');
+            }
+
+            if (typeof toastr !== 'undefined') toastr.success('Review submitted!');
+            this.reset();
+            resetStarRating();
+            await loadReviewsAndBars();
+        } catch (err) {
+            if (typeof toastr !== 'undefined') toastr.error(err.message || 'Something went wrong.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Submit Review';
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        updateRelatedVisibility();
+        updatePriceDisplay();
+        loadReviewsAndBars();
+        loadRelatedRatings();
+    });
+</script>

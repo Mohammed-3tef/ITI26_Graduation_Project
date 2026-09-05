@@ -1,0 +1,62 @@
+﻿@{
+    var errorCode = ViewData["ErrorCode"] ?? "Error";
+    var errorMessage = ViewData["ErrorMessage"] ?? ViewData["Title"] ?? "An Error Occurred";
+    var errorDescription = ViewData["ErrorDescription"] ?? "An unexpected error has occurred.";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <partial name="_MetaDataPartial" />
+    <title>@errorCode - @errorMessage | Mazeed</title>
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem("mazeed-theme") === "dark") document.documentElement.dataset.theme = "dark";
+            } catch { }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <partial name="_Notification" />
+    <button type="button" class="theme-toggle theme-toggle-floating" data-theme-toggle aria-label="Switch to dark mode" title="Switch theme">
+        <i class="bi bi-moon-fill" data-theme-icon></i>
+    </button>
+
+    <div class="mazeed-split-container">
+        <!-- Left Panel -->
+        <div class="mazeed-left-panel">
+            <div>
+                <a asp-controller="Home" asp-action="Index" class="brand-logo">Mazeed<span>+</span></a>
+            </div>
+
+            <!-- Error Content -->
+            <div class="my-auto py-5" style="max-width: 75%;">
+                <span class="error-badge">Error @errorCode</span>
+                <h1 class="fw-bold display-6 text-dark mb-2">@errorMessage</h1>
+                <p class="text-muted mb-4">@errorDescription</p>
+
+                <div class="d-grid gap-2">
+                    @RenderBody()
+                    <a href="javascript:history.back()" class="btn btn-mazeed-secondary text-center">
+                        Go Back
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        @await Html.PartialAsync("_RightPanel")
+    </div>
+
+    @RenderSection("Scripts", required: false)
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 502;
+    ViewData["ErrorMessage"] = "Bad Gateway";
+    ViewData["ErrorDescription"] = "The server received an invalid response from an upstream server.";
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
+    Back to Home
+</a>

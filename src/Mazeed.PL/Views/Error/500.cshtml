@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 500;
+    ViewData["ErrorMessage"] = "Internal Server Error";
+    ViewData["ErrorDescription"] = "Something went wrong on the server. Please try again later.";
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
+    Back to Home
+</a>

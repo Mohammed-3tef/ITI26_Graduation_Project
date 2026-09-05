@@ -1,0 +1,346 @@
+﻿@model Mazeed.BLL.ViewModels.CartVM
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+@section Styles {
+    <style>
+        .cart-empty-state {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .cart-item-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #ffffff;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .cart-item-img {
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .cart-item-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cart-item-img i {
+            font-size: 1.75rem;
+            color: #cbd5e1;
+        }
+
+        .cart-item-info {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .category-subtitle {
+            font-size: 0.7rem;
+            color: #9e9e9e;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .qty-picker {
+            display: inline-flex;
+            align-items: center;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 6px 14px;
+            gap: 14px;
+            font-weight: 700;
+        }
+
+        .qty-picker button {
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            color: #4b5563;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .qty-picker button:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .cart-item-price {
+            width: 90px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .cart-item-remove {
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .cart-item-remove:hover {
+            color: #ef4444;
+        }
+
+        .cart-summary-card {
+            background: #ffffff;
+            border: 1px solid #f0f0f0;
+            border-radius: 16px;
+            padding: 24px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .checkout-form .form-control {
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            height: 44px;
+        }
+
+        .checkout-form .form-control:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+        }
+
+        @@media (max-width: 575.98px) {
+            .cart-item-card {
+                flex-wrap: wrap;
+            }
+
+            .cart-item-price {
+                width: auto;
+                margin-left: auto;
+            }
+        }
+    </style>
+}
+
+<div class="container py-4 py-md-5">
+    @if (TempData["CheckoutMessage"] is string checkoutMessage)
+    {
+        <div class="alert alert-success border-0 shadow-sm" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i>@checkoutMessage
+        </div>
+    }
+
+    <h3 class="fw-bold text-dark mb-4">
+        <i class="fa-solid fa-cart-shopping text-danger me-2"></i>Shopping Cart
+    </h3>
+
+    <form style="display:none">@Html.AntiForgeryToken()</form>
+
+    @if (Model == null || !Model.Items.Any())
+    {
+        <div class="cart-empty-state text-center py-5">
+            <i class="fa-solid fa-cart-shopping fa-3x text-muted mb-3"></i>
+            <h5 class="fw-bold text-dark">Your cart is empty</h5>
+            <p class="text-muted">Looks like you haven't added anything yet.</p>
+            <a href="/Home" class="btn btn-mazeed-primary mt-2">Continue Shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            <div class="col-12 col-lg-8">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="cart-item-card" data-variant-id="@item.ItemVariantId">
+                        <div class="cart-item-img">
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.ItemName" />
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-box-open"></i>
+                            }
+                        </div>
+
+                        <div class="cart-item-info">
+                            <span class="category-subtitle">@(item.BrandName ?? "")</span>
+                            <h6 class="fw-bold text-dark mb-1">@item.ItemName</h6>
+                            <span class="text-muted small">@item.Color / @item.Size &middot; SKU: @item.SKU</span>
+                        </div>
+
+                        <div class="qty-picker">
+                            <button type="button" class="qty-decrease" data-variant-id="@item.ItemVariantId">−</button>
+                            <span class="qty-value">@item.Quantity</span>
+                            <button type="button" class="qty-increase" data-variant-id="@item.ItemVariantId" @(item.Quantity >= item.StockQuantity ? "disabled" : "")>+</button>
+                        </div>
+
+                        <div class="cart-item-price fw-bold text-danger">@item.LineTotal.ToString("F2") EGP</div>
+
+                        <button type="button" class="cart-item-remove" data-variant-id="@item.ItemVariantId" title="Remove">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <div class="cart-summary-card">
+                    <h5 class="fw-bold mb-3">Order Summary</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Subtotal (@Model.TotalItemsCount items)</span>
+                        <span class="fw-semibold">@Model.Subtotal.ToString("F2") EGP</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between fs-5 fw-bold mb-4">
+                        <span>Total</span>
+                        <span class="text-danger">@Model.Subtotal.ToString("F2") EGP</span>
+                    </div>
+
+                    <div class="border-top pt-4 mt-2">
+                        <h6 class="fw-bold mb-3"><i class="fa-solid fa-truck-fast text-danger me-2"></i>Checkout details</h6>
+                        <form asp-controller="Cart" asp-action="CheckOut" method="post" class="checkout-form">
+                            @Html.AntiForgeryToken()
+                            <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label for="FirstName" class="form-label small fw-semibold mb-1">First name</label>
+                                    <input id="FirstName" name="FirstName" value="@ViewBag.CheckoutFirstName" class="form-control" required maxlength="50" autocomplete="given-name" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="LastName" class="form-label small fw-semibold mb-1">Last name</label>
+                                    <input id="LastName" name="LastName" value="@ViewBag.CheckoutLastName" class="form-control" required maxlength="50" autocomplete="family-name" />
+                                </div>
+                                <div class="col-12">
+                                    <label for="PhoneNumber" class="form-label small fw-semibold mb-1">Phone number</label>
+                                    <input id="PhoneNumber" name="PhoneNumber" value="@ViewBag.CheckoutPhoneNumber" type="tel" class="form-control" required maxlength="30" autocomplete="tel" />
+                                </div>
+                                <div class="col-12">
+                                    <label for="ShippingAddress" class="form-label small fw-semibold mb-1">Shipping address</label>
+                                    <textarea id="ShippingAddress" name="ShippingAddress" class="form-control" rows="2" required maxlength="150" autocomplete="street-address" style="height:auto; resize:vertical;">@ViewBag.CheckoutShippingAddress</textarea>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-mazeed-primary w-100 py-2 mt-3">
+                                <i class="fa-solid fa-credit-card me-2"></i>Pay with Paymob
+                            </button>
+                        </form>
+                    </div>
+                    <button type="button" id="clearCartBtn" class="btn btn-link text-muted w-100 mt-2">Clear Cart</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Clear Cart Confirmation Modal -->
+<div class="modal fade" id="clearCartModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-triangle-exclamation me-2"></i>Clear Cart</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <p class="mb-1 fs-5">Are you sure you want to clear your entire cart?</p>
+                <small class="text-muted">This action cannot be undone.</small>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="confirmClearCartBtn" class="btn btn-danger px-4">Clear Cart</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            async function apiCall(url, method, body) {
+                const headers = { 'Accept': 'application/json' };
+                if (token) headers['RequestVerificationToken'] = token;
+
+                const options = { method, headers };
+                if (body) {
+                    headers['Content-Type'] = 'application/json';
+                    options.body = JSON.stringify(body);
+                }
+
+                const res = await fetch(url, options);
+                let data = null;
+                try { data = await res.json(); } catch (e) { /* no JSON body */ }
+
+                if (!res.ok) {
+                    const message = (data && data.message) || 'Something went wrong. Please try again.';
+                    if (typeof toastr !== 'undefined') toastr.error(message);
+                    throw new Error(message);
+                }
+                return data;
+            }
+
+            document.querySelectorAll('.qty-increase').forEach(btn => {
+                btn.addEventListener('click', async function () {
+                    const id = this.dataset.variantId;
+                    const qtySpan = this.closest('.qty-picker').querySelector('.qty-value');
+                    const newQty = parseInt(qtySpan.textContent, 10) + 1;
+                    try {
+                        await apiCall(`/api/cart/${id}`, 'PUT', { quantity: newQty });
+                        location.reload();
+                    } catch (e) { /* handled */ }
+                });
+            });
+
+            document.querySelectorAll('.qty-decrease').forEach(btn => {
+                btn.addEventListener('click', async function () {
+                    const id = this.dataset.variantId;
+                    const qtySpan = this.closest('.qty-picker').querySelector('.qty-value');
+                    const currentQty = parseInt(qtySpan.textContent, 10);
+                    try {
+                        if (currentQty <= 1) {
+                            await apiCall(`/api/cart/${id}`, 'DELETE');
+                        } else {
+                            await apiCall(`/api/cart/${id}`, 'PUT', { quantity: currentQty - 1 });
+                        }
+                        location.reload();
+                    } catch (e) { /* handled */ }
+                });
+            });
+
+            document.querySelectorAll('.cart-item-remove').forEach(btn => {
+                btn.addEventListener('click', async function () {
+                    const id = this.dataset.variantId;
+                    try {
+                        await apiCall(`/api/cart/${id}`, 'DELETE');
+                        location.reload();
+                    } catch (e) { /* handled */ }
+                });
+            });
+
+            document.getElementById('clearCartBtn')?.addEventListener('click', function () {
+                new bootstrap.Modal(document.getElementById('clearCartModal')).show();
+            });
+
+            document.getElementById('confirmClearCartBtn')?.addEventListener('click', async function () {
+                try {
+                    await apiCall('/api/cart', 'DELETE');
+                    location.reload();
+                } catch (e) { /* handled */ }
+            });
+        });
+    </script>
+}

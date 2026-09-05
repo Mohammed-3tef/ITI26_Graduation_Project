@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 409;
+    ViewData["ErrorMessage"] = "Conflict";
+    ViewData["ErrorDescription"] = "The request could not be completed because of a conflict with the current state of the resource.";
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
+    Back to Home
+</a>

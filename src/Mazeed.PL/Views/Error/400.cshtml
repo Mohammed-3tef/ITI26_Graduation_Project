@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 400;
+    ViewData["ErrorMessage"] = "Bad Request";
+    ViewData["ErrorDescription"] = "The server could not understand your request due to invalid parameters or syntax.";
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
+    Back to Home
+</a>

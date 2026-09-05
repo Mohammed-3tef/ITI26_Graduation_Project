@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 503;
+    ViewData["ErrorMessage"] = "Service Unavailable";
+    ViewData["ErrorDescription"] = "The service is temporarily unavailable. Please try again later.";
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
+    Back to Home
+</a>

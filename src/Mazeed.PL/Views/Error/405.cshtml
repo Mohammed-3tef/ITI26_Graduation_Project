@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 405;
+    ViewData["ErrorMessage"] = "Method Not Allowed";
+    ViewData["ErrorDescription"] = "The HTTP method used for this request is not allowed.";
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
+    Back to Home
+</a>

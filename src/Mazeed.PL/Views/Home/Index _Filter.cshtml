@@ -1,0 +1,1857 @@
+﻿@* @model Mazeed.BLL.ViewModels.ShopCatalogVM
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    .hero-banner {
+        background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.35)), url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+        border-radius: 16px;
+        padding: 40px 20px;
+        color: #ffffff;
+        margin-bottom: 30px;
+    }
+
+    @@media (min-width: 768px) {
+        .hero-banner {
+            border-radius: 20px;
+            padding: 90px 60px;
+            margin-bottom: 40px;
+        }
+    }
+
+    .badge-pill-red {
+        background-color: #ff4d4f;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .badge-sale {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background-color: #ff4d4f;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 4px;
+        z-index: 2;
+    }
+
+    .filter-scroll-container {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+        .filter-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+    .btn-filter {
+        border-radius: 50px;
+        padding: 6px 18px;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid #e5e7eb;
+        background-color: #ffffff;
+        color: #111827;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+        .btn-filter.active {
+            background-color: #111827;
+            color: #ffffff;
+            border-color: #111827;
+        }
+
+        .btn-filter:hover {
+            background-color: #111827;
+            color: #ffffff;
+            border-color: #111827;
+        }
+
+    .product-card {
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+    .product-img-wrapper {
+        position: relative;
+        background-color: #f4f4f5;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    @@media (min-width: 576px) {
+        .product-img-wrapper {
+            height: 240px;
+        }
+    }
+
+    .product-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-card-body {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: space-between;
+    }
+
+    .category-tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #9ca3af;
+        text-transform: uppercase;
+    }
+
+    .rating {
+        font-size: 11px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .product-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+        margin-top: 4px;
+        margin-bottom: 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .current-price {
+        font-size: 16px;
+        font-weight: 700;
+        color: #ff4d4f;
+    }
+
+        .current-price.dark {
+            color: #111827;
+        }
+
+    .original-price {
+        font-size: 12px;
+        color: #9ca3af;
+        text-decoration: line-through;
+        margin-left: 4px;
+    }
+
+    /* تكبير وتصميم زر الـ Wishlist */
+    .wishlist-btn {
+        background: none;
+        border: none;
+        color: #9ca3af;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+        .wishlist-btn:hover {
+            transform: scale(1.15);
+        }
+
+        .wishlist-btn.active {
+            color: #ff4d4f;
+        }
+
+    .btn-action-dark {
+        background-color: #111827;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+        .btn-action-dark:hover {
+            background-color: #1f2937;
+            color: #ffffff;
+        }
+
+    .btn-action-light {
+        background-color: #ffffff;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+        .btn-action-light:hover {
+            background-color: #f9fafb;
+            color: #374151;
+        }
+
+    /* تنسيق أزرار التنقل Pagination */
+    .pagination-dots-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+
+    .page-dot-btn {
+        background: none;
+        border: none;
+        color: #d1d5db;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0 4px;
+        transition: color 0.2s ease;
+    }
+
+        .page-dot-btn:hover {
+            color: #9ca3af;
+        }
+
+        .page-dot-btn.active {
+            color: #111827;
+        }
+
+    /* أزرار الأسهم: مربع داكن #111827 وسهم أبيض */
+    .page-nav-btn {
+        background-color: #111827;
+        border: none;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+        .page-nav-btn:hover:not(:disabled) {
+            background-color: #1f2937;
+            transform: translateY(-1px);
+        }
+
+        .page-nav-btn:disabled {
+            background-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+    /* ===== Apply Filter Button ===== */
+    .btn-apply-filter {
+        background-color: #EF4444;
+        border-color: #EF4444;
+        color: #ffffff;
+    }
+
+        .btn-apply-filter:hover,
+        .btn-apply-filter:focus {
+            background-color: #dc2626;
+            border-color: #dc2626;
+            color: #ffffff;
+        }
+
+    /* ===== Price Range Slider (Vanilla, no library) ===== */
+    .price-slider-wrap {
+        position: relative;
+        padding: 6px 0 18px;
+    }
+
+    .price-slider-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 14px;
+    }
+
+    .price-slider-track-wrap {
+        position: relative;
+        height: 16px;
+    }
+
+    .price-slider-track {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 4px;
+        margin-top: -2px;
+        border-radius: 2px;
+        background: #e5e7eb;
+    }
+
+    .price-slider-range {
+        position: absolute;
+        height: 4px;
+        border-radius: 2px;
+        background: #EF4444;
+        left: 0%;
+        right: 0%;
+    }
+
+    .price-range-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 16px;
+        margin: 0;
+        background: transparent;
+        pointer-events: none;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+        .price-range-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            pointer-events: auto;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #EF4444;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 1px #EF4444;
+            cursor: pointer;
+            position: relative;
+            z-index: 3;
+        }
+
+        .price-range-input::-moz-range-thumb {
+            pointer-events: auto;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #EF4444;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 1px #EF4444;
+            cursor: pointer;
+        }
+
+        .price-range-input::-webkit-slider-runnable-track {
+            background: transparent;
+        }
+
+        .price-range-input::-moz-range-track {
+            background: transparent;
+        }
+</style>
+
+<div class="container-fluid px-0">
+    <!-- Hero Section -->
+    <div class="hero-banner">
+        <div class="col-12 col-md-10 col-lg-6">
+            <span class="badge-pill-red mb-2 mb-md-3">Limited Time Drop</span>
+            <h1 class="display-5 display-md-4 fw-bold text-white mb-2 mb-md-3">Seasonal Renewal</h1>
+            <p class="text-white-50 mb-4 fs-6 leading-relaxed">
+                Discover curated designs from international makers. Transform your routine with bespoke objects crafted for modern life.
+            </p>
+            <div class="d-flex flex-wrap align-items-center gap-3">
+                <a asp-controller="Store" asp-action="Index" class="btn btn-light rounded-2 px-4 py-2 fw-semibold fs-7">Shop The Sale</a>
+                <a asp-controller="Home" asp-action="About" class="text-white text-decoration-none fw-semibold fs-7">Learn More &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Header & Dynamic Category Filters -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end gap-3 mb-4">
+        <div>
+            <span class="badge-pill-red mb-1" style="background: none; color: #ff4d4f; padding: 0; font-size: 10px;">CURATED FINDS</span>
+            <h2 class="fw-bold fs-3 text-dark mb-0">Featured Marketplace</h2>
+        </div>
+        <div class="d-flex align-items-center gap-2 w-100 w-md-auto justify-content-md-end">
+            <div class="filter-scroll-container">
+                <a asp-controller="Home" asp-action="Index" class="btn-filter @(Model?.CategoryId == null ? "active" : "")">All</a>
+                @if (Model?.Categories != null && Model.Categories.Any())
+                {
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@cat.Id"
+                           class="btn-filter @(Model.CategoryId == cat.Id ? "active" : "")">
+                            @cat.Name
+                        </a>
+                    }
+                }
+            </div>
+
+            <!-- Filter Button -->
+            <button class="btn-filter border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas" style="cursor: pointer;">
+                Filter <i class="fa-solid fa-sliders ms-1"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Dynamic Product Grid (Fixed to 4 items per row on desktop) -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4" id="productGrid">
+        @if (Model?.Items != null && Model.Items.Any())
+        {
+            @foreach (var item in Model.Items)
+            {
+                <div class="col product-item" id="product-card-@item.Id">
+                    <div class="product-card">
+                        <div class="product-img-wrapper">
+                            @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                            {
+                                <span class="badge-sale">SALE</span>
+                            }
+
+                            @if (item.Photos != null && item.Photos.Any())
+                            {
+                                <img src="@item.Photos.First()" alt="@item.Name" />
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-box-open fa-3x text-muted"></i>
+                            }
+                        </div>
+                        <div class="product-card-body">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="category-tag">
+                                        @(item.CategoryNames != null && item.CategoryNames.Any()
+                                            ? item.CategoryNames.First()
+                                            : (item.BrandName ?? "GENERAL"))
+                                    </span>
+                                    <!-- التعديل هنا: فصل النجمة وتحديد لونها بـ !important -->
+                                    <span class="rating rating-value" data-item-id="@item.Id"><span style="color: #FFD700 !important;">&#9733;</span> —</span>
+                                </div>
+                                <div class="product-title" title="@item.Name">@item.Name</div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <span class="current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
+                                            @item.Price.ToString("N0") EGP
+                                        </span>
+                                        @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                                        {
+                                            <span class="original-price">@item.OldPrice.Value.ToString("N0") EGP</span>
+                                        }
+                                    </div>
+                                    <button class="wishlist-btn" type="button" title="Add to Wishlist" data-item-id="@item.Id" onclick="toggleWishlist(this)">&#9825;</button>
+                                </div>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <a asp-controller="Home"
+                                       asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn-action-dark text-center d-block text-decoration-none">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted fw-bold">No products found</h5>
+                <p class="text-muted small">Try selecting another category or check back later.</p>
+            </div>
+        }
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel" style="width: 380px;">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold" id="filterOffcanvasLabel">Filter & Sort</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <form asp-action="Index" method="get" class="d-flex flex-column h-100" id="filterForm">
+            <!-- Preserve existing search term -->
+            <input type="hidden" name="searchQuery" value="@Model.SearchQuery" />
+
+            <div class="offcanvas-body">
+                <div class="accordion accordion-flush" id="filterAccordion">
+
+                    <!-- Sort By -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingSort">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort">
+                                Sort By
+                            </button>
+                        </h2>
+                        <div id="collapseSort" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <select name="sortBy" class="form-select">
+                                    <option value="">Default Order</option>
+                                    <option value="price_low_high" selected="@(Model.SortBy == "price_low_high")">Price: Low to High</option>
+                                    <option value="price_high_low" selected="@(Model.SortBy == "price_high_low")">Price: High to Low</option>
+                                    <option value="name_asc" selected="@(Model.SortBy == "name_asc")">Name: A to Z</option>
+                                    <option value="name_desc" selected="@(Model.SortBy == "name_desc")">Name: Z to A</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Dropdown -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingCategory">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory">
+                                Product Category
+                            </button>
+                        </h2>
+                        <div id="collapseCategory" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <select name="categoryId" id="categoryFilterSelect" class="form-select">
+                                    <option value="">All Categories</option>
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <option value="@category.Id" selected="@(Model.CategoryId == category.Id)">@category.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Brand Dropdown (يتفلتر ديناميك حسب الكاتيجوري المختارة) -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingBrand">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrand">
+                                Brand
+                            </button>
+                        </h2>
+                        <div id="collapseBrand" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <select name="brandId" id="brandFilterSelect" class="form-select">
+                                    <option value="">All Brands</option>
+                                    @foreach (var brand in Model.Brands)
+                                    {
+                                        <option value="@brand.Id" selected="@(Model.BrandId == brand.Id)">@brand.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price Range Slider -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPrice">
+                            <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
+                                Price
+                            </button>
+                        </h2>
+                        <div id="collapsePrice" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <div class="price-slider-wrap"
+                                     data-min="@Model.DbMinPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                     data-max="@Model.DbMaxPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                     data-selected-min="@((Model.MinPrice ?? Model.DbMinPrice).ToString(System.Globalization.CultureInfo.InvariantCulture))"
+                                     data-selected-max="@((Model.MaxPrice ?? Model.DbMaxPrice).ToString(System.Globalization.CultureInfo.InvariantCulture))">
+                                    <div class="price-slider-labels">
+                                        <span id="priceMinLabel">@Model.DbMinPrice.ToString("N0") EGP</span>
+                                        <span id="priceMaxLabel">@Model.DbMaxPrice.ToString("N0") EGP</span>
+                                    </div>
+                                    <div class="price-slider-track-wrap">
+                                        <div class="price-slider-track">
+                                            <div class="price-slider-range" id="priceSliderRange"></div>
+                                        </div>
+                                        <input type="range" class="price-range-input" id="priceMinRange"
+                                               min="@Model.DbMinPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                               max="@Model.DbMaxPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                               value="@((Model.MinPrice ?? Model.DbMinPrice).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+                                        <input type="range" class="price-range-input" id="priceMaxRange"
+                                               min="@Model.DbMinPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                               max="@Model.DbMaxPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                               value="@((Model.MaxPrice ?? Model.DbMaxPrice).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+                                    </div>
+                                </div>
+                                <input type="hidden" name="minPrice" id="minPriceInput" value="@Model.MinPrice" />
+                                <input type="hidden" name="maxPrice" id="maxPriceInput" value="@Model.MaxPrice" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Offcanvas Apply Button -->
+            <div class="p-3 border-top bg-white">
+                <button type="submit" class="btn w-100 py-2 fw-bold text-uppercase btn-apply-filter">
+                    Apply  <i class="fa-solid fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script id="categoryBrandMapData" type="application/json">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CategoryBrandMap))</script>
+    <script id="itemsFilterMetaData" type="application/json">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ItemsFilterMeta))</script>
+
+
+    <!-- Pagination Controls -->
+    @if (Model?.Items != null && Model.Items.Any())
+    {
+        <div class="pagination-dots-container mt-4 mb-3 d-flex justify-content-center align-items-center gap-2" id="paginationContainer">
+            <button class="page-nav-btn" id="prevBtn" onclick="changePage(-1)" title="Previous">&#10094;</button>
+            <div id="dotsWrapper" class="d-flex align-items-center gap-2"></div>
+            <button class="page-nav-btn" id="nextBtn" onclick="changePage(1)" title="Next">&#10095;</button>
+        </div>
+    }
+</div>
+
+<script>
+    // ===================== Category -> Brand Dynamic Filter =====================
+    (function () {
+        const mapEl = document.getElementById('categoryBrandMapData');
+        const categorySelect = document.getElementById('categoryFilterSelect');
+        const brandSelect = document.getElementById('brandFilterSelect');
+        if (!mapEl || !categorySelect || !brandSelect) return;
+
+        let categoryBrandMap = {};
+        try { categoryBrandMap = JSON.parse(mapEl.textContent || '{}'); } catch (e) { categoryBrandMap = {}; }
+
+        // بنحتفظ بكل الـ options الأصلية بتاعة البراند عشان نقدر نرجّعها لما اليوزر يختار "All Categories"
+        const allBrandOptions = Array.from(brandSelect.options);
+
+        function applyBrandFilter() {
+            const selectedCategoryId = categorySelect.value;
+            const currentlySelectedBrand = brandSelect.value;
+
+            if (!selectedCategoryId) {
+                // مفيش كاتيجوري محددة -> اعرض كل البراندات
+                allBrandOptions.forEach(opt => { opt.hidden = false; opt.disabled = false; });
+                return;
+            }
+
+            const allowedBrandIds = (categoryBrandMap[selectedCategoryId] || []).map(String);
+
+            allBrandOptions.forEach(opt => {
+                if (opt.value === '') { opt.hidden = false; opt.disabled = false; return; } // "All Brands" يفضل ظاهر دايمًا
+                const isAllowed = allowedBrandIds.includes(opt.value);
+                opt.hidden = !isAllowed;
+                opt.disabled = !isAllowed;
+            });
+
+            // لو البراند المختار حاليًا مبقاش متاح في الكاتيجوري الجديدة، ارجع لـ "All Brands"
+            if (currentlySelectedBrand && !allowedBrandIds.includes(currentlySelectedBrand)) {
+                brandSelect.value = '';
+            }
+        }
+
+        categorySelect.addEventListener('change', applyBrandFilter);
+        applyBrandFilter(); // تطبيق أولي عند تحميل الصفحة (لو فيه كاتيجوري محددة مسبقًا من الـ URL)
+    })();
+
+    // ===================== Price Range Slider (Vanilla) =====================
+    (function () {
+        const wrap = document.querySelector('.price-slider-wrap');
+        const minRange = document.getElementById('priceMinRange');
+        const maxRange = document.getElementById('priceMaxRange');
+        const rangeFill = document.getElementById('priceSliderRange');
+        const minLabel = document.getElementById('priceMinLabel');
+        const maxLabel = document.getElementById('priceMaxLabel');
+        const minInput = document.getElementById('minPriceInput');
+        const maxInput = document.getElementById('maxPriceInput');
+        if (!wrap || !minRange || !maxRange) return;
+
+        const minBound = parseFloat(wrap.dataset.min) || 0;
+        const maxBound = parseFloat(wrap.dataset.max) || 0;
+        const gap = 1; // أقل فرق مسموح بين الهاندل الاتنين
+
+        function formatEGP(val) {
+            return Math.round(val).toLocaleString('en-US') + ' EGP';
+        }
+
+        function updateUI() {
+            let minVal = parseFloat(minRange.value);
+            let maxVal = parseFloat(maxRange.value);
+
+            if (maxVal - minVal < gap) {
+                if (this === minRange) minRange.value = maxVal - gap;
+                else maxRange.value = minVal + gap;
+                minVal = parseFloat(minRange.value);
+                maxVal = parseFloat(maxRange.value);
+            }
+
+            const range = (maxBound - minBound) || 1;
+            const leftPct = ((minVal - minBound) / range) * 100;
+            const rightPct = ((maxVal - minBound) / range) * 100;
+
+            rangeFill.style.left = leftPct + '%';
+            rangeFill.style.right = (100 - rightPct) + '%';
+
+            minLabel.textContent = formatEGP(minVal);
+            maxLabel.textContent = formatEGP(maxVal);
+
+            minInput.value = Math.round(minVal);
+            maxInput.value = Math.round(maxVal);
+
+            if (window.__recalcApplyCount) window.__recalcApplyCount();
+        }
+
+        // نخلي أي هاندل بيتلمس آخر مرة يطلع فوق التاني (عشان يقدر يتلقط لما يكونوا فوق بعض)
+        minRange.addEventListener('mousedown', () => { minRange.style.zIndex = 4; maxRange.style.zIndex = 3; });
+        maxRange.addEventListener('mousedown', () => { maxRange.style.zIndex = 4; minRange.style.zIndex = 3; });
+        minRange.addEventListener('touchstart', () => { minRange.style.zIndex = 4; maxRange.style.zIndex = 3; });
+        maxRange.addEventListener('touchstart', () => { maxRange.style.zIndex = 4; minRange.style.zIndex = 3; });
+
+        minRange.addEventListener('input', updateUI);
+        maxRange.addEventListener('input', updateUI);
+
+        updateUI();
+    })();
+
+    // ===================== Live "Apply (count)" — يتحدث فورًا من غير Reload =====================
+    (function () {
+        const metaEl = document.getElementById('itemsFilterMetaData');
+        const countEl = document.getElementById('applyResultCount');
+        const categorySelect = document.getElementById('categoryFilterSelect');
+        const brandSelect = document.getElementById('brandFilterSelect');
+        const minInput = document.getElementById('minPriceInput');
+        const maxInput = document.getElementById('maxPriceInput');
+        const searchInput = document.querySelector('input[name="searchQuery"]');
+        if (!metaEl || !countEl) return;
+
+        let itemsMeta = [];
+        try { itemsMeta = JSON.parse(metaEl.textContent || '[]'); } catch (e) { itemsMeta = []; }
+
+        function recalcApplyCount() {
+            const categoryVal = categorySelect ? categorySelect.value : '';
+            const brandVal = brandSelect ? brandSelect.value : '';
+            const minVal = minInput ? parseFloat(minInput.value) : null;
+            const maxVal = maxInput ? parseFloat(maxInput.value) : null;
+            const searchVal = (searchInput?.value || '').trim().toLowerCase();
+
+            let count = 0;
+            for (const item of itemsMeta) {
+                if (categoryVal && !(item.categoryIds || []).includes(Number(categoryVal))) continue;
+                if (brandVal && String(item.brandId) !== brandVal) continue;
+                if (minVal !== null && !isNaN(minVal) && item.price < minVal) continue;
+                if (maxVal !== null && !isNaN(maxVal) && item.price > maxVal) continue;
+                if (searchVal && !(item.name || '').toLowerCase().includes(searchVal)) continue;
+                count++;
+            }
+
+            countEl.textContent = count;
+        }
+
+        window.__recalcApplyCount = recalcApplyCount;
+
+        if (categorySelect) categorySelect.addEventListener('change', recalcApplyCount);
+        if (brandSelect) brandSelect.addEventListener('change', recalcApplyCount);
+
+        recalcApplyCount(); // حساب أولي عند فتح الصفحة
+    })();
+
+    const itemsPerPage = 12; // تم التعديل لعرض 12 كارت في الصفحة
+    let currentPage = 0;
+
+    function renderPagination() {
+        const items = document.querySelectorAll('.product-item');
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+        const dotsWrapper = document.getElementById('dotsWrapper');
+
+        items.forEach((item, index) => {
+            if (index >= currentPage * itemsPerPage && index < (currentPage + 1) * itemsPerPage) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        if (dotsWrapper) {
+            dotsWrapper.innerHTML = '';
+            for (let i = 0; i < totalPages; i++) {
+                const dot = document.createElement('button');
+                dot.className = `page-dot-btn ${i === currentPage ? 'active' : ''}`;
+                dot.innerHTML = '&bull;';
+                dot.onclick = () => goToPage(i);
+                dotsWrapper.appendChild(dot);
+            }
+        }
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) prevBtn.disabled = currentPage === 0;
+        if (nextBtn) nextBtn.disabled = currentPage >= totalPages - 1 || totalPages === 0;
+    }
+
+    function goToPage(pageIndex) {
+        currentPage = pageIndex;
+        renderPagination();
+    }
+
+    function changePage(direction) {
+        currentPage += direction;
+        renderPagination();
+    }
+
+    function redirectToLogin() {
+        const returnUrl = window.location.pathname + window.location.search;
+        if (typeof toastr !== 'undefined') toastr.info('Please sign in to continue.');
+        setTimeout(function () {
+            window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
+        }, 900);
+    }
+
+    function toggleWishlist(btn) {
+        const itemId = btn.dataset.itemId;
+        const isActive = btn.classList.contains('active');
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        const headers = { 'Accept': 'application/json' };
+        if (token) headers['RequestVerificationToken'] = token;
+
+        fetch(`/api/wishlist/${itemId}`, { method: isActive ? 'DELETE' : 'POST', headers })
+            .then(res => {
+                if (res.status === 401) {
+                    redirectToLogin();
+                    throw new Error('unauthenticated');
+                }
+                if (!res.ok) throw new Error('request failed');
+
+                btn.classList.toggle('active');
+                btn.innerHTML = btn.classList.contains('active') ? '&#9829;' : '&#9825;';
+                if (typeof toastr !== 'undefined') {
+                    toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
+                }
+            })
+            .catch(() => { /* handled or silent */ });
+    }
+
+    function prefillWishlistState() {
+        fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
+            .then(res => res.ok ? res.json() : null)
+            .then(result => {
+                const favoritedIds = (result?.data || []).map(i => String(i.itemId));
+                document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                    if (favoritedIds.includes(btn.dataset.itemId)) {
+                        btn.classList.add('active');
+                        btn.innerHTML = '&#9829;';
+                    }
+                });
+            })
+            .catch(() => { /* not signed in */ });
+    }
+
+    function loadRealRatings() {
+        const ratingEls = document.querySelectorAll('.rating-value');
+        const itemIds = Array.from(ratingEls).map(el => parseInt(el.dataset.itemId, 10));
+        if (!itemIds.length) return;
+
+        fetch('/api/reviews/summaries', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ ItemIds: itemIds })
+        })
+            .then(res => res.ok ? res.json() : null)
+            .then(result => {
+                const summaries = result?.data || {};
+                ratingEls.forEach(el => {
+                    const s = summaries[el.dataset.itemId];
+                    if (s && s.reviewCount > 0) {
+                        el.innerHTML = `&#9733; ${s.averageRating.toFixed(1)}`;
+                    } else {
+                        el.innerHTML = `&#9734; New`;
+                    }
+                });
+            })
+            .catch(() => { /* leave placeholder dashes */ });
+    }
+
+    function hideProductCard(productId) {
+        // تحديد الكارت بناءً على الـ ID
+        const cardElement = document.getElementById('product-card-' + productId);
+
+        if (cardElement) {
+            // تأثير اختفاء سلس (Smooth Transition)
+            cardElement.style.transition = "all 0.4s ease";
+            cardElement.style.opacity = "0";
+            cardElement.style.transform = "scale(0.9)";
+
+            // إزالة العنصر من الصفحة بعد انتهاء الأنيميشن
+            setTimeout(() => {
+                cardElement.remove();
+                renderPagination(); // تحديث الصفحات بعد مسح العنصر
+            }, 400);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        renderPagination();
+        prefillWishlistState();
+        loadRealRatings();
+    });
+</script> *@
+
+
+@model Mazeed.BLL.ViewModels.Search.FilterSortViewModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    .hero-banner {
+        background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.35)), url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+        border-radius: 16px;
+        padding: 40px 20px;
+        color: #ffffff;
+        margin-bottom: 30px;
+    }
+
+    @@media (min-width: 768px) {
+        .hero-banner {
+            border-radius: 20px;
+            padding: 90px 60px;
+            margin-bottom: 40px;
+        }
+    }
+
+    .badge-pill-red {
+        background-color: #ff4d4f;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .badge-sale {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background-color: #ff4d4f;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 4px;
+        z-index: 2;
+    }
+
+    .filter-scroll-container {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .filter-scroll-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .btn-filter {
+        border-radius: 50px;
+        padding: 6px 18px;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid #e5e7eb;
+        background-color: #ffffff;
+        color: #4b5563;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .btn-filter.active, .btn-filter:hover {
+        background-color: #111827;
+        color: #ffffff;
+        border-color: #111827;
+    }
+
+    .product-card {
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .product-img-wrapper {
+        position: relative;
+        background-color: #f4f4f5;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    @@media (min-width: 576px) {
+        .product-img-wrapper {
+            height: 240px;
+        }
+    }
+
+    .product-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-card-body {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: space-between;
+    }
+
+    .category-tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #9ca3af;
+        text-transform: uppercase;
+    }
+
+    .rating {
+        font-size: 11px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .product-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+        margin-top: 4px;
+        margin-bottom: 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .current-price {
+        font-size: 16px;
+        font-weight: 700;
+        color: #ff4d4f;
+    }
+
+    .current-price.dark {
+        color: #111827;
+    }
+
+    .original-price {
+        font-size: 12px;
+        color: #9ca3af;
+        text-decoration: line-through;
+        margin-left: 4px;
+    }
+
+    .wishlist-btn {
+        background: none;
+        border: none;
+        color: #9ca3af;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .wishlist-btn:hover {
+        transform: scale(1.15);
+    }
+
+    .wishlist-btn.active {
+        color: #ff4d4f;
+    }
+
+    .btn-action-dark {
+        background-color: #111827;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+    .btn-action-dark:hover {
+        background-color: #1f2937;
+        color: #ffffff;
+    }
+
+    .pagination-dots-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+
+    .page-dot-btn {
+        background: none;
+        border: none;
+        color: #d1d5db;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0 4px;
+        transition: color 0.2s ease;
+    }
+
+    .page-dot-btn:hover {
+        color: #9ca3af;
+    }
+
+    .page-dot-btn.active {
+        color: #111827;
+    }
+
+    .page-nav-btn {
+        background-color: #111827;
+        border: none;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .page-nav-btn:hover:not(:disabled) {
+        background-color: #1f2937;
+        transform: translateY(-1px);
+    }
+
+    .page-nav-btn:disabled {
+        background-color: #e5e7eb;
+        color: #9ca3af;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .style-pointer { 
+        cursor: pointer; 
+        user-select: none; 
+    }
+    
+    .toggle-icon { 
+        font-size: 1.1rem; 
+        font-weight: bold; 
+    }
+</style>
+<style>
+.accordion-item {
+    border: none !important;
+    border-bottom: 1px solid #eaeaea !important;
+    background: transparent !important;
+}
+
+.accordion-button {
+    background: transparent !important;
+    color: #222222 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 18px 0px !important;
+    box-shadow: none !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border: none;
+    text-transform: capitalize;
+}
+
+.accordion-button::after {
+    display: none !important;
+}
+
+.accordion-button::before {
+    content: "+";
+    order: 2;
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: #666;
+    transition: transform 0.2s ease;
+}
+
+.accordion-button:not(.collapsed)::before {
+    content: "−";
+}
+
+.accordion-body {
+    padding: 0px 0px 15px 0px !important;
+}
+
+.filter-subtitle {
+    font-size: 12px;
+    color: #888888;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.form-range::-webkit-slider-thumb {
+    background: #111111 !important;
+    border: 2px solid #111111 !important;
+    width: 14px;
+    height: 14px;
+}
+.form-range::-moz-range-thumb {
+    background: #111111 !important;
+    border: 2px solid #111111 !important;
+    width: 14px;
+    height: 14px;
+}
+.form-range {
+    height: 2px;
+    background-color: #111111;
+}
+
+.btn-remove-filters {
+    color: #222222 !important;
+    font-size: 13px;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+</style>
+
+<div class="container-fluid px-0">
+    <!-- Hero Section -->
+    <div class="hero-banner">
+        <div class="col-12 col-md-10 col-lg-6">
+            <span class="badge-pill-red mb-2 mb-md-3">Limited Time Drop</span>
+            <h1 class="display-5 display-md-4 fw-bold text-white mb-2 mb-md-3">Seasonal Renewal</h1>
+            <p class="text-white-50 mb-4 fs-6 leading-relaxed">
+                Discover curated designs from international makers. Transform your routine with bespoke objects crafted for modern life.
+            </p>
+            <div class="d-flex flex-wrap align-items-center gap-3">
+                <a asp-controller="Store" asp-action="Index" class="btn btn-light rounded-2 px-4 py-2 fw-semibold fs-7">Shop The Sale</a>
+                <a asp-controller="Home" asp-action="About" class="text-white text-decoration-none fw-semibold fs-7">Learn More &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Header & Dynamic Category Filters -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end gap-3 mb-4">
+        <div>
+            <span class="badge-pill-red mb-1" style="background: none; color: #ff4d4f; padding: 0; font-size: 10px;">CURATED FINDS</span>
+            <h2 class="fw-bold fs-3 text-dark mb-0">Featured Marketplace</h2>
+        </div>
+        <div class="d-flex align-items-center gap-2 w-100 w-md-auto justify-content-md-end">
+            <div class="filter-scroll-container">
+                <a asp-controller="Home" asp-action="Index" class="btn-filter @(Model?.SelectedCategoryIds == null || !Model.SelectedCategoryIds.Any() ? "active" : "")">All</a>
+                @if (Model?.AvailableCategories != null && Model.AvailableCategories.Any())
+                {
+                    @foreach (var cat in Model.AvailableCategories)
+                    {
+                        <a asp-controller="Home" asp-action="Index" asp-route-SelectedCategoryIds="@cat.Id"
+                           class="btn-filter @(Model.SelectedCategoryIds != null && Model.SelectedCategoryIds.Contains(cat.Id) ? "active" : "")">
+                            @cat.Name
+                        </a>
+                    }
+                }
+            </div>
+
+            <button class="btn-filter border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas" style="cursor: pointer;">
+                Filter <i class="fa-solid fa-sliders ms-1"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Dynamic Product Grid -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4" id="productGrid">
+        @if (Model?.Items != null && Model.Items.Any())
+        {
+            @foreach (var item in Model.Items)
+            {
+                <div class="col-12 col-sm-6 col-lg-4 product-item" id="product-card-@item.Id">
+                    <div class="product-card">
+                        <div class="product-img-wrapper">
+                            @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                            {
+                                <span class="badge-sale">SALE</span>
+                            }
+
+                            @if (item.Photos != null && item.Photos.Any())
+                            {
+                                <img src="@item.Photos.First()" alt="@item.Name" />
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-box-open fa-3x text-muted"></i>
+                            }
+                        </div>
+                        <div class="product-card-body">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="category-tag">
+                                        @(item.CategoryNames != null && item.CategoryNames.Any()
+                                            ? item.CategoryNames.First()
+                                            : (item.BrandName ?? "GENERAL"))
+                                    </span>
+                                    <span class="rating rating-value" data-item-id="@item.Id">&#9734; —</span>
+                                </div>
+                                <div class="product-title" title="@item.Name">@item.Name</div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <span class="current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
+                                            @item.Price.ToString("N2") EGP
+                                        </span>
+                                        @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
+                                        {
+                                            <span class="original-price">@item.OldPrice.Value.ToString("N2") EGP</span>
+                                        }
+                                    </div>
+                                    <button class="wishlist-btn" type="button" title="Add to Wishlist" data-item-id="@item.Id" onclick="toggleWishlist(this)">&#9825;</button>
+                                </div>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <a asp-controller="Home"
+                                       asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn-action-dark text-center d-block text-decoration-none">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted fw-bold">No products found</h5>
+                <p class="text-muted small">Try selecting another category or check back later.</p>
+            </div>
+        }
+    </div>
+
+    <!-- Enhanced Offcanvas Filter Sidebar Component -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel" style="width: 380px;">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold" id="filterOffcanvasLabel">Filter & Sort</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <form id="filterForm" asp-controller="Home" asp-action="Index" method="get" class="d-flex flex-column h-100">
+            <input type="hidden" name="searchQuery" value="@Model.SearchQuery" />
+
+            <div class="offcanvas-body" style="overflow-y: auto;">
+                <div class="accordion accordion-flush" id="filterAccordion">
+
+                    <!-- 1. Sort Section -->
+                    <div class="accordion-item border-bottom py-1">
+                        <h2 class="accordion-header" id="headingSort">
+                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort">
+                                Sort By
+                            </button>
+                        </h2>
+                        <div id="collapseSort" class="accordion-collapse collapse show">
+                            <div class="accordion-body ps-0">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="SelectedSort" id="sortRec" value="recommended" @(Model.SelectedSort == "recommended" || string.IsNullOrEmpty(Model.SelectedSort) ? "checked" : "")>
+                                    <label class="form-check-label ms-1" for="sortRec">Recommended Sorting</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="SelectedSort" id="sortLow" value="lowToHigh" @(Model.SelectedSort == "lowToHigh" ? "checked" : "")>
+                                    <label class="form-check-label ms-1" for="sortLow">Price: Low to High</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="SelectedSort" id="sortHigh" value="highToLow" @(Model.SelectedSort == "highToLow" ? "checked" : "")>
+                                    <label class="form-check-label ms-1" for="sortHigh">Price: High to Low</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Product Category Section -->
+                    <div class="accordion-item border-bottom py-1">
+                        <h2 class="accordion-header" id="headingCategory">
+                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory">
+                                Product Category
+                            </button>
+                        </h2>
+                        <div id="collapseCategory" class="accordion-collapse collapse">
+                            <div class="accordion-body ps-0" id="categorySection">
+                                @if (Model.AvailableCategories != null && Model.AvailableCategories.Any())
+                                {
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="allCategories" />
+                                        <label class="form-check-label fw-bold ms-1" for="allCategories">Select All</label>
+                                    </div>
+                                    @foreach (var category in Model.AvailableCategories)
+                                    {
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input cat-checkbox" type="checkbox" name="SelectedCategoryIds" id="cat_@category.Id" value="@category.Id" @(Model.SelectedCategoryIds != null && Model.SelectedCategoryIds.Contains(category.Id) ? "checked" : "") />
+                                            <label class="form-check-label ms-1" for="cat_@category.Id">@category.Name</label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Brand Section -->
+                    <div class="accordion-item border-bottom py-1">
+                        <h2 class="accordion-header" id="headingBrand">
+                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrand">
+                                Brand
+                            </button>
+                        </h2>
+                        <div id="collapseBrand" class="accordion-collapse collapse">
+                            <div class="accordion-body ps-0" id="brandSection">
+                                @if (Model.AvailableBrands != null && Model.AvailableBrands.Any())
+                                {
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="allBrands" />
+                                        <label class="form-check-label fw-bold ms-1" for="allBrands">Select All</label>
+                                    </div>
+                                    @foreach (var brand in Model.AvailableBrands)
+                                    {
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input brand-checkbox" type="checkbox" name="SelectedBrandIds" id="brand_@brand.Id" value="@brand.Id" @(Model.SelectedBrandIds != null && Model.SelectedBrandIds.Contains(brand.Id) ? "checked" : "") />
+                                            <label class="form-check-label ms-1" for="brand_@brand.Id">@brand.Name</label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Size Section -->
+                    <div class="accordion-item border-bottom py-1">
+                        <h2 class="accordion-header" id="headingSize">
+                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSize">
+                                Size
+                            </button>
+                        </h2>
+                        <div id="collapseSize" class="accordion-collapse collapse">
+                            <div class="accordion-body ps-0" id="sizeSection">
+                                @if (Model.AvailableSizes != null)
+                                {
+                                    @foreach (var size in Model.AvailableSizes)
+                                    {
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input size-checkbox" type="checkbox" name="SelectedSizes" value="@size" id="size_@size" @(Model.SelectedSizes != null && Model.SelectedSizes.Contains(size) ? "checked" : "")>
+                                            <label class="form-check-label ms-1" for="size_@size">@size</label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Color Section -->
+                    <div class="accordion-item border-bottom py-1">
+                        <h2 class="accordion-header" id="headingColor">
+                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseColor">
+                                Color
+                            </button>
+                        </h2>
+                        <div id="collapseColor" class="accordion-collapse collapse">
+                            <div class="accordion-body ps-0">
+                                @if (Model.AvailableColors != null)
+                                {
+                                    @foreach (var color in Model.AvailableColors)
+                                    {
+                                        <div class="form-check d-flex align-items-center mb-2">
+                                            <input class="form-check-input me-2" type="checkbox" name="SelectedColors" value="@color.Name" id="color_@color.Name" @(Model.SelectedColors != null && Model.SelectedColors.Contains(color.Name) ? "checked" : "")>
+                                            <span class="color-preview me-2" style="background: @color.HexCode; width: 18px; height: 18px; display: inline-block; border: 1px solid #ccc; border-radius: 2px;"></span>
+                                            <label class="form-check-label" for="color_@color.Name">@color.Name</label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>                   
+
+                    <!-- 6. Price Range Slider Section -->
+                    <div class="accordion-item border-bottom py-1">
+                        <h2 class="accordion-header" id="headingPrice">
+                            <button class="accordion-button collapsed fw-bold text-uppercase ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
+                                Price
+                            </button>
+                        </h2>
+                        <div id="collapsePrice" class="accordion-collapse collapse">
+                            <div class="accordion-body ps-0 px-2">
+                                <div class="d-flex justify-content-between text-muted small mb-2">
+                                    <span><span id="minPriceVal">@(Model.MinPrice ?? 0)</span> EGP</span>
+                                    <span><span id="maxPriceVal">@(Model.MaxPrice ?? 100000000)</span> EGP</span>
+                                </div>
+                                <input type="range" class="form-range" name="MinPrice" min="0" max="100000000" step="50" value="@(Model.MinPrice ?? 199)" id="minPriceSlider">
+                                <input type="range" class="form-range mt-1" name="MaxPrice" min="0" max="100000000" step="50" value="@(Model.MaxPrice ?? 3499)" id="maxPriceSlider">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Bottom Control Frame inside Offcanvas -->
+            <div class="p-3 border-top bg-white">
+                <button type="submit" class="btn btn-dark w-100 py-2.5 fw-bold text-uppercase mb-2">
+                    Apply (@Model.TotalCount) <i class="fa-solid fa-arrow-right ms-2"></i>
+                </button>
+                <div class="text-center">
+                    <a href="@Url.Action("Index", "Home")" class="text-muted small text-decoration-underline">Remove Filters</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Pagination Controls -->
+    @if (Model?.Items != null && Model.Items.Count() > 9)
+    {
+        <div class="pagination-dots-container" id="paginationContainer">
+            <button class="page-nav-btn" id="prevBtn" onclick="changePage(-1)" title="Previous">&#10094;</button>
+            <button class="page-dot-btn active" onclick="goToPage(0)">&bull;</button>
+            <button class="page-dot-btn" onclick="goToPage(1)">&bull;</button>
+            <button class="page-dot-btn" onclick="goToPage(2)">&bull;</button>
+            <button class="page-nav-btn" id="nextBtn" onclick="changePage(1)" title="Next">&#10095;</button>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <!-- Inject current dataset variables directly into the browser DOM frame environment safely -->
+    <script>
+        window.CatalogItemsContext = @Html.Raw(Json.Serialize(Model.Items.Select(i => new
+        {
+                id = i.Id,
+                brandId = i.BrandId,
+                categoryIds = i.CategoryIds,
+                variants = i.Variants?.Select(v => new { color = v.Color, size = v.Size })
+        })));
+    </script>
+
+    <script>
+        const itemsPerPage = 9;
+        let currentPage = 0;
+
+        function renderPagination() {
+            const items = document.querySelectorAll('.product-item');
+            const totalPages = Math.ceil(items.length / itemsPerPage);
+
+            items.forEach((item, index) => {
+                if (index >= currentPage * itemsPerPage && index < (currentPage + 1) * itemsPerPage) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            const dots = document.querySelectorAll('.page-dot-btn');
+            dots.forEach((dot, index) => {
+                if (index < totalPages) {
+                    dot.style.display = 'inline-block';
+                    dot.classList.toggle('active', index === currentPage);
+                } else {
+                    dot.style.display = 'none';
+                }
+            });
+
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            if (prevBtn) prevBtn.disabled = currentPage === 0;
+            if (nextBtn) nextBtn.disabled = currentPage >= totalPages - 1;
+        }
+
+        function goToPage(pageIndex) {
+            currentPage = pageIndex;
+            renderPagination();
+        }
+
+        function changePage(direction) {
+            currentPage += direction;
+            renderPagination();
+        }
+
+        function redirectToLogin() {
+            const returnUrl = window.location.pathname + window.location.search;
+            if (typeof toastr !== 'undefined') toastr.info('Please sign in to continue.');
+            setTimeout(function () {
+                window.location.href = '/Auth/Login?ReturnUrl=' + encodeURIComponent(returnUrl);
+            }, 900);
+        }
+
+        function toggleWishlist(btn) {
+            const itemId = btn.dataset.itemId;
+            const isActive = btn.classList.contains('active');
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            const headers = { 'Accept': 'application/json' };
+            if (token) headers['RequestVerificationToken'] = token;
+
+            fetch(`/api/wishlist/${itemId}`, { method: isActive ? 'DELETE' : 'POST', headers })
+                .then(res => {
+                    if (res.status === 401) {
+                        redirectToLogin();
+                        throw new Error('unauthenticated');
+                    }
+                    if (!res.ok) throw new Error('request failed');
+
+                    btn.classList.toggle('active');
+                    btn.innerHTML = btn.classList.contains('active') ? '&#9829;' : '&#9825;';
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success(isActive ? 'Removed from favorites.' : 'Added to favorites.');
+                    }
+                })
+                .catch(() => { /* handled or silent */ });
+        }
+
+        function prefillWishlistState() {
+            fetch('/api/wishlist', { headers: { 'Accept': 'application/json' } })
+                .then(res => res.ok ? res.json() : null)
+                .then(result => {
+                    const favoritedIds = (result?.data || []).map(i => String(i.itemId));
+                    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                        if (favoritedIds.includes(btn.dataset.itemId)) {
+                            btn.classList.add('active');
+                            btn.innerHTML = '&#9829;';
+                        }
+                    });
+                })
+                .catch(() => { /* not signed in */ });
+        }
+
+        function loadRealRatings() {
+            const ratingEls = document.querySelectorAll('.rating-value');
+            const itemIds = Array.from(ratingEls).map(el => parseInt(el.dataset.itemId, 10));
+            if (!itemIds.length) return;
+
+            fetch('/api/reviews/summaries', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ ItemIds: itemIds })
+            })
+                .then(res => res.ok ? res.json() : null)
+                .then(result => {
+                    const summaries = result?.data || {};
+                    ratingEls.forEach(el => {
+                        const s = summaries[el.dataset.itemId];
+                        if (s && s.reviewCount > 0) {
+                            el.innerHTML = `&#9733; ${s.averageRating.toFixed(1)}`;
+                        } else {
+                            el.innerHTML = `&#9734; New`;
+                        }
+                    });
+                })
+                .catch(() => { /* leave placeholder dashes */ });
+        }
+
+        function hideProductCard(productId) {
+            const cardElement = document.getElementById('product-card-' + productId);
+            if (cardElement) {
+                cardElement.style.transition = "all 0.4s ease";
+                cardElement.style.opacity = "0";
+                cardElement.style.transform = "scale(0.9)";
+                setTimeout(() => {
+                    cardElement.remove();
+                    renderPagination();
+                }, 400);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const filterForm = document.getElementById('filterForm');
+            if (!filterForm) return;
+
+            renderPagination();
+            prefillWishlistState();
+            loadRealRatings();
+
+            // 1. Dual Slider constraint management handles
+            const minSlider = document.getElementById('minPriceSlider');
+            const maxSlider = document.getElementById('maxPriceSlider');
+            const minPriceVal = document.getElementById('minPriceVal');
+            const maxPriceVal = document.getElementById('maxPriceVal');
+
+            function handlePriceChange() {
+                let minVal = parseInt(minSlider.value);
+                let maxVal = parseInt(maxSlider.value);
+
+                if (minVal > maxVal) {
+                    minSlider.value = maxVal;
+                    minVal = maxVal;
+                }
+                
+                minPriceVal.textContent = minVal;
+                maxPriceVal.textContent = maxVal;
+            }
+
+            if (minSlider && maxSlider) {
+                minSlider.addEventListener('input', handlePriceChange);
+                maxSlider.addEventListener('input', handlePriceChange);
+            }
+
+            // 2. Select All Master/Child checkbox handlers
+            function setupSelectAll(masterId, childClass) {
+                const master = document.getElementById(masterId);
+                if (!master) return;
+
+                master.addEventListener('change', function() {
+                    document.querySelectorAll('.' + childClass).forEach(cb => cb.checked = this.checked);
+                    setTimeout(updateDependantFilters, 10);
+                });
+
+                document.querySelectorAll('.' + childClass).forEach(cb => {
+                    cb.addEventListener('change', function() {
+                        const all = document.querySelectorAll('.' + childClass);
+                        const checked = document.querySelectorAll('.' + childClass + ':checked');
+                        master.checked = (all.length === checked.length);
+                        master.indeterminate = (checked.length > 0 && checked.length < all.length);
+                    });
+                });
+            }
+
+            setupSelectAll('allCategories', 'cat-checkbox');
+            setupSelectAll('allBrands', 'brand-checkbox');
+
+            // Helper function to dynamically filter colors, brands, and sizes based on selected categories
+            function updateDependantFilters() {
+                const checkedCategoryIds = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(cb => cb.value);
+                const items = window.CatalogItemsContext || [];
+
+                if (checkedCategoryIds.length === 0) {
+                    document.querySelectorAll('#colorSection .form-check, #brandSection .form-check, #sizeSection .form-check').forEach(el => {
+                        el.style.display = 'block';
+                    });
+                    return;
+                }
+
+                const allowedBrandIds = new Set();
+                const allowedColorNames = new Set();
+                const allowedSizeNames = new Set();
+
+                items.forEach(item => {
+                    const matchesCategory = item.categoryIds && item.categoryIds.some(catId => checkedCategoryIds.includes(String(catId)));
+
+                    if (matchesCategory) {
+                        if (item.brandId) allowedBrandIds.add(String(item.brandId));
+                        if (item.variants) {
+                            item.variants.forEach(v => {
+                                if (v.color) allowedColorNames.add(v.color.trim().toLowerCase());
+                                if (v.size) allowedSizeNames.add(v.size.trim().toLowerCase());
+                            });
+                        }
+                    }
+                });
+
+                document.querySelectorAll('#brandSection .brand-checkbox').forEach(cb => {
+                    const container = cb.closest('.form-check');
+                    if (cb.id === 'allBrands') return;
+
+                    if (allowedBrandIds.has(cb.value)) {
+                        container.style.display = 'block';
+                    } else {
+                        container.style.display = 'none';
+                        cb.checked = false;
+                    }
+                });
+
+                document.querySelectorAll('#colorSection input[name="SelectedColors"]').forEach(cb => {
+                    const container = cb.closest('.form-check');
+                    const colorValue = cb.value.trim().toLowerCase();
+
+                    if (allowedColorNames.has(colorValue)) {
+                        container.style.display = 'flex';
+                    } else {
+                        container.style.display = 'none';
+                        cb.checked = false;
+                    }
+                });
+
+                document.querySelectorAll('#sizeSection .size-checkbox').forEach(cb => {
+                    const container = cb.closest('.form-check');
+                    const sizeValue = cb.value.trim().toLowerCase();
+
+                    if (allowedSizeNames.has(sizeValue)) {
+                        container.style.display = 'block';
+                    } else {
+                        container.style.display = 'none';
+                        cb.checked = false;
+                    }
+                });
+            }
+
+            document.querySelectorAll('.cat-checkbox').forEach(cb => {
+                cb.addEventListener('change', updateDependantFilters);
+            });
+
+            const allCategoriesMaster = document.getElementById('allCategories');
+            if (allCategoriesMaster) {
+                allCategoriesMaster.addEventListener('change', function () {
+                    setTimeout(updateDependantFilters, 10);
+                });
+            }
+
+            setTimeout(updateDependantFilters, 100);
+        });
+    </script>
+}

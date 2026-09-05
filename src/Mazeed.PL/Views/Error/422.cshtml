@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 422;
+    ViewData["ErrorMessage"] = "Unprocessable Entity";
+    ViewData["ErrorDescription"] = "The request was valid, but the server could not process the provided data.";
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
+    Back to Home
+</a>

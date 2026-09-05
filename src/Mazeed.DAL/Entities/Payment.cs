@@ -23,10 +23,13 @@ namespace Mazeed.DAL.Entities
         [MaxLength(100)]
         public string? TransactionId { get; set; }
 
+        public long? PaymobOrderId { get; set; }
+
         public DateTime? PaidAt { get; set; }
 
         // Foreign Key
-        public int OrderId { get; set; }
+        [ForeignKey(nameof(Order))]
+        public long OrderId { get; set; }
         public Order Order { get; set; } = null!;
     }
 }

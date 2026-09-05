@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
@@ -30,10 +30,12 @@ namespace Mazeed.DAL.Entities
         public int LowStockThreshold { get; set; } = 5;
 
         // Foreign Key
-        public int ItemId { get; set; }
+        [ForeignKey(nameof(Item))]
+        public long ItemId { get; set; }
         public Item Item { get; set; } = null!;
 
         // Navigation Properties
+        public ICollection<ItemVariantPhoto> Photos { get; set; } = new List<ItemVariantPhoto>();
         public ICollection<ShopperCart> CartItems { get; set; } = new List<ShopperCart>();
         public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
     }

@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 401;
+    ViewData["ErrorMessage"] = "Unauthorized";
+    ViewData["ErrorDescription"] = "You need to be logged in to access this resource.";
+}
+
+<a asp-controller="Auth" asp-action="Login" class="btn btn-mazeed-primary text-center">
+    Go to Login
+</a>

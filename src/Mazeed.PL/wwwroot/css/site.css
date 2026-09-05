@@ -1,22 +1,965 @@
-html {
-  font-size: 14px;
+﻿html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+/* Focus States */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+/* Brand Styling */
+header .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+header .plus,
+footer .plus {
+    font-weight: 800;
+    color: #EF4444;
+}
+
+/* Search Bar */
+header .search-input {
+    padding: 8px 16px;
+    background-color: #F3F4F6;
+    gap: 8px;
+    opacity: 1;
+    border-radius: 20px;
+    border: 0;
+    outline: none;
+}
+
+/* =========================================================
+   Navbar Links (Hover, Active & Underline for Main Menu Only)
+   ========================================================= */
+
+/* نطبق التأثير فقط على اللينكات اللي مش dropdown-toggle */
+header .navbar-nav .nav-link:not(.dropdown-toggle) {
+    position: relative;
+    color: #111827 !important;
+    transition: color 0.25s ease-in-out;
+    padding-bottom: 6px !important;
+}
+
+/* Hover Effect: Red Color (#EF4444) */
+header .navbar-nav .nav-link:not(.dropdown-toggle):hover {
+    color: #EF4444 !important;
+}
+
+/* Underline Setup */
+/* header .navbar-nav .nav-link:not(.dropdown-toggle)::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #EF4444;
+    transition: width 0.3s ease-in-out;
+} */
+
+/* Active / Clicked State: Keeps Red Color & Underline */
+header .navbar-nav .nav-link:not(.dropdown-toggle).active {
+    color: #EF4444 !important;
+    font-weight: 600;
+}
+
+header .navbar-nav .nav-link:not(.dropdown-toggle).active::after {
+    width: 100%;
+}
+
+/*------------- FOOTER ----------------*/
+
+footer {
+    background-color: #111827F5;
+}
+
+footer a {
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+footer .brand {
+    color: #ffffff;
+    font-size: 1.75rem;
+}
+
+footer .muted {
+    color: #9CA3AF;
+}
+
+/* Footer Responsive Adjustments */
+@media (max-width: 767px) {
+    /* Keep SHOP and SUPPORT sub-headings left-aligned for clear grid reading */
+    footer .col-6 {
+        text-align: start;
+    }
+
+    footer .brand {
+        font-size: 1.5rem;
+    }
+
+    footer hr {
+        opacity: 0.15;
+    }
+}
+
+/* Custom Styling for Mazeed Split Auth/Error Layout */
+.mazeed-split-container {
+    min-height: 100vh;
+    display: flex;
+}
+
+/* Left Content Panel */
+.mazeed-left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem 4rem;
+    background-color: #ffffff;
+}
+
+/* Right Decorative Panel */
+.mazeed-right-panel {
+    flex: 1;
+    background: radial-gradient(circle at 80% 20%, #fde047 0%, transparent 40%), radial-gradient(circle at 20% 10%, #fb923c 0%, transparent 50%), linear-gradient(135deg, #ef4444 0%, #06b6d4 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem;
+    color: #ffffff;
+}
+
+/* Typography & Components */
+.mazeed-left-panel .brand-logo {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #0f172a;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+    transition: all 0.3s ease;
+}
+
+.brand-logo-container a:hover {
+    text-decoration: none;
+    color: #0f172a;
+}
+
+.brand-logo span {
+    color: #ef4444;
+}
+
+.error-badge {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #ef4444;
+    background-color: #fef2f2;
+    border-radius: 50rem;
+    margin-bottom: 1rem;
+}
+
+.btn-mazeed-primary {
+    background-color: #ef4444;
+    border-color: #ef4444;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-mazeed-primary:hover {
+    background-color: #dc2626;
+    border-color: #dc2626;
+    color: #ffffff;
+}
+
+.btn-mazeed-secondary {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.btn-mazeed-secondary:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+}
+
+/* Feature Card Image Container */
+.featured-card-img {
+    width: 100%;
+    max-width: 520px;
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+}
+
+@media (max-width: 991.98px) {
+    .mazeed-split-container {
+        flex-direction: column;
+    }
+
+    .mazeed-left-panel {
+        padding: 2rem;
+    }
+
+    .mazeed-right-panel {
+        display: none; /* Hide decorative column on smaller screens */
+    }
+    a.navbar-brand {
+        white-space: normal;
+        text-align: center;
+        word-break: break-all;
+    }
+
+    a {
+        color: #0077cc;
+        text-decoration: none;
+    }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #1b6ec2;
+        border-color: #1861ac;
+    }
+
+        .btn-primary:hover {
+            background-color: #15589c;
+            border-color: #134f8c;
+        }
+
+    .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+        color: #fff;
+        background-color: #1b6ec2;
+        border-color: #1861ac;
+    }
+
+    .border-top {
+        border-top: 1px solid #e5e5e5;
+    }
+
+    .border-bottom {
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .box-shadow {
+        box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    }
+
+    button.accept-policy {
+        font-size: 1rem;
+        line-height: inherit;
+    }
+
+    /* Enhancements for CRUD Views */
+    .card {
+        border-radius: 0.5rem;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(27, 110, 194, 0.04);
+    }
+    /* ==========================================
+   Global Search Bar & Autocomplete Styling
+   ========================================== */
+    /* ==========================================
+   Fix Search Bar & Suggestions Layout
+   ========================================== */
+
+    /* الحاوية الرئيسية */
+    .search-container {
+        position: relative !important;
+        width: 100%;
+        max-width: 380px;
+    }
+
+    /* تجميعة الـ Input والـ Button */
+    .search-input-group {
+        background-color: #F3F4F6;
+        border-radius: 50rem;
+        padding: 2px 6px;
+        border: 1px solid #E5E7EB;
+        transition: all 0.2s ease;
+    }
+
+        .search-input-group:focus-within {
+            border-color: #258cfb;
+            box-shadow: 0 0 0 0.25rem rgba(37, 140, 251, 0.25);
+            background-color: #FFFFFF;
+        }
+
+    /* مدخل البحث */
+    .search-container .search-input {
+        background-color: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        padding: 6px 14px;
+        font-size: 14px;
+    }
+
+    /* زر العدسة */
+    .search-container .search-btn {
+        background-color: transparent !important;
+        border: 0 !important;
+        color: #6B7280;
+        padding: 6px 12px;
+        box-shadow: none !important;
+    }
+
+    .search-container .search-btn:hover {
+        color: #EF4444;
+    }
+
+    /* قائمة الاقتراحات المنسدلة */
+    ul.search-suggestions-list {
+        position: absolute !important;
+        top: calc(100% + 8px) !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 9999 !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #E5E7EB !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+        list-style: none !important; /* لإزالة النقاط • */
+        padding: 6px 0 !important; /* إزالة المسافات البادئة القادمة من Bootstrap */
+        margin: 0 !important;
+        max-height: 280px;
+        overflow-y: auto;
+        display: none;
+    }
+
+        /* عناصر القائمة */
+        ul.search-suggestions-list li.search-suggestion-item {
+            padding: 10px 16px !important;
+            color: #374151 !important;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            list-style-type: none !important;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        ul.search-suggestions-list li.search-suggestion-item i {
+            color: #9CA3AF;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        ul.search-suggestions-list li.search-suggestion-item strong {
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* تأثير الـ Hover على العنصر */
+        ul.search-suggestions-list li.search-suggestion-item:hover {
+            background-color: #EF4444 !important;
+            color: #FFFFFF !important;
+        }
+
+        ul.search-suggestions-list li.search-suggestion-item:hover i,
+        ul.search-suggestions-list li.search-suggestion-item:hover span,
+        ul.search-suggestions-list li.search-suggestion-item:hover strong {
+            color: #FFFFFF !important;
+        }
+
+    /* ==========================================
+   Media Queries (Responsive)
+   ========================================== */
+    @media (max-width: 991.98px) {
+        .mazeed-split-container {
+            flex-direction: column;
+        }
+
+        .mazeed-left-panel {
+            padding: 2rem;
+        }
+
+        .mazeed-right-panel {
+            display: none;
+        }
+
+        .search-container {
+            max-width: 100%;
+            margin-bottom: 1rem;
+        }
+    }
+}
+
+:root {
+    color-scheme: light;
+    --theme-page: #ffffff;
+    --theme-surface: #ffffff;
+    --theme-surface-muted: #f8f9fa;
+    --theme-text: #212529;
+    --theme-text-muted: #6c757d;
+    --theme-border: #e9ecef;
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+    --theme-page: #12161c;
+    --theme-surface: #1b222b;
+    --theme-surface-muted: #252e39;
+    --theme-text: #e8edf2;
+    --theme-text-muted: #aab5c1;
+    --theme-border: #354250;
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: var(--theme-page);
+    color: var(--theme-text);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.store-filter-button {
+    background-color: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    color: #111827 !important;
+}
+
+.store-filter-button:hover,
+.store-filter-button:focus {
+    background-color: #111827 !important;
+    border-color: #111827 !important;
+    color: #ffffff !important;
+}
+
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    padding: 0.45rem 0.75rem;
+    color: var(--theme-text);
+    background: var(--theme-surface-muted);
+    border: 1px solid var(--theme-border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+    color: #ef4444;
+    border-color: #ef4444;
+}
+
+.theme-toggle-floating {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.5rem;
+    z-index: 1050;
+}
+
+html[data-theme="dark"] body,
+html[data-theme="dark"] .bg-white,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .kpi-card,
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .mazeed-left-panel,
+html[data-theme="dark"] .modal-content,
+html[data-theme="dark"] .dropdown-menu,
+html[data-theme="dark"] .list-group-item,
+html[data-theme="dark"] .table {
+    background-color: var(--theme-surface) !important;
+    color: var(--theme-text);
+}
+
+html[data-theme="dark"] header .navbar {
+    background-color: #111827F5 !important;
+}
+
+html[data-theme="dark"] header .navbar .navbar-brand,
+html[data-theme="dark"] header .navbar .nav-link,
+html[data-theme="dark"] header .navbar .navbar-toggler {
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] header .navbar .navbar-toggler-icon {
+    filter: invert(1) grayscale(100%) brightness(180%);
+}
+
+html[data-theme="dark"] .btn-filter,
+html[data-theme="dark"] .btn-filter-pill,
+html[data-theme="dark"] .store-filter-button {
+    background-color: #111827 !important;
+    border-color: #111827 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .btn-filter:hover,
+html[data-theme="dark"] .btn-filter-pill:hover,
+html[data-theme="dark"] .store-filter-button:hover,
+html[data-theme="dark"] .store-filter-button:focus {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #111827 !important;
+}
+
+html[data-theme="dark"] .bg-light,
+html[data-theme="dark"] .dashboard-container,
+html[data-theme="dark"] .search-input-group {
+    background-color: var(--theme-surface-muted) !important;
+    color: var(--theme-text);
+}
+
+html[data-theme="dark"] .text-dark,
+html[data-theme="dark"] .navbar-light .navbar-nav .nav-link,
+html[data-theme="dark"] .navbar-brand,
+html[data-theme="dark"] label,
+html[data-theme="dark"] .form-label {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .text-muted,
+html[data-theme="dark"] .muted {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .sidebar .nav-link,
+html[data-theme="dark"] .top-nav .nav-link {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .border,
+html[data-theme="dark"] .border-bottom,
+html[data-theme="dark"] .border-top,
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .form-select,
+html[data-theme="dark"] .search-input-group,
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .top-nav {
+    border-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .form-select,
+html[data-theme="dark"] .search-input {
+    background-color: var(--theme-surface-muted) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .form-control::placeholder,
+html[data-theme="dark"] .search-input::placeholder {
+    color: var(--theme-text-muted);
+}
+
+html[data-theme="dark"] .dropdown-item,
+html[data-theme="dark"] .table th,
+html[data-theme="dark"] .table td {
+    color: var(--theme-text);
+}
+
+html[data-theme="dark"] .dropdown-item:hover {
+    background-color: var(--theme-surface-muted);
+}
+
+html[data-theme="dark"] .dropdown-item,
+html[data-theme="dark"] .table th,
+html[data-theme="dark"] .table td {
+    color: var(--theme-text);
+}
+
+    html[data-theme="dark"] .dropdown-item:hover {
+        background-color: var(--theme-surface-muted);
+    }
+
+/* ضبط خلفية وحدود وألوان القائمة لـ Dark Mode */
+    html[data-theme="dark"] ul.search-suggestions-list {
+        background-color: var(--theme-surface) !important;
+        border-color: var(--theme-border) !important;
+    }
+
+    /* لون الكلام العادي داخل عناصر الـ Suggestion ليطابق لون الـ Placeholder */
+    html[data-theme="dark"] ul.search-suggestions-list li.search-suggestion-item {
+        color: var(--theme-text-muted) !important;
+    }
+
+        /* لون الحروف المطابقة/المشتركة ليصبح أبيض ناصع */
+        html[data-theme="dark"] ul.search-suggestions-list li.search-suggestion-item strong {
+            color: #ffffff !important;
+        }
+
+        /* الحفاظ على تغير اللون لأبيض كاملاً عند الـ Hover */
+        html[data-theme="dark"] ul.search-suggestions-list li.search-suggestion-item:hover,
+        html[data-theme="dark"] ul.search-suggestions-list li.search-suggestion-item:hover strong {
+            color: #ffffff !important;
+        }
+
+html[data-theme="dark"] .offcanvas {
+    --bs-offcanvas-bg: var(--theme-surface);
+    --bs-offcanvas-color: var(--theme-text);
+    background-color: var(--theme-surface) !important;
+    color: var(--theme-text) !important;
+}
+
+
+html[data-theme="dark"] .offcanvas-header,
+html[data-theme="dark"] .offcanvas .border-top,
+html[data-theme="dark"] .offcanvas .border-bottom {
+    border-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .offcanvas .btn-close {
+    filter: invert(1) grayscale(100%) brightness(180%);
+}
+
+html[data-theme="dark"] .offcanvas .accordion-item,
+html[data-theme="dark"] .offcanvas .accordion-button,
+html[data-theme="dark"] .offcanvas .accordion-body {
+    background-color: var(--theme-surface) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .offcanvas .accordion-button:not(.collapsed) {
+    background-color: var(--theme-surface-muted) !important;
+    color: var(--theme-text) !important;
+    box-shadow: inset 0 -1px 0 var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .offcanvas .accordion-button::after {
+    filter: invert(1) grayscale(100%) brightness(180%);
+}
+
+html[data-theme="dark"] .offcanvas .form-check-label,
+html[data-theme="dark"] .offcanvas .form-label {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .offcanvas .form-check-input {
+    background-color: var(--theme-surface-muted);
+    border-color: var(--theme-border);
+}
+
+html[data-theme="dark"] .offcanvas .form-check-input:checked {
+    background-color: #ef4444;
+    border-color: #ef4444;
+}
+
+/* Page-specific surfaces that intentionally use custom component classes. */
+html[data-theme="dark"] .table-light,
+html[data-theme="dark"] .table-light > *,
+html[data-theme="dark"] .table-hover > tbody > tr:hover > * {
+    --bs-table-bg: var(--theme-surface-muted) !important;
+    --bs-table-color: var(--theme-text) !important;
+    background-color: var(--theme-surface-muted) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .table {
+    --bs-table-bg: var(--theme-surface) !important;
+    --bs-table-color: var(--theme-text) !important;
+    --bs-table-border-color: var(--theme-border) !important;
+    --bs-table-hover-bg: var(--theme-surface-muted) !important;
+    --bs-table-hover-color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .table > :not(caption) > * > * {
+    background-color: var(--theme-surface) !important;
+    border-bottom-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .table > tbody > tr:hover > * {
+    background-color: var(--theme-surface-muted) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .table .text-muted,
+html[data-theme="dark"] .table small,
+html[data-theme="dark"] .table .text-dark,
+html[data-theme="dark"] .table .fw-semibold,
+html[data-theme="dark"] .table .fw-bold {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .table .text-muted,
+html[data-theme="dark"] .table small.text-muted {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .product-card,
+html[data-theme="dark"] .cart-empty-state,
+html[data-theme="dark"] .cart-item-card,
+html[data-theme="dark"] .cart-summary-card,
+html[data-theme="dark"] .reviews-card {
+    background: var(--theme-surface) !important;
+    border-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .product-card-body,
+html[data-theme="dark"] .variant-specifications,
+html[data-theme="dark"] .write-review-box {
+    background: var(--theme-surface-muted) !important;
+    border-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .product-img-wrapper,
+html[data-theme="dark"] .main-img-box,
+html[data-theme="dark"] .thumb-img,
+html[data-theme="dark"] .cart-item-img,
+html[data-theme="dark"] .rating-bar-track {
+    background-color: var(--theme-surface-muted) !important;
+    border-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .product-title,
+html[data-theme="dark"] .rating,
+html[data-theme="dark"] .current-price.dark,
+html[data-theme="dark"] .specification-value,
+html[data-theme="dark"] .review-body .review-name,
+html[data-theme="dark"] .write-review-box h6 {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .specification-label,
+html[data-theme="dark"] .rating-bar-row .star-label,
+html[data-theme="dark"] .review-body p,
+html[data-theme="dark"] .category-subtitle {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .qty-picker {
+    background-color: var(--theme-surface-muted) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .qty-picker button {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .opt-btn,
+html[data-theme="dark"] .btn-action-light,
+html[data-theme="dark"] .wishlist-detail-btn {
+    background-color: var(--theme-surface) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+    html[data-theme="dark"] .opt-btn.active,
+    html[data-theme="dark"] .btn-action-dark {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+    }
+
+html[data-theme="dark"] .review-item,
+html[data-theme="dark"] .reviews-card hr {
+    border-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .nav-tabs-custom {
+    border-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .nav-tabs-custom .nav-link {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .user-avatar-placeholder,
+html[data-theme="dark"] .brand-logo-placeholder {
+    background-color: var(--theme-surface-muted) !important;
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .dashboard-container,
+html[data-theme="dark"] .chart-card,
+html[data-theme="dark"] .kpi-card {
+    background: var(--theme-surface) !important;
+    border-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .kpi-title {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .kpi-value {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .rating-overview-score .big-num,
+html[data-theme="dark"] .mazeed-left-panel .brand-logo {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .mazeed-right-panel {
+    background: radial-gradient(circle at 80% 20%, #854d0e 0%, transparent 40%), radial-gradient(circle at 20% 10%, #9a3412 0%, transparent 50%), linear-gradient(135deg, #991b1b 0%, #155e75 100%) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel {
+    background-color: var(--theme-surface) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .brand-logo,
+html[data-theme="dark"] .mazeed-left-panel .text-dark,
+html[data-theme="dark"] .mazeed-left-panel .form-label {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .form-control,
+html[data-theme="dark"] .mazeed-left-panel .form-select {
+    background-color: var(--theme-surface-muted) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .form-control::placeholder,
+html[data-theme="dark"] .mazeed-left-panel .form-select::placeholder {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .input-prefix-icon,
+html[data-theme="dark"] .mazeed-left-panel .password-toggle-btn {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .btn-google {
+    background-color: var(--theme-surface-muted) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .btn-google:hover,
+html[data-theme="dark"] .mazeed-left-panel .btn-mazeed-outline:hover,
+html[data-theme="dark"] .mazeed-left-panel .btn-mazeed-secondary:hover {
+    background-color: #303b48 !important;
+    border-color: #526173 !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .btn-mazeed-outline,
+html[data-theme="dark"] .mazeed-left-panel .btn-mazeed-secondary {
+    background-color: var(--theme-surface-muted) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .divider::before,
+html[data-theme="dark"] .mazeed-left-panel .divider::after,
+html[data-theme="dark"] .mazeed-left-panel .step-progress::before {
+    border-color: var(--theme-border) !important;
+    background-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .step-circle {
+    background-color: var(--theme-surface) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .mazeed-left-panel .step-circle.active,
+html[data-theme="dark"] .mazeed-left-panel .step-circle.completed {
+    background-color: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .help-wrapper,
+html[data-theme="dark"] .privacy-wrapper,
+html[data-theme="dark"] .about-wrapper {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .help-wrapper .section-title,
+html[data-theme="dark"] .help-wrapper .topic-card h3,
+html[data-theme="dark"] .help-wrapper .faq-question,
+html[data-theme="dark"] .help-wrapper .contact-card h3,
+html[data-theme="dark"] .privacy-wrapper h1,
+html[data-theme="dark"] .privacy-wrapper h2,
+html[data-theme="dark"] .privacy-wrapper .policy-section p,
+html[data-theme="dark"] .privacy-wrapper .policy-list li,
+html[data-theme="dark"] .privacy-wrapper .policy-list li strong,
+html[data-theme="dark"] .privacy-wrapper .contact-item,
+html[data-theme="dark"] .privacy-wrapper .contact-item strong,
+html[data-theme="dark"] .about-wrapper h1,
+html[data-theme="dark"] .about-wrapper h2,
+html[data-theme="dark"] .about-wrapper .about-section p,
+html[data-theme="dark"] .about-wrapper .about-intro,
+html[data-theme="dark"] .about-wrapper .value-card h3,
+html[data-theme="dark"] .about-wrapper .value-card p {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .help-wrapper .topic-card,
+html[data-theme="dark"] .help-wrapper .faq-item,
+html[data-theme="dark"] .privacy-wrapper .contact-card,
+html[data-theme="dark"] .about-wrapper .value-card {
+    background: var(--theme-surface) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .help-wrapper .contact-card,
+html[data-theme="dark"] .privacy-wrapper .policy-intro,
+html[data-theme="dark"] .about-wrapper .about-intro {
+    background: var(--theme-surface-muted) !important;
+    border-color: var(--theme-border) !important;
+}
+
+html[data-theme="dark"] .help-wrapper .topic-icon {
+    background-color: #3a2025 !important;
+    color: #f87171 !important;
+}
+
+html[data-theme="dark"] .privacy-wrapper .policy-intro,
+html[data-theme="dark"] .privacy-wrapper .policy-intro strong {
+    color: var(--theme-text) !important;
+}
+
+html[data-theme="dark"] .help-wrapper .topic-card p,
+html[data-theme="dark"] .help-wrapper .faq-answer,
+html[data-theme="dark"] .help-wrapper .contact-card p,
+html[data-theme="dark"] .privacy-wrapper .last-updated,
+html[data-theme="dark"] .about-wrapper .sub-text {
+    color: var(--theme-text-muted) !important;
+}
+
+html[data-theme="dark"] .privacy-wrapper .privacy-header,
+html[data-theme="dark"] .about-wrapper .about-header {
+    border-color: var(--theme-border) !important;
+}
+
+
+/* إصلاح خلفية البروفايل للـ Dark Mode */
+html[data-theme="dark"] .profile-info,
+html[data-theme="dark"] .profile-info-card,
+html[data-theme="dark"] .profile-card,
+html[data-theme="dark"] .account-details,
+html[data-theme="dark"] .profile-info .card,
+html[data-theme="dark"] .profile-info .bg-white {
+    background-color: #131928 !important;
+    color: var(--theme-text) !important;
+    border-color: var(--theme-border) !important;
 }

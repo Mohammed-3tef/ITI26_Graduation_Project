@@ -27,11 +27,25 @@ namespace Mazeed.DAL.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal ShippingFee { get; set; } = 0;
 
-        // Foreign Keys
-        public int ShopperId { get; set; }
-        public Shopper Shopper { get; set; } = null!;
+        [Required, MaxLength(50)]
+        public string FirstName { get; set; } = string.Empty;
 
-        public int? DiscountRuleId { get; set; }
+        [Required, MaxLength(50)]
+        public string LastName { get; set; } = string.Empty;
+
+        [Required, MaxLength(30)]
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        [Required, MaxLength(150)]
+        public string ShippingAddress { get; set; } = string.Empty;
+
+        // Foreign Keys
+        [ForeignKey(nameof(Shopper))]
+        public long UserId { get; set; }
+        public User Shopper { get; set; } = null!;
+
+        [ForeignKey(nameof(DiscountRule))]
+        public long? DiscountRuleId { get; set; }
         public DiscountRule? DiscountRule { get; set; }
 
         // Navigation Properties

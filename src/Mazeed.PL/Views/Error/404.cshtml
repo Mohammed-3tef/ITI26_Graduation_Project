@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 404;
+    ViewData["ErrorMessage"] = "Page Not Found";
+    ViewData["ErrorDescription"] = "The page you're looking for doesn't exist.";
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
+    Back to Home
+</a>

@@ -1,0 +1,26 @@
+@model Mazeed.BLL.ViewModels.Cart.PaymentResultVM
+
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = Model.IsSuccessful ? "Payment Approved" : "Payment Failed";
+}
+
+<div class="my-auto py-5 mx-auto w-100 text-center" style="max-width: 520px;">
+    <div class="status-icon-box @(Model.IsSuccessful ? "success" : "danger") mx-auto">
+        <i class="bi @(Model.IsSuccessful ? "bi-check-lg" : "bi-x-lg") fs-2"></i>
+    </div>
+
+    @if (Model.IsSuccessful)
+    {
+        <h1 class="fw-bold fs-2 text-dark mb-2">Payment Approved</h1>
+        <p class="text-muted mb-1">@Model.Message</p>
+        <p class="text-muted small mb-4">Your order has been completed successfully.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-submit w-100">Continue shopping</a>
+    }
+    else
+    {
+        <h1 class="fw-bold fs-2 text-dark mb-2">Payment Failed</h1>
+        <p class="text-muted mb-4">@Model.Message</p>
+        <a asp-controller="Cart" asp-action="Index" class="btn btn-mazeed-submit w-100">Return to cart</a>
+    }
+</div>

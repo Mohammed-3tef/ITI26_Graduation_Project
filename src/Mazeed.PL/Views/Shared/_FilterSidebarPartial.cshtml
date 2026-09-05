@@ -1,0 +1,155 @@
+﻿@model Mazeed.BLL.ViewModels.Search.FilterSortViewModel
+
+<!-- If a page doesn't pass a model, we instantiate an empty fallback to avoid NullReferenceExceptions -->
+@{
+    var filterModel = Model ?? new Mazeed.BLL.ViewModels.Search.FilterSortViewModel();
+
+    // Dynamically post back to the current Route/Action the user is on (Home, Store, etc.)
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "Store";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "Index";
+}
+
+<div class="card p-3 shadow-sm" style="max-height: 90vh; overflow-y: auto;">
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+        <h5 class="m-0 fw-bold">Filter and Sort</h5>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+    </div>
+
+    <form id="filterForm" method="get" action="@Url.Action("Index", "Home")">
+
+        <!-- 1. Sort Section -->
+        <div class="border-bottom py-2">
+            <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#sortSection">
+                <span class="fw-semibold">Sort</span>
+                <span class="toggle-icon">-</span>
+            </div>
+            <div id="sortSection" class="collapse show mt-2 ps-2">
+                <div class="form-check my-2">
+                    <input class="form-check-input" type="radio" name="SelectedSort" id="sortRec" value="recommended" @(filterModel.SelectedSort == "recommended" ? "checked" : "")>
+                    <label class="form-check-label" for="sortRec">Recommended Sorting</label>
+                </div>
+                <div class="form-check my-2">
+                    <input class="form-check-input" type="radio" name="SelectedSort" id="sortLow" value="lowToHigh" @(filterModel.SelectedSort == "lowToHigh" ? "checked" : "")>
+                    <label class="form-check-label" for="sortLow">Price: Low to High</label>
+                </div>
+                <div class="form-check my-2">
+                    <input class="form-check-input" type="radio" name="SelectedSort" id="sortHigh" value="highToLow" @(filterModel.SelectedSort == "highToLow" ? "checked" : "")>
+                    <label class="form-check-label" for="sortHigh">Price: High to Low</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Product Type Section -->
+        <div class="border-bottom py-2">
+            <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#categorySection">
+                <span class="fw-semibold">Product Type</span>
+                <span class="toggle-icon">+</span>
+            </div>
+            <div id="categorySection" class="collapse mt-2 ps-2">
+                @if (filterModel.AvailableCategories?.Any() == true)
+                {
+                    <div class="form-check my-2">
+                        <input class="form-check-input select-all-categories" type="checkbox" id="allCategories">
+                        <label class="form-check-label fw-bold" for="allCategories">Select All</label>
+                    </div>
+                    @foreach (var category in filterModel.AvailableCategories)
+                    {
+                        <div class="form-check my-2">
+                            <input class="form-check-input cat-checkbox" type="checkbox" name="SelectedCategoryIds" value="@category.Id" id="cat_@category.Id" @(filterModel.SelectedCategoryIds != null && filterModel.SelectedCategoryIds.Contains(category.Id) ? "checked" : "")>
+                            <label class="form-check-label" for="cat_@category.Id">@category.Name</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- 3. Size Section -->
+        <div class="border-bottom py-2">
+            <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#sizeSection">
+                <span class="fw-semibold">Size</span>
+                <span class="toggle-icon">+</span>
+            </div>
+            <div id="sizeSection" class="collapse mt-2 ps-2">
+                @if (filterModel.AvailableSizes?.Any() == true)
+                {
+                    @foreach (var size in filterModel.AvailableSizes)
+                    {
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="checkbox" name="SelectedSizes" value="@size" id="size_@size" @(filterModel.SelectedSizes != null && filterModel.SelectedSizes.Contains(size) ? "checked" : "")>
+                            <label class="form-check-label" for="size_@size">@size</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- 4. Color Section -->
+        <div class="border-bottom py-2">
+            <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#colorSection">
+                <span class="fw-semibold">Color</span>
+                <span class="toggle-icon">+</span>
+            </div>
+            <div id="colorSection" class="collapse mt-2 ps-2">
+                @if (filterModel.AvailableColors?.Any() == true)
+                {
+                    @foreach (var color in filterModel.AvailableColors)
+                    {
+                        <div class="form-check d-flex align-items-center my-2">
+                            <input class="form-check-input me-2" type="checkbox" name="SelectedColors" value="@color.Name" id="color_@color.Name" @(filterModel.SelectedColors != null && filterModel.SelectedColors.Contains(color.Name) ? "checked" : "")>
+                            <span class="color-preview me-2" style="background: @color.HexCode; width: 18px; height: 18px; display: inline-block; border: 1px solid #ccc; border-radius: 2px;"></span>
+                            <label class="form-check-label" for="color_@color.Name">@color.Name</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- 5. Brand Section -->
+        <div class="border-bottom py-2">
+            <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#brandSection">
+                <span class="fw-semibold">Brand</span>
+                <span class="toggle-icon">+</span>
+            </div>
+            <div id="brandSection" class="collapse mt-2 ps-2">
+                @if (filterModel.AvailableBrands?.Any() == true)
+                {
+                    <div class="form-check my-2">
+                        <input class="form-check-input select-all-brands" type="checkbox" id="allBrands">
+                        <label class="form-check-label fw-bold" for="allBrands">Select All</label>
+                    </div>
+                    @foreach (var brand in filterModel.AvailableBrands)
+                    {
+                        <div class="form-check my-2">
+                            <input class="form-check-input brand-checkbox" type="checkbox" name="SelectedBrandIds" value="@brand.Id" id="brand_@brand.Id" @(filterModel.SelectedBrandIds != null && filterModel.SelectedBrandIds.Contains(brand.Id) ? "checked" : "")>
+                            <label class="form-check-label" for="brand_@brand.Id">@brand.Name</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- 6. Price Section -->
+        <div class="border-bottom py-2">
+            <div class="d-flex justify-content-between align-items-center style-pointer" data-bs-toggle="collapse" data-bs-target="#priceSection">
+                <span class="fw-semibold">Price</span>
+                <span class="toggle-icon">+</span>
+            </div>
+            <div id="priceSection" class="collapse mt-2 px-2">
+                <div class="d-flex justify-content-between text-muted small mb-2">
+                    <span><span id="minPriceVal">@filterModel.MinPrice</span> EGP</span>
+                    <span><span id="maxPriceVal">@filterModel.MaxPrice</span> EGP</span>
+                </div>
+                <input type="range" class="form-range" name="MinPrice" min="0" max="100000000" step="50" value="@filterModel.MinPrice" id="minPriceSlider">
+                <input type="range" class="form-range mt-1" name="MaxPrice" min="0" max="100000000" step="50" value="@filterModel.MaxPrice" id="maxPriceSlider">
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="mt-4 pt-2 bg-white sticky-bottom">
+            <button type="submit" class="btn btn-dark w-100 py-2.5 fw-bold text-uppercase">Show Products</button>
+            <div class="text-center mt-2">
+                <a href="@Url.Action("Index", "Home")" class="text-muted small text-decoration-underline">Remove Filters</a>
+            </div>
+        </div>
+    </form>
+</div>

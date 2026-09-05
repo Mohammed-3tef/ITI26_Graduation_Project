@@ -1,21 +1,416 @@
+﻿@{
+    var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+
+    // جلب الـ Category ID سواء كان من الـ Route Data أو الـ Query String
+    var currentCategoryId = ViewContext.RouteData.Values["id"]?.ToString()
+                            ?? Context.Request.Query["id"].ToString();
+}
+
+<style>
+    /* ==========================================
+       Fix Search Bar & Suggestions Layout
+       ========================================== */
+
+    /* الحاوية الرئيسية */
+    .search-container {
+        position: relative !important;
+        width: 100%;
+        max-width: 380px;
+    }
+
+    /* تجميعة الـ Input والـ Button */
+    .search-input-group {
+        background-color: #F3F4F6;
+        border-radius: 50rem;
+        padding: 2px 6px;
+        border: 1px solid #E5E7EB;
+        transition: all 0.2s ease;
+    }
+
+    .search-input-group:focus-within {
+        border-color: #258cfb;
+        box-shadow: 0 0 0 0.25rem rgba(37, 140, 251, 0.25);
+        background-color: #FFFFFF;
+    }
+
+    /* مدخل البحث */
+    .search-container .search-input {
+        background-color: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        padding: 6px 14px;
+        font-size: 14px;
+    }
+
+    /* زر العدسة */
+    .search-container .search-btn {
+        background-color: transparent !important;
+        border: 0 !important;
+        color: #6B7280;
+        padding: 6px 12px;
+        box-shadow: none !important;
+    }
+
+    .search-container .search-btn:hover {
+        color: #EF4444;
+    }
+
+    /* قائمة الاقتراحات المنسدلة */
+    ul.search-suggestions-list {
+        position: absolute !important;
+        top: calc(100% + 8px) !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 9999 !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #E5E7EB !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+        list-style: none !important; /* لإزالة النقاط • */
+        padding: 6px 0 !important; /* إزالة المسافات البادئة القادمة من Bootstrap */
+        margin: 0 !important;
+        max-height: 280px;
+        overflow-y: auto;
+        display: none;
+    }
+
+    /* عناصر القائمة */
+    ul.search-suggestions-list li.search-suggestion-item {
+        padding: 10px 16px !important;
+        color: #374151 !important;
+        cursor: pointer;
+        font-size: 14px;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        list-style-type: none !important;
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    ul.search-suggestions-list li.search-suggestion-item i {
+        color: #9CA3AF;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    ul.search-suggestions-list li.search-suggestion-item strong {
+        font-weight: 700;
+        color: #111827;
+    }
+
+    /* تأثير الـ Hover على العنصر */
+    ul.search-suggestions-list li.search-suggestion-item:hover {
+        background-color: #EF4444 !important;
+        color: #FFFFFF !important;
+    }
+
+    ul.search-suggestions-list li.search-suggestion-item:hover i,
+    ul.search-suggestions-list li.search-suggestion-item:hover span,
+    ul.search-suggestions-list li.search-suggestion-item:hover strong {
+        color: #FFFFFF !important;
+    }
+
+    /* Notification dropdown */
+    .notif-dropdown {
+        width: 340px;
+        max-height: 420px;
+        padding: 0 !important;
+    }
+
+    .notif-list {
+        max-height: 320px;
+        overflow-y: auto;
+    }
+
+    .notif-item {
+        display: block;
+        padding: 10px 14px;
+        border-bottom: 1px solid #f0f0f0;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .notif-item:hover {
+        background-color: #F3F4F6;
+    }
+
+    .notif-item.unread {
+        background-color: #FEF2F2;
+    }
+
+    .notif-item .notif-title {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #111827;
+    }
+
+    .notif-item .notif-msg {
+        font-size: 0.8rem;
+        color: #6B7280;
+    }
+
+    .notif-item .notif-time {
+        font-size: 0.7rem;
+        color: #9CA3AF;
+    }
+</style>
+
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow py-2">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Mazeed.PL</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            <!-- Brand Logo -->
+            <a class="navbar-brand brand-logo fs-4" asp-area="" asp-controller="Home" asp-action="Index">
+                Mazeed<span class="plus">+</span>
+            </a>
+
+            <!-- Toggler for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                    aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
+
+            <!-- Collapsible Content -->
+            
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <!-- Navigation Links -->
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link fw-medium @(currentController == "Home" && currentAction == "Index" ? "active" : "")"
+                           asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium @(currentController == "Home" && currentAction == "Category" && currentCategoryId == "1" ? "active" : "")"
+                           asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="1">Electronics</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link fw-medium @(currentController == "Home" && currentAction == "Category" && currentCategoryId == "2" ? "active" : "")"
+                           asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="2">Fashion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium @(currentController == "Home" && currentAction == "Category" && currentCategoryId == "3" ? "active" : "")"
+                           asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="3">Sports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium @(currentController == "Home" && currentAction == "Category" && currentCategoryId == "4" ? "active" : "")"
+                           asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="4">Beauty</a>
+                    </li>
+                </ul>
+
+                <!-- Updated Search Bar Form -->
+                <!-- Updated Search Bar Form -->
+                <form id="searchForm" action="/Store/Index" method="get" class="me-lg-3 mb-2 mb-lg-0 search-container">
+                    <div class="input-group search-input-group">
+                        <input id="searchInput"
+                               class="form-control search-input"
+                               type="search"
+                               name="searchQuery"
+                               placeholder="Search by product, brand, category..."
+                               value="@Context.Request.Query["searchQuery"]"
+                               autocomplete="off" />
+                        <button class="btn search-btn" type="submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                    <ul id="suggestionsList" class="search-suggestions-list"></ul>
+                </form>
+
+                <!-- Account Dropdown Menu -->
+                <ul class="navbar-nav">
+                    <li class="nav-item me-2">
+                        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode" title="Switch theme">
+                            <i class="fa-solid fa-moon" data-theme-icon></i>
+                        </button>
+                    </li>
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <li class="nav-item me-2">
+                            <a class="nav-link position-relative" href="/Cart" title="Cart">
+                                <i class="fa-solid fa-cart-shopping fs-5"></i>
+                                <span id="cartBadge" class="notif-badge d-none">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown me-2">
+                            <a class="nav-link position-relative" href="#" id="notifBell" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
+                                <i class="fa-regular fa-bell fs-5"></i>
+                                <span id="notifBadge" class="notif-badge d-none">0</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2 notif-dropdown" aria-labelledby="notifBell">
+                                <li class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                                    <span class="fw-semibold small">Notifications</span>
+                                    <button type="button" id="notifMarkAllRead" class="btn btn-link btn-sm p-0 text-decoration-none">Mark all read</button>
+                                </li>
+                                <li>
+                                    <div id="notifList" class="notif-list">
+                                        <div class="text-center text-muted small py-4">Loading...</div>
+                                    </div>
+                                </li>
+                                <li class="border-top text-center py-2">
+                                    <a href="/Notifications" class="small fw-semibold text-decoration-none">View all notifications</a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    <li class="nav-item dropdown">
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <a class="nav-link dropdown-toggle fw-semibold d-flex align-items-center gap-2"
+                               href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle fs-5 text-mazeed-primary"></i>
+                                <span>@User.Identity.Name</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="userMenu">
+                                @if(User.IsInRole("Admin"))
+                                {
+                                    <li>
+                                        <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Admin" asp-action="Index">
+                                            <i class="bi bi-speedometer2 text-muted"></i> Admin Dashboard
+                                        </a>
+                                    </li>
+                                }
+                                <li>
+                                    <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Auth" asp-action="Profile">
+                                        <i class="bi bi-person text-muted"></i> My Profile
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                                        <button type="submit" class="dropdown-item py-2 text-danger d-flex align-items-center gap-2 w-100">
+                                            <i class="bi bi-box-arrow-right"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <a class="nav-link dropdown-toggle fw-semibold d-flex align-items-center gap-2"
+                               href="#" id="authMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person fs-5"></i>
+                                <span>Account</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="authMenu">
+                                <li>
+                                    <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Auth" asp-action="Login">
+                                        <i class="bi bi-box-arrow-in-right text-mazeed-primary"></i> Sign In
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2 d-flex align-items-center gap-2" asp-controller="Auth" asp-action="Register">
+                                        <i class="bi bi-person-plus text-muted"></i> Create Account
+                                    </a>
+                                </li>
+                            </ul>
+                        }
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
+
+<script>
+       document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const suggestionsList = document.getElementById("suggestionsList");
+        const searchForm = document.getElementById("searchForm");
+
+        if (!searchInput || !suggestionsList || !searchForm) return;
+
+        // منع الـ Submit التقليدي وتحويله لـ AJAX
+        searchForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            performSearch(searchInput.value.trim());
+        });
+
+        // جلب الاقتراحات أثناء الكتابة
+        searchInput.addEventListener("input", function () {
+            const query = this.value.trim();
+
+            if (query.length === 0) {
+                suggestionsList.style.display = "none";
+                suggestionsList.innerHTML = "";
+                return;
+            }
+
+            fetch(`/Store/GetSuggestions?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsList.innerHTML = "";
+                    if (data && data.length > 0) {
+                        data.forEach(item => {
+                            const li = document.createElement("li");
+                            li.className = "search-suggestion-item";
+
+                            // تمييز النص المطابق
+                            let highlightedText = item;
+                            if (item.toLowerCase().startsWith(query.toLowerCase())) {
+                                const matchLength = query.length;
+                                const typed = item.substring(0, matchLength);
+                                const rest = item.substring(matchLength);
+                                highlightedText = `${typed}<strong>${rest}</strong>`;
+                            }
+
+                            li.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> <span>${highlightedText}</span>`;
+
+                            li.addEventListener("click", function () {
+                                searchInput.value = item;
+                                suggestionsList.style.display = "none";
+                                performSearch(item);
+                            });
+
+                            suggestionsList.appendChild(li);
+                        });
+                        suggestionsList.style.display = "block";
+                    } else {
+                        suggestionsList.style.display = "none";
+                    }
+                })
+                .catch(err => console.error("Error fetching suggestions:", err));
+        });
+
+        // إخفاء القائمة عند النقر خارج شريط البحث
+        document.addEventListener("click", function (e) {
+            if (!searchForm.contains(e.target)) {
+                suggestionsList.style.display = "none";
+            }
+        });
+
+        // تنفيذ البحث بدون Reload
+        function performSearch(query) {
+            suggestionsList.style.display = "none";
+
+            const currentUrl = new URL(window.location.href);
+            currentUrl.pathname = "/Store/Index";
+            if (query) {
+                currentUrl.searchParams.set("searchQuery", query);
+            } else {
+                currentUrl.searchParams.delete("searchQuery");
+            }
+
+            window.history.pushState({}, "", currentUrl);
+
+            fetch(currentUrl.toString(), {
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+
+                const newGrid = doc.getElementById("productGrid");
+                const currentGrid = document.getElementById("productGrid");
+
+                if (newGrid && currentGrid) {
+                    currentGrid.innerHTML = newGrid.innerHTML;
+                } else {
+                    window.location.href = currentUrl.toString();
+                }
+            })
+            .catch(err => console.error("Error updating products:", err));
+        }
+    });
+</script>

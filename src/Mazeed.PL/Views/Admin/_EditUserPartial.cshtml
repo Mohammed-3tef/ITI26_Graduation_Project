@@ -1,0 +1,97 @@
+﻿<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold" id="editUserModalLabel">
+                    <i class="fa-solid fa-user-pen me-2"></i>Edit User
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Admin" asp-action="EditUser" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <!-- Hidden inputs for form submission fallback if needed -->
+                <input type="hidden" id="hiddenEditUserEmail" name="Email" />
+                <input type="hidden" id="hiddenEditUserName" name="UserName" />
+
+                <div class="modal-body p-3 p-md-4">
+                    <!-- Image Upload & Preview -->
+                    <div class="text-center mb-4">
+                        <div class="mx-auto mb-2" style="width: 100px; height: 100px; position: relative;">
+                            <img id="editModalImgPreview"
+                                 src="/assets/images/users/default-avatar.png"
+                                 class="rounded-circle w-100 h-100 object-fit-cover border"
+                                 alt="Preview" />
+                        </div>
+                        <label for="editProfileImage" class="btn btn-sm btn-outline-danger rounded-pill">
+                            <i class="fa-solid fa-upload me-1"></i> Change Photo
+                        </label>
+                        <input type="file" id="editProfileImage" name="ProfileImage" class="d-none" accept="image/*" onchange="previewEditImage(this)" />
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Username</label>
+                            <input type="text" id="editUserName" name="UserName" class="form-control" readonly />
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="email" id="editUserEmail" name="Email" class="form-control" readonly />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">First Name</label>
+                            <input type="text" id="editFirstName" name="FirstName" class="form-control" required />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Last Name</label>
+                            <input type="text" id="editLastName" name="LastName" class="form-control" required />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Phone Number</label>
+                            <input type="tel" id="editPhoneNumber" name="PhoneNumber" class="form-control" required />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Birth Date</label>
+                            <input type="date" id="editBirthDate" name="BirthDate" class="form-control" required />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Gender</label>
+                            <select id="editGender" name="Gender" class="form-select" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Governorate</label>
+                            <select id="editGovSelect" name="Governorate" class="form-select" required>
+                                <option value="">Select Governorate</option>
+                                @if (ViewBag.Governorates != null)
+                                {
+                                    foreach (SelectListItem gov in ViewBag.Governorates)
+                                    {
+                                        <option value="@gov.Value">@gov.Text</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">City</label>
+                            <select id="editCitySelect" name="City" class="form-select" required>
+                                <option value="">Select City</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Street</label>
+                            <input type="text" id="editStreet" name="Street" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger px-4">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

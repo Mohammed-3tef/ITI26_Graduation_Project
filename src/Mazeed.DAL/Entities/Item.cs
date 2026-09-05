@@ -16,7 +16,7 @@ namespace Mazeed.DAL.Entities
         [Required, MaxLength(50)]
         public string Code { get; set; } = string.Empty;
 
-        [MaxLength(1000)]
+        [MaxLength(255)]
         public string? Description { get; set; }
 
         [Required, Range(0, 1000000)]
@@ -24,7 +24,8 @@ namespace Mazeed.DAL.Entities
         public decimal Price { get; set; }
 
         // Foreign Key
-        public int BrandId { get; set; }
+        [ForeignKey(nameof(Brand))]
+        public long BrandId { get; set; }
         public Brand Brand { get; set; } = null!;
 
         // Navigation Properties

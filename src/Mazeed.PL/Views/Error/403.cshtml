@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 403;
+    ViewData["ErrorMessage"] = "Forbidden";
+    ViewData["ErrorDescription"] = "You don't have permission to access this resource.";
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
+    Back to Home
+</a>

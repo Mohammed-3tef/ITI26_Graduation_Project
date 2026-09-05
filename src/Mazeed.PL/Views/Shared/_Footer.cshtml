@@ -1,5 +1,63 @@
-<footer class="border-top footer text-muted">
+<footer class="border-top footer py-4 py-md-5">
     <div class="container">
-        &copy; 2026 - Mazeed.PL - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="row g-4 g-md-5">
+            <div class="col-12 col-md-4">
+                <h1 class="brand text-light mb-3">
+                    Mazeed<span class="plus">+</span>
+                </h1>
+
+                <p class="muted mb-0">
+                    A meticulously curated space presenting timeless designs, limited editions, and daily beautiful items for conscious living.
+                </p>
+            </div>
+
+            <div class="col-6 col-md-2 pt-md-3">
+                <h5 class="text-light mb-3">SHOP</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><a class="muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="1">Electronics</a></li>
+                    <li class="mb-2"><a class="muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="2">Fashion</a></li>
+                    <li class="mb-2"><a class="muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="3">Sports</a></li>
+                    <li><a class="muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="4">Beauty</a></li>
+                </ul>
+            </div>
+
+            <div class="col-6 col-md-2 pt-md-3">
+                <h5 class="text-light mb-3">SUPPORT</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><a class="muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="Help">Help Center</a></li>
+                    <li class="mb-2"><a class="muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="About">About Us</a></li>
+                    <li class="mb-2"><a class="muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                    <li class="mb-2"><a class="muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="Terms">Terms of Service</a></li>
+                    <li><a class="muted text-decoration-none" asp-area="" asp-controller="Home" asp-action="Contact">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="col-12 col-md-4 pt-md-3">
+                <h5 class="text-light mb-3">DROP NOTICE</h5>
+                <p class="muted">
+                    Subscribe to our newsletter to get the latest updates on new drops and exclusive offers.
+                </p>
+            </div>
+        </div>
+
+        <hr class="bg-white my-4" />
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
+            <p class="muted mb-0 text-center text-sm-start">
+                � 2026 Mazeed Retail Ltd. All rights reserved.
+            </p>
+
+            <div class="d-flex justify-content-center justify-content-sm-end">
+                <a class="muted me-3" href="#" aria-label="Facebook">
+                    <i class="fa-brands fa-facebook-f fa-lg"></i>
+                </a>
+                <a class="muted me-3" href="#" aria-label="Instagram">
+                    <i class="fa-brands fa-instagram fa-lg"></i>
+                </a>
+                <a class="muted" href="#" aria-label="Twitter">
+                    <i class="fa-brands fa-twitter fa-lg"></i>
+                </a>
+            </div>
+        </div>
     </div>
 </footer>

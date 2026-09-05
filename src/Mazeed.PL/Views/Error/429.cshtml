@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "_ErrorLayout";
+    ViewData["ErrorCode"] = 429;
+    ViewData["ErrorMessage"] = "Too Many Requests";
+    ViewData["ErrorDescription"] = "You have made too many requests. Please try again later.";
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-mazeed-primary text-center">
+    Back to Home
+</a>

@@ -1,0 +1,170 @@
+﻿@* @model Mazeed.BLL.ViewModels.User.UserVM *@
+@* @{ *@
+@*     Layout = "_AdminLayout"; *@
+@*     ViewData["Title"] = "Dashboard"; *@
+@* } *@
+
+@* <div class="dashboard-container"> *@
+@*     <!-- KPI Cards Row --> *@
+@*     <div class="row g-3 mb-4"> *@
+@*         <div class="col-12 col-sm-6 col-lg-3"> *@
+@*             <div class="kpi-card p-3 h-100"> *@
+@*                 <div class="d-flex justify-content-between align-items-center"> *@
+@*                     <div> *@
+@*                         <small class="text-muted d-block">Sales</small> *@
+@*                         <h4 class="fw-bold mb-0">$119M</h4> *@
+@*                         <small class="text-success">PY 26.22M ↑77.8%</small> *@
+@*                     </div> *@
+@*                     <i class="fa-solid fa-dollar-sign text-primary fs-4"></i> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*         <div class="col-12 col-sm-6 col-lg-3"> *@
+@*             <div class="kpi-card p-3 h-100"> *@
+@*                 <div class="d-flex justify-content-between align-items-center"> *@
+@*                     <div> *@
+@*                         <small class="text-muted d-block">Revenue</small> *@
+@*                         <h4 class="fw-bold mb-0">$45.2M</h4> *@
+@*                         <small class="text-success">PY 20.1M ↑55.2%</small> *@
+@*                     </div> *@
+@*                     <i class="fa-solid fa-chart-line text-primary fs-4"></i> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*         <div class="col-12 col-sm-6 col-lg-3"> *@
+@*             <div class="kpi-card p-3 h-100"> *@
+@*                 <div class="d-flex justify-content-between align-items-center"> *@
+@*                     <div> *@
+@*                         <small class="text-muted d-block">Products</small> *@
+@*                         <h4 class="fw-bold mb-0">1,932</h4> *@
+@*                         <small class="text-success">PY 1,822 ↑6.0%</small> *@
+@*                     </div> *@
+@*                     <i class="fa-solid fa-box-archive text-primary fs-4"></i> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*         <div class="col-12 col-sm-6 col-lg-3"> *@
+@*             <div class="kpi-card p-3 h-100"> *@
+@*                 <div class="d-flex justify-content-between align-items-center"> *@
+@*                     <div> *@
+@*                         <small class="text-muted d-block">Customers</small> *@
+@*                         <h4 class="fw-bold mb-0">89.4K</h4> *@
+@*                         <small class="text-success">PY 65.2K ↑37.1%</small> *@
+@*                     </div> *@
+@*                     <i class="fa-solid fa-users text-primary fs-4"></i> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+
+@*     <!-- Charts Row 1 --> *@
+@*     <div class="row g-3 mb-4"> *@
+@*         <div class="col-12 col-lg-6"> *@
+@*             <div class="bg-white p-3 rounded-4 shadow-sm h-100"> *@
+@*                 <h6 class="fw-bold mb-3">Total Sales per Month</h6> *@
+@*                 <div class="chart-container"> *@
+@*                     <canvas id="lineChart"></canvas> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*         <div class="col-12 col-sm-6 col-lg-3"> *@
+@*             <div class="bg-white p-3 rounded-4 shadow-sm h-100"> *@
+@*                 <h6 class="fw-bold mb-3">% by Category</h6> *@
+@*                 <div class="chart-container"> *@
+@*                     <canvas id="doughnutChart"></canvas> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*         <div class="col-12 col-sm-6 col-lg-3"> *@
+@*             <div class="bg-white p-3 rounded-4 shadow-sm h-100"> *@
+@*                 <h6 class="fw-bold mb-3">By Segment</h6> *@
+@*                 <div class="chart-container"> *@
+@*                     <canvas id="pieChart"></canvas> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+
+@*     <!-- Charts & Table Row 2 --> *@
+@*     <div class="row g-3"> *@
+@*         <div class="col-12 col-lg-6"> *@
+@*             <div class="bg-white p-3 rounded-4 shadow-sm h-100"> *@
+@*                 <h6 class="fw-bold mb-3">Sales by Product</h6> *@
+@*                 <div class="chart-container"> *@
+@*                     <canvas id="barChart"></canvas> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*         <div class="col-12 col-lg-6"> *@
+@*             <div class="bg-white p-3 rounded-4 shadow-sm h-100"> *@
+@*                 <h6 class="fw-bold mb-3">Sales Detail Table</h6> *@
+@*                 <div class="table-responsive"> *@
+@*                     <table class="table table-hover align-middle mb-0"> *@
+@*                         <thead class="table-light"> *@
+@*                             <tr> *@
+@*                                 <th>Country</th> *@
+@*                                 <th>Segment</th> *@
+@*                                 <th>Product</th> *@
+@*                                 <th>Sales</th> *@
+@*                             </tr> *@
+@*                         </thead> *@
+@*                         <tbody> *@
+@*                             <tr><td>United Kingdom</td><td>Corporate</td><td>Montana</td><td>$189,540</td></tr> *@
+@*                             <tr><td>United Kingdom</td><td>Corporate</td><td>Velo</td><td>$267,196</td></tr> *@
+@*                             <tr><td>Germany</td><td>Home Office</td><td>Carretera</td><td>$300,000</td></tr> *@
+@*                         </tbody> *@
+@*                         <tfoot class="fw-bold"> *@
+@*                             <tr> *@
+@*                                 <td colspan="3">Total</td> *@
+@*                                 <td>$1,265,200</td> *@
+@*                             </tr> *@
+@*                         </tfoot> *@
+@*                     </table> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+
+@* @section Scripts { *@
+@*     <script> *@
+@*         const chartOptions = { *@
+@*             responsive: true, *@
+@*             maintainAspectRatio: false *@
+@*         }; *@
+
+@*         // Doughnut Chart *@
+@*         new Chart(document.getElementById('doughnutChart'), { *@
+@*             type: 'doughnut', *@
+@*             data: { datasets: [{ data: [60, 40], backgroundColor: ['#d63384', '#6f42c1'] }] }, *@
+@*             options: chartOptions *@
+@*         }); *@
+
+@*         // Pie Chart *@
+@*         new Chart(document.getElementById('pieChart'), { *@
+@*             type: 'pie', *@
+@*             data: { datasets: [{ data: [70, 30], backgroundColor: ['#dc3545', '#a100ff'] }] }, *@
+@*             options: chartOptions *@
+@*         }); *@
+
+@*         // Bar Chart *@
+@*         new Chart(document.getElementById('barChart'), { *@
+@*             type: 'bar', *@
+@*             data: { *@
+@*                 labels: ['Prod 1', 'Prod 2', 'Prod 3', 'Prod 4', 'Prod 5', 'Prod 6', 'Prod 7', 'Prod 8'], *@
+@*                 datasets: [{ data: [12, 25, 19, 27, 15, 20, 18, 14], backgroundColor: '#d63384' }] *@
+@*             }, *@
+@*             options: chartOptions *@
+@*         }); *@
+
+@*         // Line Chart *@
+@*         new Chart(document.getElementById('lineChart'), { *@
+@*             type: 'line', *@
+@*             data: { *@
+@*                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], *@
+@*                 datasets: [{ data: [65, 75, 70, 80, 110, 130, 145, 160, 155, 170, 165, 190], borderColor: '#dc3545', fill: false }] *@
+@*             }, *@
+@*             options: chartOptions *@
+@*         }); *@
+@*     </script> *@
+@* } *@

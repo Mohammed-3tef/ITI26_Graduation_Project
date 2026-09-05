@@ -1,0 +1,565 @@
+﻿@using Mazeed.BLL.ViewModels
+@using Mazeed.BLL.ViewModels.User
+@model IEnumerable<UserVM>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Users & Roles";
+    var roles = ViewBag.Roles as IEnumerable<RoleVM> ?? Enumerable.Empty<RoleVM>();
+    var userRoles = ViewBag.UserRoles as IEnumerable<UserRoleVM> ?? Enumerable.Empty<UserRoleVM>();
+    var CurrentUser = ViewBag.CurrentUser as UserVM;
+}
+
+@section Styles {
+    <style>
+        .nav-tabs-custom {
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .nav-tabs-custom .nav-link {
+            border: none;
+            color: #6c757d;
+            font-weight: 500;
+            padding: 10px 30px;
+            position: relative;
+            background: transparent;
+        }
+
+        .nav-tabs-custom .nav-link.active {
+            color: #dc3545;
+            font-weight: 600;
+            background: transparent;
+        }
+
+        .nav-tabs-custom .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #dc3545;
+        }
+
+        .btn-action-edit {
+            background-color: #fff8dd;
+            color: #ffc107;
+            border: 1px solid #ffe69c;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-action-edit:hover {
+            background-color: #ffc107;
+            color: #fff;
+        }
+
+        .btn-action-role {
+            background-color: #e2e3e5;
+            color: #41464b;
+            border: 1px solid #d3d6d8;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-action-role:hover {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .btn-action-delete {
+            background-color: #ffe6e6;
+            color: #dc3545;
+            border: 1px solid #f5c2c7;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-action-delete:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .user-avatar-sm {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-avatar-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+        }
+    </style>
+}
+
+@* Define Local Razor Function *@
+@{
+    async Task<Microsoft.AspNetCore.Html.IHtmlContent> RenderUserTable(IEnumerable<UserVM>? users, string emptyIcon, string emptyText)
+    {
+        var allRolesJson = System.Text.Json.JsonSerializer.Serialize(roles.Select(r => r.Name).ToList());
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col" style="width: 60px;">Photo</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col" class="text-center" style="width: 150px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (users != null && users.Any())
+                    {
+                        foreach (var user in users)
+                        {
+                            var userRoleInfo = userRoles.FirstOrDefault(u => u.UserEmail == user.Email);
+                            var assignedRolesJson = System.Text.Json.JsonSerializer.Serialize(userRoleInfo?.AssignedRoles ?? new List<string>());
+                            string userImgBase64 = (user.ExistingImage != null && user.ExistingImage.Length > 0) ? Convert.ToBase64String(user.ExistingImage) : "";
+
+                            <tr class="user-search-row">
+                                <td>
+                                    @if (!string.IsNullOrEmpty(userImgBase64))
+                                    {
+                                        <img src="data:image/png;base64,@userImgBase64" class="user-avatar-sm" alt="@user.FirstName" draggable="false" />
+                                    }
+                                    else
+                                    {
+                                        <div class="user-avatar-placeholder">
+                                            <i class="fa-regular fa-user"></i>
+                                        </div>
+                                    }
+                                </td>
+                                <td class="fw-semibold">
+                                    @if (!string.IsNullOrEmpty(user.FirstName) || !string.IsNullOrEmpty(user.LastName))
+                                    {
+                                        @($"{user.FirstName} {user.LastName}".Trim())
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td>@user.UserName</td>
+                                <td>@user.Email</td>
+                                <td>@(string.IsNullOrEmpty(user.PhoneNumber) ? "-" : user.PhoneNumber)</td>
+                                <td>
+                                    @if (string.IsNullOrEmpty(user.Gender)) 
+                                    {
+                                        <span class="badge bg-secondary border">Not Specified</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge @(user.Gender == "Male" ? "bg-primary-subtle text-primary" : "bg-danger-subtle text-danger") border">
+                                            @user.Gender
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <button type="button"
+                                                class="btn btn-action-role"
+                                                title="Manage Roles"
+                                                onclick="openManageRolesModal('@user.Email', '@user.FirstName @user.LastName', '@assignedRolesJson.Replace("'", "\\'")', '@allRolesJson.Replace("'", "\\'")')">
+                                            <i class="fa-solid fa-user-shield"></i>
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-action-edit"
+                                                title="Edit User"
+                                                onclick="populateEditUserModal('@user.Email', '@user.UserName', '@user.FirstName', '@user.LastName', '@user.PhoneNumber', '@user.BirthDate.ToString("yyyy-MM-dd")', '@user.Gender', '@user.Governorate', '@user.City', '@user.Street', '@userImgBase64')">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-action-delete"
+                                                title="Delete User"
+                                                onclick="openDeleteModal('@user.Email', '@user.FirstName @user.LastName')">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">
+                                <i class="fa-solid @emptyIcon fs-3 d-block mb-2"></i>
+                                @emptyText
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        return Microsoft.AspNetCore.Html.HtmlString.Empty;
+    }
+}
+
+<!-- Top Navigation Tabs -->
+<ul class="nav nav-tabs nav-tabs-custom justify-content-center mb-4" id="userTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="view-tab" data-bs-toggle="tab" data-bs-target="#view-tab-pane" type="button" role="tab">
+            View All Users
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="add-tab" data-bs-toggle="tab" data-bs-target="#add-tab-pane" type="button" role="tab">
+            Add User
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="roles-tab" data-bs-toggle="tab" data-bs-target="#roles-tab-pane" type="button" role="tab">
+            Manage Roles
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="userTabsContent">
+    <!-- View All Users Tab -->
+    <div class="tab-pane fade show active" id="view-tab-pane" role="tabpanel" tabindex="0">
+        <div class="d-flex justify-content-end mb-3">
+            <div class="input-group shadow-sm" style="width: 300px; border-radius: 20px; overflow: hidden;">
+                <span class="input-group-text bg-light border-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                <input type="text" id="userSearchInput" class="form-control border-0 bg-light" placeholder="Search users...">
+            </div>
+        </div>
+        @{
+            var adminList = Model?.Where(u =>
+            {
+                var userRoleInfo = userRoles.FirstOrDefault(r => r.UserEmail == u.Email);
+                return userRoleInfo != null && userRoleInfo.AssignedRoles.Contains("Admin");
+            }).Where(u => u.Email != CurrentUser?.Email).ToList();
+
+            var standardUserList = Model?.Where(u =>
+            {
+                var userRoleInfo = userRoles.FirstOrDefault(r => r.UserEmail == u.Email);
+                return userRoleInfo == null || !userRoleInfo.AssignedRoles.Contains("Admin");
+            }).Where(u => u.Email != CurrentUser?.Email).ToList();
+        }
+
+        <!-- Section 1: Admins -->
+        <h4 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-user-shield me-2 text-danger"></i>Admins</h4>
+        <div class="bg-white rounded-4 shadow-sm p-4 mb-5">
+            @await RenderUserTable(adminList, "fa-user-shield", "No administrators found.")
+        </div>
+
+        <!-- Section 2: Standard Users -->
+        <h4 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-users me-2 text-primary"></i>Users</h4>
+        <div class="bg-white rounded-4 shadow-sm p-4">
+            @await RenderUserTable(standardUserList, "fa-users-slash", "No standard users found.")
+        </div>
+    </div>
+
+    <!-- Add User Tab -->
+    <div class="tab-pane fade" id="add-tab-pane" role="tabpanel" tabindex="0">
+        <partial name="_CreateUserPartial" model="new UserVM()" />
+    </div>
+
+    <!-- Manage Roles Tab -->
+    <div class="tab-pane fade" id="roles-tab-pane" role="tabpanel" tabindex="0">
+        <div class="row g-4">
+            <!-- Create Role Card -->
+            <div class="col-12 col-md-4">
+                <div class="bg-white rounded-4 shadow-sm p-4">
+                    <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-shield-halved me-2"></i>Create New Role</h5>
+                    <form asp-controller="Admin" asp-action="CreateRole" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Role Name</label>
+                            <input type="text" name="roleName" class="form-control" placeholder="e.g. Manager" required />
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100 rounded-pill">
+                            <i class="fa-solid fa-plus me-1"></i> Create Role
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Role List Table -->
+            <div class="col-12 col-md-8">
+                <div class="bg-white rounded-4 shadow-sm p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0"><i class="fa-solid fa-list-check me-2"></i>Existing Roles</h5>
+                        <div class="input-group shadow-sm" style="width: 260px; border-radius: 20px; overflow: hidden;">
+                            <span class="input-group-text bg-light border-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                            <input type="text" id="roleSearchInput" class="form-control border-0 bg-light" placeholder="Search roles...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Role Name</th>
+                                    <th>Assigned Users</th>
+                                    <th class="text-center" style="width: 100px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (roles.Any())
+                                {
+                                    foreach (var role in roles)
+                                    {
+                                        <tr class="role-search-row">
+                                            <td class="fw-semibold">@role.Name</td>
+                                            <td><span class="badge bg-secondary rounded-pill">@role.UsersCount Users</span></td>
+                                            <td class="text-center">
+                                                <form asp-controller="Admin" asp-action="DeleteRole" method="post" onsubmit="return confirm('Delete this role?');">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="roleName" value="@role.Name" />
+                                                    <button type="submit" class="btn btn-action-delete" title="Delete Role">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center py-3 text-muted">No roles found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assign Roles Modal -->
+<div class="modal fade" id="manageRolesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-shield me-2"></i>Assign Roles</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-controller="Admin" asp-action="ManageUserRoles" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="roleUserEmail" name="email" />
+                <div class="modal-body p-4">
+                    <p class="mb-3">Assigning roles for <strong id="roleUserNameDisplay" class="text-danger"></strong>:</p>
+                    <div id="rolesCheckboxContainer" class="d-flex flex-column gap-2"></div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger px-4">Save Roles</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal Partial -->
+<partial name="_EditUserPartial" />
+
+<!-- Delete User Modal Confirmation -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-triangle-exclamation me-2"></i>Confirm Delete</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-controller="Admin" asp-action="DeleteUser" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="deleteUserEmail" name="email" />
+                <div class="modal-body p-4 text-center">
+                    <p class="mb-1 fs-5">Are you sure you want to delete user?</p>
+                    <p class="fw-bold text-danger fs-5" id="deleteUserNameDisplay"></p>
+                    <small class="text-muted">This action cannot be undone.</small>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger px-4">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addLiveFilter = (inputId, rowSelector) => {
+                const input = document.getElementById(inputId);
+                if (!input) return;
+
+                input.addEventListener('keyup', function () {
+                    const filter = this.value.toLowerCase();
+                    document.querySelectorAll(rowSelector).forEach(row => {
+                        row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+                    });
+                });
+            };
+
+            addLiveFilter('userSearchInput', '.user-search-row');
+            addLiveFilter('roleSearchInput', '.role-search-row');
+        });
+
+        function previewEditImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('editModalImgPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.getElementById("addGovSelect")?.addEventListener("change", function () {
+            const citySelect = document.getElementById("addCitySelect");
+            const govId = this.value;
+            if (!citySelect) return;
+
+            citySelect.innerHTML = '<option value="">Select City</option>';
+
+            if (govId) {
+                fetch(`/Admin/GetCitiesByGovernorate?governorateId=${govId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        data.forEach(city => {
+                            const opt = document.createElement("option");
+                            opt.value = city.id;
+                            opt.textContent = city.name;
+                            citySelect.appendChild(opt);
+                        });
+                    })
+                    .catch(err => console.error(err));
+            }
+        });
+
+        function loadEditCities(governorateId, selectedCityId = null) {
+            const citySelect = document.getElementById("editCitySelect");
+            if (!citySelect) return;
+
+            citySelect.innerHTML = '<option value="">Select City</option>';
+            if (!governorateId) return;
+
+            fetch(`/Admin/GetCitiesByGovernorate?governorateId=${governorateId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(city => {
+                        const option = document.createElement("option");
+                        option.value = city.id;
+                        option.textContent = city.name;
+                        if (selectedCityId && city.id.toString() === selectedCityId.toString()) {
+                            option.selected = true;
+                        }
+                        citySelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error fetching cities:", error));
+        }
+
+        document.getElementById("editGovSelect")?.addEventListener("change", function () {
+            loadEditCities(this.value);
+        });
+
+        function openDeleteModal(email, displayName) {
+            document.getElementById('deleteUserEmail').value = email;
+            document.getElementById('deleteUserNameDisplay').textContent = displayName;
+            const modal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+            modal.show();
+        }
+
+        function populateEditUserModal(email, userName, firstName, lastName, phone, birthDate, gender, gov, city, street, imageBase64 = null) {
+            document.getElementById('editUserEmail').value = email;
+            document.getElementById('editUserName').value = userName;
+
+            if (document.getElementById('hiddenEditUserEmail')) {
+                document.getElementById('hiddenEditUserEmail').value = email;
+            }
+            if (document.getElementById('hiddenEditUserName')) {
+                document.getElementById('hiddenEditUserName').value = userName;
+            }
+
+            document.getElementById('editFirstName').value = firstName;
+            document.getElementById('editLastName').value = lastName;
+            document.getElementById('editPhoneNumber').value = phone;
+            document.getElementById('editBirthDate').value = birthDate;
+            document.getElementById('editGender').value = gender;
+            document.getElementById('editStreet').value = street;
+
+            const imgPreview = document.getElementById('editModalImgPreview');
+            if (imageBase64 && imageBase64.length > 0) {
+                imgPreview.src = `data:image/png;base64,${imageBase64}`;
+            } else {
+                imgPreview.src = '/assets/images/users/default-avatar.png';
+            }
+
+            const govSelect = document.getElementById('editGovSelect');
+            if (govSelect) {
+                govSelect.value = gov;
+                loadEditCities(gov, city);
+            }
+
+            const editModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+            editModal.show();
+        }
+
+        function openManageRolesModal(userEmail, userName, assignedRolesJson, allRolesJson) {
+            let assignedRoles = [];
+            let allRoles = [];
+
+            try {
+                assignedRoles = JSON.parse(assignedRolesJson);
+                allRoles = JSON.parse(allRolesJson);
+            } catch (e) {
+                console.error("Error parsing role JSON", e);
+            }
+
+            document.getElementById('roleUserEmail').value = userEmail;
+            document.getElementById('roleUserNameDisplay').textContent = userName;
+
+            const container = document.getElementById('rolesCheckboxContainer');
+            container.innerHTML = '';
+
+            if (allRoles.length === 0) {
+                container.innerHTML = '<p class="text-muted small">No roles available. Create roles first.</p>';
+            } else {
+                allRoles.forEach(role => {
+                    const isChecked = assignedRoles.includes(role);
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'form-check';
+                    wrapper.innerHTML = `
+                        <input class="form-check-input" type="checkbox" name="roles" value="${role}" id="role_chk_${role}" ${isChecked ? 'checked' : ''}>
+                        <label class="form-check-label fw-semibold" for="role_chk_${role}">${role}</label>
+                    `;
+                    container.appendChild(wrapper);
+                });
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('manageRolesModal'));
+            modal.show();
+        }
+    </script>
+}
