@@ -11,6 +11,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Mazeed</title>
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem("mazeed-theme") === "dark") document.documentElement.dataset.theme = "dark";
+            } catch { }
+        })();
+    </script>
 
     <!-- Bootstrap 5 CSS & Icons -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -123,6 +130,9 @@
     </style>
 </head>
 <body>
+    <button type="button" class="theme-toggle theme-toggle-auth theme-toggle-floating" data-theme-toggle aria-label="Switch to dark mode" title="Switch theme">
+        <i class="bi bi-moon-fill" data-theme-icon></i>
+    </button>
     <div class="mazeed-split-container">
 
         <!-- Left Panel Form -->
@@ -216,5 +226,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>

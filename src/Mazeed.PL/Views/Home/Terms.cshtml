@@ -1,0 +1,153 @@
+@{
+    ViewData["Title"] = "Terms of Service";
+}
+
+<style>
+    .terms-wrapper {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+        color: #111827;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .terms-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .terms-header h1 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 0.5rem;
+    }
+
+    .terms-header p,
+    .terms-section p,
+    .terms-list li {
+        color: #374151;
+        line-height: 1.7;
+    }
+
+    .terms-header p {
+        color: #6b7280;
+        margin: 0;
+    }
+
+    .terms-intro {
+        background: #f8fafc;
+        border-left: 4px solid #ef4444;
+        border-radius: 0 12px 12px 0;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2.5rem;
+        line-height: 1.7;
+    }
+
+    .terms-section {
+        margin-bottom: 2.25rem;
+    }
+
+    .terms-section h2 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0.85rem;
+    }
+
+    .terms-list {
+        padding-left: 1.25rem;
+        margin-bottom: 0;
+    }
+
+    .terms-list li {
+        margin-bottom: 0.65rem;
+    }
+
+    html[data-theme="dark"] .terms-wrapper,
+    html[data-theme="dark"] .terms-section h2 {
+        color: var(--theme-text) !important;
+    }
+
+    html[data-theme="dark"] .terms-header {
+        border-color: var(--theme-border) !important;
+    }
+
+    html[data-theme="dark"] .terms-header h1,
+    html[data-theme="dark"] .terms-section p,
+    html[data-theme="dark"] .terms-list li {
+        color: var(--theme-text) !important;
+    }
+
+    html[data-theme="dark"] .terms-header p {
+        color: var(--theme-text-muted) !important;
+    }
+
+    html[data-theme="dark"] .terms-intro {
+        background: var(--theme-surface-muted) !important;
+        border-color: #ef4444 !important;
+        color: var(--theme-text) !important;
+    }
+</style>
+
+<div class="terms-wrapper">
+    <header class="terms-header">
+        <h1>Terms of Service</h1>
+        <p>Effective Date: August 2026 | Last Updated: August 2026</p>
+    </header>
+
+    <div class="terms-intro">
+        Welcome to Mazeed+. By accessing or using our website, creating an account, or placing an order, you agree to follow these Terms of Service.
+    </div>
+
+    <section class="terms-section">
+        <h2>1. Using Mazeed+</h2>
+        <p>You must provide accurate information when creating an account and keep your login details confidential. You are responsible for activity performed through your account.</p>
+    </section>
+
+    <section class="terms-section">
+        <h2>2. Products and Orders</h2>
+        <p>Product descriptions, prices, availability, and delivery estimates may change. An order is accepted only after Mazeed+ confirms it. We may cancel or limit an order when information is incorrect, stock is unavailable, or fraud is suspected.</p>
+    </section>
+
+    <section class="terms-section">
+        <h2>3. Prices and Payments</h2>
+        <p>Prices are displayed in Egyptian pounds unless stated otherwise. You agree to provide valid payment and billing information. Payments are processed through our approved payment providers.</p>
+    </section>
+
+    <section class="terms-section">
+        <h2>4. Delivery, Returns, and Refunds</h2>
+        <p>Delivery times are estimates and may vary by location or circumstances outside our control. Returns and refunds are handled according to our applicable return policy and the condition of the purchased item.</p>
+    </section>
+
+    <section class="terms-section">
+        <h2>5. Acceptable Use</h2>
+        <ul class="terms-list">
+            <li>Do not use the website for unlawful, fraudulent, or abusive activity.</li>
+            <li>Do not attempt to gain unauthorized access to accounts, systems, or data.</li>
+            <li>Do not copy, modify, or misuse Mazeed+ content, branding, or functionality.</li>
+        </ul>
+    </section>
+
+    <section class="terms-section">
+        <h2>6. Intellectual Property</h2>
+        <p>Mazeed+ and its content, including text, graphics, logos, and software, are protected by applicable intellectual-property laws. You may use the website only for personal, lawful shopping purposes.</p>
+    </section>
+
+    <section class="terms-section">
+        <h2>7. Limitation of Liability</h2>
+        <p>Mazeed+ is not responsible for indirect losses, service interruptions, or delays caused by events outside our reasonable control. Nothing in these terms limits rights that cannot legally be limited.</p>
+    </section>
+
+    <section class="terms-section">
+        <h2>8. Changes to These Terms</h2>
+        <p>We may update these Terms of Service from time to time. The revised version becomes effective when published on this page. Continued use of Mazeed+ after an update means you accept the revised terms.</p>
+    </section>
+
+    <section class="terms-section mb-0">
+        <h2>9. Contact Us</h2>
+        <p>If you have questions about these terms, contact our support team through the <a asp-controller="Home" asp-action="Contact" class="text-mazeed-primary">Contact Us</a> page.</p>
+    </section>
+</div>
