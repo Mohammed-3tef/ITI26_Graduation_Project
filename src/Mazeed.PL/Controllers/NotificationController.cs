@@ -16,6 +16,12 @@ namespace Mazeed.PL.Controllers
             _notificationService = notificationService;
         }
 
+        [HttpGet("/Notifications")]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetMy([FromQuery] bool unreadOnly = false)
             => HandleResponse(await _notificationService.GetUserNotificationsAsync(CurrentUserId, unreadOnly));
