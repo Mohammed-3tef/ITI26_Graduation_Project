@@ -288,6 +288,107 @@
             cursor: not-allowed;
             transform: none;
         }
+
+    /* ===== Apply Filter Button ===== */
+    .btn-apply-filter {
+        background-color: #EF4444;
+        border-color: #EF4444;
+        color: #ffffff;
+    }
+
+        .btn-apply-filter:hover,
+        .btn-apply-filter:focus {
+            background-color: #dc2626;
+            border-color: #dc2626;
+            color: #ffffff;
+        }
+
+    /* ===== Price Range Slider (Vanilla, no library) ===== */
+    .price-slider-wrap {
+        position: relative;
+        padding: 6px 0 18px;
+    }
+
+    .price-slider-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 14px;
+    }
+
+    .price-slider-track-wrap {
+        position: relative;
+        height: 16px;
+    }
+
+    .price-slider-track {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 4px;
+        margin-top: -2px;
+        border-radius: 2px;
+        background: #e5e7eb;
+    }
+
+    .price-slider-range {
+        position: absolute;
+        height: 4px;
+        border-radius: 2px;
+        background: #EF4444;
+        left: 0%;
+        right: 0%;
+    }
+
+    .price-range-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 16px;
+        margin: 0;
+        background: transparent;
+        pointer-events: none;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+        .price-range-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            pointer-events: auto;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #EF4444;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 1px #EF4444;
+            cursor: pointer;
+            position: relative;
+            z-index: 3;
+        }
+
+        .price-range-input::-moz-range-thumb {
+            pointer-events: auto;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #EF4444;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 1px #EF4444;
+            cursor: pointer;
+        }
+
+        .price-range-input::-webkit-slider-runnable-track {
+            background: transparent;
+        }
+
+        .price-range-input::-moz-range-track {
+            background: transparent;
+        }
 </style>
 
 <div class="container-fluid px-0">
@@ -365,17 +466,18 @@
                                             ? item.CategoryNames.First()
                                             : (item.BrandName ?? "GENERAL"))
                                     </span>
-                                    <span class="rating rating-value" data-item-id="@item.Id">&#9734; —</span>
+                                    <!-- التعديل هنا: فصل النجمة وتحديد لونها بـ !important -->
+                                    <span class="rating rating-value" data-item-id="@item.Id"><span style="color: #FFD700 !important;">&#9733;</span> —</span>
                                 </div>
                                 <div class="product-title" title="@item.Name">@item.Name</div>
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div>
                                         <span class="current-price @(item.OldPrice.HasValue && item.OldPrice > item.Price ? "" : "dark")">
-                                            @item.Price.ToString("N2") EGP
+                                            @item.Price.ToString("N0") EGP
                                         </span>
                                         @if (item.OldPrice.HasValue && item.OldPrice > item.Price)
                                         {
-                                            <span class="original-price">@item.OldPrice.Value.ToString("N2") EGP</span>
+                                            <span class="original-price">@item.OldPrice.Value.ToString("N0") EGP</span>
                                         }
                                     </div>
                                     <button class="wishlist-btn" type="button" title="Add to Wishlist" data-item-id="@item.Id" onclick="toggleWishlist(this)">&#9825;</button>
@@ -410,13 +512,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
 
-        <form asp-controller="Home" asp-action="Index" method="get" class="d-flex flex-column h-100">
+        <form asp-action="Index" method="get" class="d-flex flex-column h-100" id="filterForm">
+            <!-- Preserve existing search term -->
             <input type="hidden" name="searchQuery" value="@Model.SearchQuery" />
 
             <div class="offcanvas-body">
                 <div class="accordion accordion-flush" id="filterAccordion">
 
-                    <!-- Sort By Accordion -->
+                    <!-- Sort By -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingSort">
                             <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort">
@@ -436,69 +539,80 @@
                         </div>
                     </div>
 
-                    <!-- Category Filter -->
+                    <!-- Category Dropdown -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingCategory">
                             <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory">
                                 Product Category
                             </button>
                         </h2>
-                        <div id="collapseCategory" class="accordion-collapse collapse">
+                        <div id="collapseCategory" class="accordion-collapse collapse show">
                             <div class="accordion-body">
-                                @if (Model.Categories != null)
-                                {
+                                <select name="categoryId" id="categoryFilterSelect" class="form-select">
+                                    <option value="">All Categories</option>
                                     @foreach (var category in Model.Categories)
                                     {
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="categoryId" id="cat_@category.Id" value="@category.Id" @(Model.CategoryId == category.Id ? "checked" : "") />
-                                            <label class="form-check-label ms-1" for="cat_@category.Id">@category.Name</label>
-                                        </div>
+                                        <option value="@category.Id" selected="@(Model.CategoryId == category.Id)">@category.Name</option>
                                     }
-                                }
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Brand Filter -->
+                    <!-- Brand Dropdown (يتفلتر ديناميك حسب الكاتيجوري المختارة) -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingBrand">
                             <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrand">
                                 Brand
                             </button>
                         </h2>
-                        <div id="collapseBrand" class="accordion-collapse collapse">
+                        <div id="collapseBrand" class="accordion-collapse collapse show">
                             <div class="accordion-body">
-                                @if (Model.Brands != null)
-                                {
+                                <select name="brandId" id="brandFilterSelect" class="form-select">
+                                    <option value="">All Brands</option>
                                     @foreach (var brand in Model.Brands)
                                     {
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="brandId" id="brand_@brand.Id" value="@brand.Id" @(Model.BrandId == brand.Id ? "checked" : "") />
-                                            <label class="form-check-label ms-1" for="brand_@brand.Id">@brand.Name</label>
-                                        </div>
+                                        <option value="@brand.Id" selected="@(Model.BrandId == brand.Id)">@brand.Name</option>
                                     }
-                                }
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Price Range Filter -->
+                    <!-- Price Range Slider -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingPrice">
                             <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
                                 Price
                             </button>
                         </h2>
-                        <div id="collapsePrice" class="accordion-collapse collapse">
+                        <div id="collapsePrice" class="accordion-collapse collapse show">
                             <div class="accordion-body">
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <input type="number" name="minPrice" class="form-control" placeholder="Min" value="@Model.MinPrice" />
+                                <div class="price-slider-wrap"
+                                     data-min="@Model.DbMinPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                     data-max="@Model.DbMaxPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                     data-selected-min="@((Model.MinPrice ?? Model.DbMinPrice).ToString(System.Globalization.CultureInfo.InvariantCulture))"
+                                     data-selected-max="@((Model.MaxPrice ?? Model.DbMaxPrice).ToString(System.Globalization.CultureInfo.InvariantCulture))">
+                                    <div class="price-slider-labels">
+                                        <span id="priceMinLabel">@Model.DbMinPrice.ToString("N0") EGP</span>
+                                        <span id="priceMaxLabel">@Model.DbMaxPrice.ToString("N0") EGP</span>
                                     </div>
-                                    <div class="col-6">
-                                        <input type="number" name="maxPrice" class="form-control" placeholder="Max" value="@Model.MaxPrice" />
+                                    <div class="price-slider-track-wrap">
+                                        <div class="price-slider-track">
+                                            <div class="price-slider-range" id="priceSliderRange"></div>
+                                        </div>
+                                        <input type="range" class="price-range-input" id="priceMinRange"
+                                               min="@Model.DbMinPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                               max="@Model.DbMaxPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                               value="@((Model.MinPrice ?? Model.DbMinPrice).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+                                        <input type="range" class="price-range-input" id="priceMaxRange"
+                                               min="@Model.DbMinPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                               max="@Model.DbMaxPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                               value="@((Model.MaxPrice ?? Model.DbMaxPrice).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
                                     </div>
                                 </div>
+                                <input type="hidden" name="minPrice" id="minPriceInput" value="@Model.MinPrice" />
+                                <input type="hidden" name="maxPrice" id="maxPriceInput" value="@Model.MaxPrice" />
                             </div>
                         </div>
                     </div>
@@ -508,12 +622,16 @@
 
             <!-- Offcanvas Apply Button -->
             <div class="p-3 border-top bg-white">
-                <button type="submit" class="btn btn-dark w-100 py-2 fw-bold text-uppercase">
-                    Apply (@Model.TotalCount) <i class="fa-solid fa-arrow-right ms-2"></i>
+                <button type="submit" class="btn w-100 py-2 fw-bold text-uppercase btn-apply-filter">
+                    Apply  <i class="fa-solid fa-arrow-right ms-2"></i>
                 </button>
             </div>
         </form>
     </div>
+
+    <script id="categoryBrandMapData" type="application/json">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CategoryBrandMap))</script>
+    <script id="itemsFilterMetaData" type="application/json">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ItemsFilterMeta))</script>
+
 
     <!-- Pagination Controls -->
     @if (Model?.Items != null && Model.Items.Any())
@@ -527,6 +645,149 @@
 </div>
 
 <script>
+    // ===================== Category -> Brand Dynamic Filter =====================
+    (function () {
+        const mapEl = document.getElementById('categoryBrandMapData');
+        const categorySelect = document.getElementById('categoryFilterSelect');
+        const brandSelect = document.getElementById('brandFilterSelect');
+        if (!mapEl || !categorySelect || !brandSelect) return;
+
+        let categoryBrandMap = {};
+        try { categoryBrandMap = JSON.parse(mapEl.textContent || '{}'); } catch (e) { categoryBrandMap = {}; }
+
+        // بنحتفظ بكل الـ options الأصلية بتاعة البراند عشان نقدر نرجّعها لما اليوزر يختار "All Categories"
+        const allBrandOptions = Array.from(brandSelect.options);
+
+        function applyBrandFilter() {
+            const selectedCategoryId = categorySelect.value;
+            const currentlySelectedBrand = brandSelect.value;
+
+            if (!selectedCategoryId) {
+                // مفيش كاتيجوري محددة -> اعرض كل البراندات
+                allBrandOptions.forEach(opt => { opt.hidden = false; opt.disabled = false; });
+                return;
+            }
+
+            const allowedBrandIds = (categoryBrandMap[selectedCategoryId] || []).map(String);
+
+            allBrandOptions.forEach(opt => {
+                if (opt.value === '') { opt.hidden = false; opt.disabled = false; return; } // "All Brands" يفضل ظاهر دايمًا
+                const isAllowed = allowedBrandIds.includes(opt.value);
+                opt.hidden = !isAllowed;
+                opt.disabled = !isAllowed;
+            });
+
+            // لو البراند المختار حاليًا مبقاش متاح في الكاتيجوري الجديدة، ارجع لـ "All Brands"
+            if (currentlySelectedBrand && !allowedBrandIds.includes(currentlySelectedBrand)) {
+                brandSelect.value = '';
+            }
+        }
+
+        categorySelect.addEventListener('change', applyBrandFilter);
+        applyBrandFilter(); // تطبيق أولي عند تحميل الصفحة (لو فيه كاتيجوري محددة مسبقًا من الـ URL)
+    })();
+
+    // ===================== Price Range Slider (Vanilla) =====================
+    (function () {
+        const wrap = document.querySelector('.price-slider-wrap');
+        const minRange = document.getElementById('priceMinRange');
+        const maxRange = document.getElementById('priceMaxRange');
+        const rangeFill = document.getElementById('priceSliderRange');
+        const minLabel = document.getElementById('priceMinLabel');
+        const maxLabel = document.getElementById('priceMaxLabel');
+        const minInput = document.getElementById('minPriceInput');
+        const maxInput = document.getElementById('maxPriceInput');
+        if (!wrap || !minRange || !maxRange) return;
+
+        const minBound = parseFloat(wrap.dataset.min) || 0;
+        const maxBound = parseFloat(wrap.dataset.max) || 0;
+        const gap = 1; // أقل فرق مسموح بين الهاندل الاتنين
+
+        function formatEGP(val) {
+            return Math.round(val).toLocaleString('en-US') + ' EGP';
+        }
+
+        function updateUI() {
+            let minVal = parseFloat(minRange.value);
+            let maxVal = parseFloat(maxRange.value);
+
+            if (maxVal - minVal < gap) {
+                if (this === minRange) minRange.value = maxVal - gap;
+                else maxRange.value = minVal + gap;
+                minVal = parseFloat(minRange.value);
+                maxVal = parseFloat(maxRange.value);
+            }
+
+            const range = (maxBound - minBound) || 1;
+            const leftPct = ((minVal - minBound) / range) * 100;
+            const rightPct = ((maxVal - minBound) / range) * 100;
+
+            rangeFill.style.left = leftPct + '%';
+            rangeFill.style.right = (100 - rightPct) + '%';
+
+            minLabel.textContent = formatEGP(minVal);
+            maxLabel.textContent = formatEGP(maxVal);
+
+            minInput.value = Math.round(minVal);
+            maxInput.value = Math.round(maxVal);
+
+            if (window.__recalcApplyCount) window.__recalcApplyCount();
+        }
+
+        // نخلي أي هاندل بيتلمس آخر مرة يطلع فوق التاني (عشان يقدر يتلقط لما يكونوا فوق بعض)
+        minRange.addEventListener('mousedown', () => { minRange.style.zIndex = 4; maxRange.style.zIndex = 3; });
+        maxRange.addEventListener('mousedown', () => { maxRange.style.zIndex = 4; minRange.style.zIndex = 3; });
+        minRange.addEventListener('touchstart', () => { minRange.style.zIndex = 4; maxRange.style.zIndex = 3; });
+        maxRange.addEventListener('touchstart', () => { maxRange.style.zIndex = 4; minRange.style.zIndex = 3; });
+
+        minRange.addEventListener('input', updateUI);
+        maxRange.addEventListener('input', updateUI);
+
+        updateUI();
+    })();
+
+    // ===================== Live "Apply (count)" — يتحدث فورًا من غير Reload =====================
+    (function () {
+        const metaEl = document.getElementById('itemsFilterMetaData');
+        const countEl = document.getElementById('applyResultCount');
+        const categorySelect = document.getElementById('categoryFilterSelect');
+        const brandSelect = document.getElementById('brandFilterSelect');
+        const minInput = document.getElementById('minPriceInput');
+        const maxInput = document.getElementById('maxPriceInput');
+        const searchInput = document.querySelector('input[name="searchQuery"]');
+        if (!metaEl || !countEl) return;
+
+        let itemsMeta = [];
+        try { itemsMeta = JSON.parse(metaEl.textContent || '[]'); } catch (e) { itemsMeta = []; }
+
+        function recalcApplyCount() {
+            const categoryVal = categorySelect ? categorySelect.value : '';
+            const brandVal = brandSelect ? brandSelect.value : '';
+            const minVal = minInput ? parseFloat(minInput.value) : null;
+            const maxVal = maxInput ? parseFloat(maxInput.value) : null;
+            const searchVal = (searchInput?.value || '').trim().toLowerCase();
+
+            let count = 0;
+            for (const item of itemsMeta) {
+                if (categoryVal && !(item.categoryIds || []).includes(Number(categoryVal))) continue;
+                if (brandVal && String(item.brandId) !== brandVal) continue;
+                if (minVal !== null && !isNaN(minVal) && item.price < minVal) continue;
+                if (maxVal !== null && !isNaN(maxVal) && item.price > maxVal) continue;
+                if (searchVal && !(item.name || '').toLowerCase().includes(searchVal)) continue;
+                count++;
+            }
+
+            countEl.textContent = count;
+        }
+
+        window.__recalcApplyCount = recalcApplyCount;
+
+        if (categorySelect) categorySelect.addEventListener('change', recalcApplyCount);
+        if (brandSelect) brandSelect.addEventListener('change', recalcApplyCount);
+
+        recalcApplyCount(); // حساب أولي عند فتح الصفحة
+    })();
+
     const itemsPerPage = 12; // تم التعديل لعرض 12 كارت في الصفحة
     let currentPage = 0;
 

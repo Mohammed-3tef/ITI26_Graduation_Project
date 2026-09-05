@@ -1,8 +1,12 @@
-﻿@{
+﻿
+@{
     var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
-}
 
+    // جلب الـ Category ID سواء كان من الـ Route Data أو الـ Query String
+    var currentCategoryId = ViewContext.RouteData.Values["id"]?.ToString()
+                            ?? Context.Request.Query["id"].ToString();
+}
 <style>
     /* ==========================================
        Fix Search Bar & Suggestions Layout
@@ -125,26 +129,28 @@
             <!-- Collapsible Content -->
             <div class="collapse navbar-collapse" id="navbarMain">
                 <!-- Navigation Links -->
+                <!-- داخل الـ Navigation Links -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link fw-medium @(currentController == "Home" && currentAction == "Index" ? "active" : "")"
                            asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
 
-                    <!-- Categories Section Link Added Here -->
-                  
-
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="1">Electronics</a>
+                        <a class="nav-link fw-medium @(currentController == "Home" && currentAction == "Category" && currentCategoryId == "1" ? "active" : "")"
+                           asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="1">Electronics</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="2">Fashion</a>
+                        <a class="nav-link fw-medium @(currentController == "Home" && currentAction == "Category" && currentCategoryId == "2" ? "active" : "")"
+                           asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="2">Fashion</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="3">Sports</a>
+                        <a class="nav-link fw-medium @(currentController == "Home" && currentAction == "Category" && currentCategoryId == "3" ? "active" : "")"
+                           asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="3">Sports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="4">Beauty</a>
+                        <a class="nav-link fw-medium @(currentController == "Home" && currentAction == "Category" && currentCategoryId == "4" ? "active" : "")"
+                           asp-area="" asp-controller="Home" asp-action="Category" asp-route-id="4">Beauty</a>
                     </li>
                 </ul>
 

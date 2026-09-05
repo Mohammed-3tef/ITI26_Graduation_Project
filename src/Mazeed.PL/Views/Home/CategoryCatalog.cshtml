@@ -20,10 +20,10 @@
         flex-direction: column;
     }
 
-    .product-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    }
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
 
     .product-img-wrapper {
         position: relative;
@@ -35,11 +35,11 @@
         overflow: hidden;
     }
 
-    .product-img-wrapper img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+        .product-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
     .badge-sale {
         position: absolute;
@@ -94,9 +94,9 @@
         color: #ff4d4f;
     }
 
-    .current-price.dark {
-        color: #111827;
-    }
+        .current-price.dark {
+            color: #111827;
+        }
 
     .original-price {
         font-size: 11px;
@@ -116,13 +116,13 @@
         transition: color 0.2s ease, transform 0.2s ease;
     }
 
-    .wishlist-btn:hover {
-        transform: scale(1.15);
-    }
+        .wishlist-btn:hover {
+            transform: scale(1.15);
+        }
 
-    .wishlist-btn.active {
-        color: #ff4d4f;
-    }
+        .wishlist-btn.active {
+            color: #ff4d4f;
+        }
 
     .btn-action-dark {
         background-color: #111827;
@@ -138,10 +138,10 @@
         display: block;
     }
 
-    .btn-action-dark:hover {
-        background-color: #1f2937;
-        color: #ffffff;
-    }
+        .btn-action-dark:hover {
+            background-color: #1f2937;
+            color: #ffffff;
+        }
 
     .btn-action-light {
         background-color: #ffffff;
@@ -157,10 +157,10 @@
         display: block;
     }
 
-    .btn-action-light:hover {
-        background-color: #f9fafb;
-        color: #374151;
-    }
+        .btn-action-light:hover {
+            background-color: #f9fafb;
+            color: #374151;
+        }
 
     /* أزرار الترقيم Pagination */
     .pagination-dots-container {
@@ -182,13 +182,13 @@
         transition: color 0.2s ease;
     }
 
-    .page-dot-btn:hover {
-        color: #9ca3af;
-    }
+        .page-dot-btn:hover {
+            color: #9ca3af;
+        }
 
-    .page-dot-btn.active {
-        color: #111827;
-    }
+        .page-dot-btn.active {
+            color: #111827;
+        }
 
     .page-nav-btn {
         background-color: #111827;
@@ -206,17 +206,17 @@
         transition: background-color 0.2s ease, transform 0.1s ease;
     }
 
-    .page-nav-btn:hover:not(:disabled) {
-        background-color: #1f2937;
-        transform: translateY(-1px);
-    }
+        .page-nav-btn:hover:not(:disabled) {
+            background-color: #1f2937;
+            transform: translateY(-1px);
+        }
 
-    .page-nav-btn:disabled {
-        background-color: #e5e7eb;
-        color: #9ca3af;
-        cursor: not-allowed;
-        transform: none;
-    }
+        .page-nav-btn:disabled {
+            background-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
 
     .btn-filter-pill {
         border-radius: 50px;
@@ -230,11 +230,11 @@
         cursor: pointer;
     }
 
-    .btn-filter-pill:hover {
-        background-color: #111827;
-        color: #ffffff;
-        border-color: #111827;
-    }
+        .btn-filter-pill:hover {
+            background-color: #111827;
+            color: #ffffff;
+            border-color: #111827;
+        }
 </style>
 
 <div class="container-fluid px-0 my-4">
@@ -357,23 +357,58 @@
                     </div>
                 </div>
 
-                <!-- Price Range -->
+                <!-- Brand Dropdown (البراندات اللي ليها منتجات في الكاتيجوري دي بس) -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingBrand">
+                        <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrand">
+                            Brand
+                        </button>
+                    </h2>
+                    <div id="collapseBrand" class="accordion-collapse collapse show">
+                        <div class="accordion-body">
+                            <select name="brandId" class="form-select">
+                                <option value="">All Brands</option>
+                                @foreach (var brand in Model.Brands)
+                                {
+                                    <option value="@brand.Id" selected="@(Model.BrandId == brand.Id)">@brand.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Range Slider -->
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingPrice">
                         <button class="accordion-button collapsed fw-bold text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
                             Price Range
                         </button>
                     </h2>
-                    <div id="collapsePrice" class="accordion-collapse collapse">
+                    <div id="collapsePrice" class="accordion-collapse collapse show">
                         <div class="accordion-body">
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <input type="number" name="minPrice" class="form-control" placeholder="Min" value="@Model.MinPrice" />
+                            <div class="price-slider-wrap"
+                                 data-min="@Model.DbMinPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                 data-max="@Model.DbMaxPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                                <div class="price-slider-labels">
+                                    <span id="priceMinLabel">@Model.DbMinPrice.ToString("N0") EGP</span>
+                                    <span id="priceMaxLabel">@Model.DbMaxPrice.ToString("N0") EGP</span>
                                 </div>
-                                <div class="col-6">
-                                    <input type="number" name="maxPrice" class="form-control" placeholder="Max" value="@Model.MaxPrice" />
+                                <div class="price-slider-track-wrap">
+                                    <div class="price-slider-track">
+                                        <div class="price-slider-range" id="priceSliderRange"></div>
+                                    </div>
+                                    <input type="range" class="price-range-input" id="priceMinRange"
+                                           min="@Model.DbMinPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                           max="@Model.DbMaxPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                           value="@((Model.MinPrice ?? Model.DbMinPrice).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+                                    <input type="range" class="price-range-input" id="priceMaxRange"
+                                           min="@Model.DbMinPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                           max="@Model.DbMaxPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                           value="@((Model.MaxPrice ?? Model.DbMaxPrice).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
                                 </div>
                             </div>
+                            <input type="hidden" name="minPrice" id="minPriceInput" value="@Model.MinPrice" />
+                            <input type="hidden" name="maxPrice" id="maxPriceInput" value="@Model.MaxPrice" />
                         </div>
                     </div>
                 </div>
@@ -382,12 +417,170 @@
         </div>
 
         <div class="p-3 border-top bg-white">
-            <button type="submit" class="btn btn-dark w-100 py-2 fw-bold text-uppercase">
+            <button type="submit" class="btn w-100 py-2 fw-bold text-uppercase btn-apply-filter">
                 Apply Filters <i class="fa-solid fa-arrow-right ms-2"></i>
             </button>
         </div>
     </form>
 </div>
+
+<style>
+    .btn-apply-filter {
+        background-color: #EF4444;
+        border-color: #EF4444;
+        color: #ffffff;
+    }
+
+        .btn-apply-filter:hover,
+        .btn-apply-filter:focus {
+            background-color: #dc2626;
+            border-color: #dc2626;
+            color: #ffffff;
+        }
+
+    .price-slider-wrap {
+        position: relative;
+        padding: 6px 0 18px;
+    }
+
+    .price-slider-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 14px;
+    }
+
+    .price-slider-track-wrap {
+        position: relative;
+        height: 16px;
+    }
+
+    .price-slider-track {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 4px;
+        margin-top: -2px;
+        border-radius: 2px;
+        background: #e5e7eb;
+    }
+
+    .price-slider-range {
+        position: absolute;
+        height: 4px;
+        border-radius: 2px;
+        background: #EF4444;
+        left: 0%;
+        right: 0%;
+    }
+
+    .price-range-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 16px;
+        margin: 0;
+        background: transparent;
+        pointer-events: none;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+        .price-range-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            pointer-events: auto;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #EF4444;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 1px #EF4444;
+            cursor: pointer;
+            position: relative;
+            z-index: 3;
+        }
+
+        .price-range-input::-moz-range-thumb {
+            pointer-events: auto;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #EF4444;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 1px #EF4444;
+            cursor: pointer;
+        }
+
+        .price-range-input::-webkit-slider-runnable-track {
+            background: transparent;
+        }
+
+        .price-range-input::-moz-range-track {
+            background: transparent;
+        }
+</style>
+
+<script>
+    (function () {
+        const wrap = document.querySelector('.price-slider-wrap');
+        const minRange = document.getElementById('priceMinRange');
+        const maxRange = document.getElementById('priceMaxRange');
+        const rangeFill = document.getElementById('priceSliderRange');
+        const minLabel = document.getElementById('priceMinLabel');
+        const maxLabel = document.getElementById('priceMaxLabel');
+        const minInput = document.getElementById('minPriceInput');
+        const maxInput = document.getElementById('maxPriceInput');
+        if (!wrap || !minRange || !maxRange) return;
+
+        const minBound = parseFloat(wrap.dataset.min) || 0;
+        const maxBound = parseFloat(wrap.dataset.max) || 0;
+        const gap = 1;
+
+        function formatEGP(val) {
+            return Math.round(val).toLocaleString('en-US') + ' EGP';
+        }
+
+        function updateUI() {
+            let minVal = parseFloat(minRange.value);
+            let maxVal = parseFloat(maxRange.value);
+
+            if (maxVal - minVal < gap) {
+                if (this === minRange) minRange.value = maxVal - gap;
+                else maxRange.value = minVal + gap;
+                minVal = parseFloat(minRange.value);
+                maxVal = parseFloat(maxRange.value);
+            }
+
+            const range = (maxBound - minBound) || 1;
+            const leftPct = ((minVal - minBound) / range) * 100;
+            const rightPct = ((maxVal - minBound) / range) * 100;
+
+            rangeFill.style.left = leftPct + '%';
+            rangeFill.style.right = (100 - rightPct) + '%';
+
+            minLabel.textContent = formatEGP(minVal);
+            maxLabel.textContent = formatEGP(maxVal);
+
+            minInput.value = Math.round(minVal);
+            maxInput.value = Math.round(maxVal);
+        }
+
+        minRange.addEventListener('mousedown', () => { minRange.style.zIndex = 4; maxRange.style.zIndex = 3; });
+        maxRange.addEventListener('mousedown', () => { maxRange.style.zIndex = 4; minRange.style.zIndex = 3; });
+        minRange.addEventListener('touchstart', () => { minRange.style.zIndex = 4; maxRange.style.zIndex = 3; });
+        maxRange.addEventListener('touchstart', () => { maxRange.style.zIndex = 4; minRange.style.zIndex = 3; });
+
+        minRange.addEventListener('input', updateUI);
+        maxRange.addEventListener('input', updateUI);
+
+        updateUI();
+    })();
+</script>
 
 <script>
     // الإبقاء على 16 عنصر في الصفحة كما كان أصلاً

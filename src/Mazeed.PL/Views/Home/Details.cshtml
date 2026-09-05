@@ -456,12 +456,12 @@
 
             <!-- Price -->
             <div class="d-flex align-items-center gap-3 mb-4">
-                <span id="mainDisplayPrice" class="fs-2 fw-bold text-danger">@Model.Product.Price.ToString("F2") EGP</span>
+                <span id="mainDisplayPrice" class="fs-2 fw-bold text-danger">@Model.Product.Price.ToString("N0") EGP</span>
                 @if (Model.Product.OldPrice.HasValue && Model.Product.OldPrice > Model.Product.Price)
                 {
-                    <span class="text-decoration-line-through text-muted fs-5">@Model.Product.OldPrice.Value.ToString("F2") EGP</span>
+                    <span class="text-decoration-line-through text-muted fs-5">@Model.Product.OldPrice.Value.ToString("N0") EGP</span>
                     <span class="badge bg-danger-subtle text-danger fw-bold fs-7 px-2 py-1">
-                        Save @((Model.Product.OldPrice.Value - Model.Product.Price).ToString("F2")) EGP
+                        Save @((Model.Product.OldPrice.Value - Model.Product.Price).ToString("N0")) EGP
                     </span>
                 }
             </div>
@@ -543,7 +543,7 @@
                 </div>
 
                 <button type="button" id="addToCartBtn" class="btn-add-cart flex-grow-1 text-center">
-                    Add to Cart — @Model.Product.Price.ToString("F2") EGP
+                    Add to Cart — @Model.Product.Price.ToString("N0") EGP
                 </button>
 
                 <button type="button" id="wishlistDetailBtn" class="wishlist-detail-btn" title="Add to Wishlist">
@@ -648,7 +648,7 @@
                                         <span class="small fw-bold text-dark related-rating-value" data-item-id="@item.Id">&#9734; —</span>
                                     </div>
                                     <h6 class="fw-bold text-dark text-truncate mb-2">@item.Name</h6>
-                                    <span class="fw-bold text-danger fs-6 d-block mb-3">@item.Price.ToString("F2") EGP</span>
+                                    <span class="fw-bold text-danger fs-6 d-block mb-3">@item.Price.ToString("N0") EGP</span>
                                 </div>
 
                                 <!-- Matching Buttons Style from Home -->
@@ -735,7 +735,8 @@
 
         let totalPrice = unitPrice * quantity;
 
-        document.getElementById('mainDisplayPrice').innerText = unitPrice.toFixed(2) + ' EGP';
+            // الكود الجديد
+    document.getElementById('mainDisplayPrice').innerText = Math.round(unitPrice).toLocaleString() + ' EGP';
         document.getElementById('addToCartBtn').innerText = 'Add to Cart — ' + totalPrice.toFixed(2) + ' EGP';
         updateVariantSpecifications();
     }
