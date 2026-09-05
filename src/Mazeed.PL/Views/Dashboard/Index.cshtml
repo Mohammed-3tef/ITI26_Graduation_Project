@@ -265,7 +265,18 @@
                     y: { ticks: { color: isDark ? '#aab5c1' : '#6b7280' }, grid: { color: isDark ? '#354250' : '#e5e7eb' } }
                 } : undefined,
                 plugins: {
-                    legend: { position: 'bottom', labels: { color: isDark ? '#aab5c1' : '#6b7280' } }
+                    legend: { position: 'bottom', labels: { color: isDark ? '#aab5c1' : '#6b7280' } },
+                    tooltip: {
+                        callbacks: {
+                            label: context => {
+                                if (type !== 'pie' && type !== 'doughnut') return `${context.dataset.label}: ${context.formattedValue}`;
+
+                                const total = context.dataset.data.reduce((sum, value) => sum + Number(value), 0);
+                                const percentage = total > 0 ? (Number(context.raw) / total) * 100 : 0;
+                                return `${context.label}: ${percentage.toFixed(1)}%`;
+                            }
+                        }
+                    }
                 }
             }
         });
